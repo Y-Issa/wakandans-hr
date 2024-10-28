@@ -1,0 +1,123 @@
+openapi: 3.1.0
+info:
+  title: HR DB API,
+  version: apiVersion,
+  description: |
+    The HR DB API is a RESTful API that provides access to the HR database.
+
+    API possible responses: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#client_error_responses
+
+    Informational responses (100 - 199)
+
+    Successful responses (200 - 299)
+
+    Redirection messages (300 - 399)
+
+    Client error responses (400 - 499)
+
+    Server error responses (500 - 599)
+
+servers:
+  - url: http://localhost:5000/api/v1
+    description: Development server
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: session
+security:
+  - cookieAuth: []
+paths:
+  /hello:
+    get:
+      summary: A simple hello world endpoint
+      tags:
+        - Hello
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Hello, World!'
+  /login:
+    post:
+      summary: Generate a login token for a user
+      tags:
+        - Authentication
+      requestBody:
+        description: The email address of the user requesting a login token
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: 'user@example.com'
+      security: []
+      responses:
+        200:
+          description: Login token generated and email job created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Login token generated and email job created successfully'
+                  loginToken:
+                    type: string
+                    example: '4c2fdef7-9d3b-4c2d-a1b6-9c2bfc51900b'
+  /validate-token:
+    post:
+      summary: Validate a login token
+      tags:
+        - Authentication
+      requestBody:
+        description: The email address and login token to validate
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: 'user@example.com'
+                loginToken:
+                  type: string
+                  example: '4c2fdef7-9d3b-4c2d-a1b6-9c2bfc51900b'
+      security: []
+      responses:
+        200:
+          description: Login token is valid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Login token is valid'
+  /logout:
+    post:
+      summary: User logout
+      tags:
+        - Authentication
+      requestBody:
+        description: No request body required.
+        required: false
+        content: {}
+      responses:
+        '200':
+          description: Successfully logged out.
