@@ -4,6 +4,8 @@ import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 import cors from 'cors';
 
+import { writePrisma, readPrisma, adminPrisma } from './prisma';
+
 import helloRouter from './routes/helloRoutes';
 
 if (!process.env.DB_API_PORT) {
@@ -43,6 +45,9 @@ export const server = app.listen(process.env.DB_API_PORT, () => {
 });
 
 process.on('SIGINT', async () => {
+  await writePrisma.$disconnect();
+  await readPrisma.$disconnect();
+  await adminPrisma.$disconnect();
   server.close(() => {
     console.log('Process terminated');
     process.exit(0);
@@ -50,6 +55,9 @@ process.on('SIGINT', async () => {
 });
 
 process.on('SIGTERM', async () => {
+  await writePrisma.$disconnect();
+  await readPrisma.$disconnect();
+  await adminPrisma.$disconnect();
   server.close(() => {
     console.log('Process terminated');
     process.exit(0);

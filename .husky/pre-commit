@@ -1,0 +1,7 @@
+cd ./packages/db-api
+npm run format:check
+npm run lint:check
+
+cd ../web-app
+npm run format:check
+npm run lint:check
