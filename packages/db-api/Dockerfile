@@ -6,11 +6,14 @@ COPY package*.json ./
 
 COPY . .
 
+COPY schema.prisma ./
 COPY wait-for-postgres.sh ./
+COPY migrations ./migrations/
 
 RUN chmod +x ./wait-for-postgres.sh
 
 RUN npm install
+RUN npx prisma generate
 
 RUN apk update && \
     apk add postgresql-client

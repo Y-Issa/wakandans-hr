@@ -7,6 +7,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  schemas  = ["private", "public"]
 }
 
 enum UserRole {
@@ -18,16 +19,319 @@ enum UserRole {
 }
 
 model User {
-  id        String    @id @default(cuid())
-  email     String    @unique
-  role      UserRole
-  password  String
+  id            Int       @id @default(autoincrement())
+  email         String    @unique
+  firstName     String
+  lastName      String
+  locationId    Int
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+  reportsToId   Int? // Optional, because a user might not have a manager
+  role          UserRole // determines access level using scarlet, not employee title / position
+  workSettingId Int?
+
+  manager       User?    @relation("UserManager", fields: [reportsToId], references: [id])
+  directReports User[]   @relation("UserManager")
+  location      Location @relation(fields: [locationId], references: [id])
+  profile       Profile?
+
+  workSetting      WorkSetting?     @relation(fields: [workSettingId], references: [id])
+  calendarStatuses CalendarStatus[]
+  userGroups       UserGroup[]
+  userTeams        UserTeam[]
+  userDepartments  UserDepartment[]
+  userAuth         UserAuth[]
+
+  @@index([locationId])
+  @@index([reportsToId])
+  @@index([deletedAt])
+  @@schema("public")
+}
+
+model Profile {
+  id             Int       @id @default(autoincrement())
+  userId         Int       @unique
+  title          String?
+  employedAt     DateTime?
+  dateOfBirth    DateTime?
+  profileImage   String?
+  additionalInfo Json? // bio, social profiles, pronouns, etc
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@schema("public")
+}
+
+model UserAuth {
+  id           Int       @id @default(autoincrement())
+  userId       Int       @unique
+  loginToken   String?
+  refreshToken String?
+  sessionId    String?
+  expiresAt    DateTime? // login token expiration date
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([loginToken])
+  @@index([refreshToken])
+  @@index([sessionId])
+  @@schema("public")
+}
+
+// Examples: out of office, in transit, vacation, sick, business trip, bereavement..
+// An admin org will add those to be used by employees to update their status
+// Employees statuses will be added to CalendarStatus model 
+model Status {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  calendarStatuses CalendarStatus[]
+
+  @@index([deletedAt])
+  @@schema("public")
+}
+
+model CalendarStatus {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  fromDate    DateTime
+  toDate      DateTime
+  isFullDay   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+  statusId    Int
+  approved    Boolean   @default(false)
+  description String?
+
+  user   User   @relation(fields: [userId], references: [id])
+  status Status @relation(fields: [statusId], references: [id])
+
+  @@index([fromDate, toDate])
+  @@index([userId])
+  @@index([deletedAt])
+  @@schema("public")
+}
+
+model Location {
+  id            Int       @id @default(autoincrement())
+  name          String
+  country       String
+  city          String
+  address       String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+  companyId     Int
+  workSettingId Int?
+
+  workSetting WorkSetting? @relation(fields: [workSettingId], references: [id]) // optional, overrides company WorkSetting if set
+  users       User[]
+  company     Company      @relation(fields: [companyId], references: [id])
+  departments Department[]
+  teams       Team[]
+  groups      Group[]
+
+  @@index([companyId])
+  @@index([deletedAt])
+  @@schema("public")
+}
+
+model Department {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+  locationId  Int?
+  companyId   Int
+
+  location        Location?        @relation(fields: [locationId], references: [id])
+  company         Company          @relation(fields: [companyId], references: [id])
+  departmentUsers UserDepartment[]
+
+  @@index([companyId, locationId])
+  @@index([deletedAt])
+  @@schema("public")
+}
+
+model Team {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+  locationId  Int?
+  companyId   Int
+
+  teamUsers UserTeam[]
+  company   Company    @relation(fields: [companyId], references: [id])
+  location  Location?  @relation(fields: [locationId], references: [id])
+
+  @@index([companyId, locationId])
+  @@index([deletedAt])
+  @@schema("public")
+}
+
+model Group {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+  locationId  Int?
+  companyId   Int
+
+  location   Location?   @relation(fields: [locationId], references: [id])
+  company    Company     @relation(fields: [companyId], references: [id])
+  groupUsers UserGroup[]
+
+  @@index([companyId, locationId])
+  @@index([deletedAt])
+  @@schema("public")
+}
+
+model UserGroup {
+  userId    Int
+  groupId   Int
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user  User  @relation(fields: [userId], references: [id])
+  group Group @relation(fields: [groupId], references: [id])
+
+  @@id([userId, groupId])
+  @@schema("public")
+}
+
+model UserTeam {
+  userId    Int
+  teamId    Int
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+  team Team @relation(fields: [teamId], references: [id])
+
+  @@id([userId, teamId])
+  @@schema("public")
+}
+
+model UserDepartment {
+  userId       Int
+  departmentId Int
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user       User       @relation(fields: [userId], references: [id])
+  department Department @relation(fields: [departmentId], references: [id])
+
+  @@id([userId, departmentId])
+  @@schema("public")
+}
+
+// Holidays - moslty entered by the admin once per year 
+model DayOff {
+  id        Int       @id @default(autoincrement())
   name      String
+  fromDate  DateTime
+  toDate    DateTime
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
+  @@index([fromDate, toDate])
   @@index([deletedAt])
+  @@schema("public")
+}
 
+model Company {
+  id                    Int       @id @default(autoincrement())
+  name                  String
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  deletedAt             DateTime?
+  externalEmailsAllowed Boolean   @default(false)
+
+  locations   Location[]
+  departments Department[]
+  teams       Team[]
+  groups      Group[]
+
+  @@index([deletedAt])
+  @@schema("public")
+}
+
+model PrivateProfile {
+  id                     Int     @id @default(autoincrement())
+  userId                 Int     @unique
+  salary                 Float?
+  address                String?
+  phoneNumber            String?
+  secondaryPhoneNumber   String?
+  secondaryEmail         String?
+  emergencyContactName   String?
+  emergencyContactNumber String?
+
+  @@schema("private")
+}
+
+// Stores every update made to a user
+// Data mostly useful for org admins
+model UserHistory {
+  id                Int      @id @default(autoincrement())
+  userId            Int
+  updateType        String // TODO: Enum, example: SALARY, PROMOTION...
+  updateDescription String?
+  createdAt         DateTime @default(now())
+  previousData      Json?
+  currentData       Json?
+
+  @@index([userId])
+  @@schema("private")
+}
+
+// workingSchedule json example
+// {
+//  'm': { start: '09:00', end: '18:00', breaks: [{ start: '12:00', end: '13:00', description: "Lunch" }] },
+//  'tu': { start: '09:00', end: '18:00', breaks: [{ start: '12:00', end: '13:00', description: "Lunch" }] },
+//  'w': { start: '09:00', end: '18:00', breaks: [{ start: '12:00', end: '13:00', description: "Lunch" }] },
+//  'th': { start: '09:00', end: '18:00', breaks: [{ start: '12:00', end: '13:00', description: "Lunch" }] },
+//  'f': { start: '09:00', end: '18:00', breaks: [{ start: '12:00', end: '13:00', description: "Lunch" }] },
+// }
+model WorkSetting {
+  id                 Int       @id @default(autoincrement())
+  remoteWorkAllowed  Boolean   @default(false)
+  hybridWorkAllowed  Boolean   @default(false)
+  inOfficeAvailable  Boolean   @default(true)
+  flexibleHours      Boolean   @default(false)
+  partTime           Boolean   @default(false)
+  timeZone           String
+  workingSchedule    Json
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  deletedAt          DateTime?
+  maxDaysOffPerYear  Int       @default(20)
+  maxOooMinsPerDay   Int       @default(149) // 2 hours and 29 mins
+  pdAllowancePerYear Int       @default(1000)
+
+  locations Location[]
+  users     User[]
+
+  @@index([deletedAt])
   @@schema("public")
 }

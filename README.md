@@ -34,3 +34,11 @@ To create a new migration:
 ```
 npm run db:migrate
 ```
+
+### Seeding
+
+In the root directory run:
+
+```
+npm run seed
+```
