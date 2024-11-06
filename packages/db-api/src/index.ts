@@ -7,6 +7,7 @@ import cors from 'cors';
 import { writePrisma, readPrisma, adminPrisma } from './prisma';
 
 import helloRouter from './routes/helloRoutes';
+import locationRouter from './routes/locationRoutes';
 
 if (!process.env.DB_API_PORT) {
   process.env.DB_API_PORT = '5000';
@@ -34,7 +35,7 @@ requiredEnvVars.forEach((envVar) => {
 const swaggerDocument = YAML.load('./openapi.yaml');
 app.use(`/api/v1/docs`, swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-const routers = [helloRouter];
+const routers = [helloRouter, locationRouter];
 
 routers.forEach((router) => {
   app.use(`/api/v1`, router);
