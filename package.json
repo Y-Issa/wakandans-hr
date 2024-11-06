@@ -13,6 +13,7 @@
     "prepare": "husky",
     "db-api": "npm run --workspace=db-api",
     "jobs": "npm run --workspace=jobs",
+    "db:migrate": "docker compose exec db-api npx prisma migrate dev",
     "web-app": "npm run --workspace=web-app"
   },
   "workspaces": [
