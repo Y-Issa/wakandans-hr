@@ -5,6 +5,13 @@ In the root directory:
 - Create `.env` and then copy the contents of `.env.sample`
 - Run `npm start`
 
+## Module Distribution
+Performance Review Module - Jad Tarabay
+Talent Pool Module - Jonathan isshak
+Onboarding/Offboarding and Reporting Module - Ali elchab
+Dashboard/Org Chart and Calender Module - Hanan Aref
+Admin Dashboard - Youssef Issa
+
 ## Frontend
 
 NextJS web app: http://localhost:3000/
