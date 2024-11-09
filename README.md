@@ -29,6 +29,16 @@ Node and Express API: http://localhost:5000/
 
 Swagger API Docs: http://localhost:5000/api/v1/docs/
 
+## Jobs
+
+Service that executes jobs asynchronously.
+
+Important: make sure to have db prisma types synced by executing the following inside `scarlet-job`:
+
+```
+sh sync-types.sh
+```
+
 ## Migrations
 
 We use Prisma for managing the Database.

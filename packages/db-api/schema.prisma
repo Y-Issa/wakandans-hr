@@ -7,7 +7,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  schemas  = ["private", "public"]
+  schemas  = ["private", "public", "jobs"]
 }
 
 enum UserRole {
@@ -16,6 +16,25 @@ enum UserRole {
   MANAGER
 
   @@schema("public")
+}
+
+enum JobStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+  CANCELED
+
+  @@schema("jobs")
+}
+
+enum JobType {
+  EMAIL
+  SMS
+  PUSH_NOTIFICATION
+  SLACK
+
+  @@schema("jobs")
 }
 
 model User {
@@ -303,6 +322,21 @@ model UserHistory {
 
   @@index([userId])
   @@schema("private")
+}
+
+model Job {
+  id           Int       @id @default(autoincrement())
+  type         JobType
+  status       JobStatus
+  priority     Int       @default(0)
+  payload      Json
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  completedAt  DateTime?
+  errorMessage String?
+  failureCount Int       @default(0)
+
+  @@schema("jobs")
 }
 
 // workingSchedule json example
