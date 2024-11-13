@@ -1,8 +1,17 @@
 -- CreateSchema
+CREATE SCHEMA IF NOT EXISTS "jobs";
+
+-- CreateSchema
 CREATE SCHEMA IF NOT EXISTS "private";
 
 -- CreateEnum
 CREATE TYPE "public"."UserRole" AS ENUM ('ADMIN', 'EMPLOYEE', 'MANAGER');
+
+-- CreateEnum
+CREATE TYPE "jobs"."JobStatus" AS ENUM ('PENDING', 'RUNNING', 'COMPLETED', 'FAILED', 'CANCELED', 'RETRY');
+
+-- CreateEnum
+CREATE TYPE "jobs"."JobType" AS ENUM ('EMAIL', 'SMS', 'PUSH_NOTIFICATION', 'SLACK');
 
 -- CreateTable
 CREATE TABLE "public"."User" (
@@ -219,6 +228,22 @@ CREATE TABLE "private"."UserHistory" (
     "currentData" JSONB,
 
     CONSTRAINT "UserHistory_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "jobs"."Job" (
+    "id" SERIAL NOT NULL,
+    "type" "jobs"."JobType" NOT NULL,
+    "status" "jobs"."JobStatus" NOT NULL,
+    "priority" INTEGER NOT NULL DEFAULT 0,
+    "payload" JSONB NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "completedAt" TIMESTAMP(3),
+    "errorMessage" TEXT,
+    "failureCount" INTEGER NOT NULL DEFAULT 0,
+
+    CONSTRAINT "Job_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
