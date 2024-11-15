@@ -24,6 +24,7 @@ enum JobStatus {
   COMPLETED
   FAILED
   CANCELED
+  RETRY
 
   @@schema("jobs")
 }

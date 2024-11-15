@@ -6,7 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "format": "prettier --write .",
+    "lint:check": "eslint .",
+    "format:check": "prettier --check .",
+    "css:build": "sass src/styles",
+    "css:watch": "sass --watch src/styles:dist/css"
   },
   "dependencies": {
     "react": "19.0.0-rc-69d4b800-20241021",

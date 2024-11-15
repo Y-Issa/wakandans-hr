@@ -33,7 +33,7 @@ Swagger API Docs: http://localhost:5000/api/v1/docs/
 
 Service that executes jobs asynchronously.
 
-Important: make sure to have db prisma types synced by executing the following inside `scarlet-job`:
+Important: make sure to have db prisma types synced by executing the following inside `jobs`:
 
 ```
 sh sync-types.sh
