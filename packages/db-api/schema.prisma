@@ -46,10 +46,12 @@ model User {
   locationId    Int
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  isActive      Boolean   @default(true)
   deletedAt     DateTime?
   reportsToId   Int? // Optional, because a user might not have a manager
   role          UserRole // determines access level using scarlet, not employee title / position
   workSettingId Int?
+  companyId     Int
 
   manager       User?    @relation("UserManager", fields: [reportsToId], references: [id])
   directReports User[]   @relation("UserManager")

@@ -1,5 +1,6 @@
 import { UserRole } from '@prisma/client';
 import { writePrisma } from '../prisma';
+import { COMPANY_ID } from '../constants';
 
 const users = [
   // Admins, reporting to no one
@@ -846,6 +847,7 @@ export const seedUsers = async () => {
             locationId: user.locationId,
             role: user.role as UserRole,
             reportsToId: user.reportsToId,
+            companyId: COMPANY_ID,
           },
         }),
       ),
