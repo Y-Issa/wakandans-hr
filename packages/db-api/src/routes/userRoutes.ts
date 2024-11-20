@@ -1,4 +1,5 @@
 import express from 'express';
+import { UserRole } from '@prisma/client';
 import {
   getAllUsers,
   getUserById,
@@ -6,17 +7,27 @@ import {
   updateUser,
   softDeleteUser,
 } from '../controllers/userController';
+import {
+  authMiddleware,
+  authRolesMiddleware,
+} from '../middlewares/authMiddleware';
 
 const router = express.Router();
 
-router.get('/users', getAllUsers);
+router.use('/users', authMiddleware);
 
-router.get('/users/:id', getUserById);
+router.get('/users', authRolesMiddleware([UserRole.ADMIN]), getAllUsers);
 
-router.post('/users', createUser);
+router.get('/users/:id', authRolesMiddleware([UserRole.ADMIN]), getUserById);
 
-router.put('/users/:id', updateUser);
+router.post('/users', authRolesMiddleware([UserRole.ADMIN]), createUser);
 
-router.patch('/users/:id', softDeleteUser);
+router.put('/users/:id', authRolesMiddleware([UserRole.ADMIN]), updateUser);
+
+router.patch(
+  '/users/:id',
+  authRolesMiddleware([UserRole.ADMIN]),
+  softDeleteUser,
+);
 
 export default router;
