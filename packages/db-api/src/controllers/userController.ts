@@ -121,7 +121,6 @@ export const updateUser = async (req: Request, res: Response) => {
   }
 
   const updateData = req.body;
-  console.log(updateData);
   const { user, ...validData } = updateData;
 
   try {
@@ -151,7 +150,7 @@ export const updateUser = async (req: Request, res: Response) => {
   }
 };
 
-export const softDeleteUser = async (req: Request, res: Response) => {
+export const DeleteUser = async (req: Request, res: Response) => {
   const { id } = req.params;
   const idInt = parseInt(id, 10);
 

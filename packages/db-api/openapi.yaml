@@ -474,7 +474,7 @@ paths:
           description: Invalid user ID
         500:
           description: Server error
-    patch:
+    delete:
       tags:
         - Users
       summary: Soft delete a user
@@ -612,7 +612,7 @@ paths:
           description: Invalid department ID
         '500':
           description: Internal server error
-    patch:
+    delete:
       summary: Soft delete a department by ID
       tags:
         - Departments
@@ -636,6 +636,158 @@ paths:
                     example: 'Department soft-deleted successfully'
         '400':
           description: Invalid department ID
+        '500':
+          description: Internal server error
+  /userDepartments:
+    post:
+      summary: Assign a user to a department
+      description: Creates a user-department relationship, assigning a user to a department.
+      operationId: createUserDepartment
+      tags:
+        - UserDepartment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: integer
+                  example: 87
+                departmentId:
+                  type: integer
+                  example: 4
+      responses:
+        '200':
+          description: User successfully assigned to department
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "User successfully assigned to department."
+        '400':
+          description: Bad request, invalid data
+        '404':
+          description: User or department not found
+        '500':
+          description: Internal server error
+
+  /userDepartments/user/{userId}:
+    get:
+      summary: Get all departments assigned to a user
+      description: Retrieves all departments that a user is assigned to.
+      operationId: getDepartmentsForUser
+      tags:
+        - UserDepartment
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID of the user whose departments are being retrieved
+      responses:
+        '200':
+          description: List of departments assigned to user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 4
+                    name:
+                      type: string
+                      example: "Marketing"
+                    description:
+                      type: string
+                      example: "Handles marketing and outreach"
+        '404':
+          description: User not found
+        '500':
+          description: Internal server error
+
+  /userDepartments/department/{departmentId}:
+    get:
+      summary: Get all users assigned to a department
+      description: Retrieves all users assigned to a particular department.
+      operationId: getUsersForDepartment
+      tags:
+        - UserDepartment
+      parameters:
+        - name: departmentId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID of the department whose users are being retrieved
+      responses:
+        '200':
+          description: List of users assigned to department
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 87
+                    firstName:
+                      type: string
+                      example: "Youssef"
+                    lastName:
+                      type: string
+                      example: "Issa"
+                    email:
+                      type: string
+                      example: "ysf@test.com"
+        '404':
+          description: Department not found
+        '500':
+          description: Internal server error
+
+  /userDepartments/user/{userId}/department/{departmentId}:
+    delete:
+      summary: Remove a user from a department
+      description: Deletes the user-department relationship, effectively removing the user from the department.
+      operationId: deleteUserDepartment
+      tags:
+        - UserDepartment
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID of the user to be removed from the department
+        - name: departmentId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID of the department from which the user will be removed
+      responses:
+        '200':
+          description: User successfully removed from department
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "User successfully removed from department."
+        '404':
+          description: User or department not found
         '500':
           description: Internal server error
 

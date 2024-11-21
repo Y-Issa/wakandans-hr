@@ -5,7 +5,7 @@ import {
   getUserById,
   createUser,
   updateUser,
-  softDeleteUser,
+  DeleteUser,
 } from '../controllers/userController';
 import {
   authMiddleware,
@@ -24,10 +24,6 @@ router.post('/users', authRolesMiddleware([UserRole.ADMIN]), createUser);
 
 router.put('/users/:id', authRolesMiddleware([UserRole.ADMIN]), updateUser);
 
-router.patch(
-  '/users/:id',
-  authRolesMiddleware([UserRole.ADMIN]),
-  softDeleteUser,
-);
+router.delete('/users/:id', authRolesMiddleware([UserRole.ADMIN]), DeleteUser);
 
 export default router;

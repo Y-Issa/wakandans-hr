@@ -5,7 +5,7 @@ import {
   getDepartmentById,
   createDepartment,
   updateDepartment,
-  softDeleteDepartment,
+  DeleteDepartment,
 } from '../controllers/departmentController';
 import {
   authMiddleware,
@@ -40,10 +40,10 @@ router.put(
   updateDepartment,
 );
 
-router.patch(
+router.delete(
   '/departments/:id',
   authRolesMiddleware([UserRole.ADMIN]),
-  softDeleteDepartment,
+  DeleteDepartment,
 );
 
 export default router;

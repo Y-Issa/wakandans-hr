@@ -117,13 +117,12 @@ export const updateDepartment = async (req: Request, res: Response) => {
   }
 
   const updateData = req.body;
-  console.log(updateData);
   const { user, ...validData } = updateData;
 
   try {
     const updatedDepartment = await writePrisma.department.update({
       where: { id: idInt, companyId: COMPANY_ID },
-      data: { ...validData, updatedAt: new Date() },
+      data: validData,
       select: minimalDepartmentSelect,
     });
 
@@ -142,7 +141,7 @@ export const updateDepartment = async (req: Request, res: Response) => {
   }
 };
 
-export const softDeleteDepartment = async (req: Request, res: Response) => {
+export const DeleteDepartment = async (req: Request, res: Response) => {
   const { id } = req.params;
   const idInt = parseInt(id, 10);
 
