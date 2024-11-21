@@ -121,11 +121,13 @@ export const updateUser = async (req: Request, res: Response) => {
   }
 
   const updateData = req.body;
+  console.log(updateData);
+  const { user, ...validData } = updateData;
 
   try {
     const updatedUser = await writePrisma.user.update({
       where: { id: idInt, companyId: COMPANY_ID },
-      data: updateData,
+      data: validData,
       select: {
         id: true,
         email: true,

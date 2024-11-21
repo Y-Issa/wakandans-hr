@@ -10,6 +10,7 @@ import helloRouter from './routes/helloRoutes';
 import locationRouter from './routes/locationRoutes';
 import userAuthRouter from './routes/userAuthRoutes';
 import userRouter from './routes/userRoutes';
+import departmentRouter from './routes/departmentRoutes';
 
 if (!process.env.DB_API_PORT) {
   process.env.DB_API_PORT = '5000';
@@ -37,7 +38,13 @@ requiredEnvVars.forEach((envVar) => {
 const swaggerDocument = YAML.load('./openapi.yaml');
 app.use(`/api/v1/docs`, swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-const routers = [helloRouter, locationRouter, userAuthRouter, userRouter];
+const routers = [
+  helloRouter,
+  locationRouter,
+  userAuthRouter,
+  userRouter,
+  departmentRouter,
+];
 
 routers.forEach((router) => {
   app.use(`/api/v1`, router);
