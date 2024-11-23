@@ -26,6 +26,265 @@ components:
       type: apiKey
       in: cookie
       name: session
+  schemas:
+    Location:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "New York Office"
+        country:
+          type: string
+          example: "US"
+        city:
+          type: string
+          example: "New York"
+        address:
+          type: string
+          example: "5th Street - Building 100, first floor"
+        workSetting:
+          type: object
+        users:
+          type: array
+          items:
+            type: object
+        departments:
+          type: array
+          items:
+            type: object
+        teams:
+          type: array
+          items:
+            type: object
+        groups:
+          type: array
+          items:
+            type: object
+        locationStatuses:
+          type: array
+          items:
+            type: object
+        daysOffLocation:
+          type: array
+          items:
+            type: object
+    LocationInput:
+      type: object
+      required:
+        - name
+        - country
+        - city
+        - address
+      properties:
+        name:
+          type: string
+          example: "New York Office"
+        country:
+          type: string
+          example: "US"
+        city:
+          type: string
+          example: "New York"
+        address:
+          type: string
+          example: "5th Street - Building 100, first floor"
+        workSettingId:
+          type: integer
+          example: 2
+    Team:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        locationId:
+          type: integer
+          nullable: true
+        companyId:
+          type: integer
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+    TeamInput:
+      type: object
+      required:
+        - name
+        - description
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        locationId:
+          type: integer
+          nullable: true
+        companyId:
+          type: integer
+    MinimalUser:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        firstName:
+          type: string
+          example: "John"
+        lastName:
+          type: string
+          example: "Doe"
+        email:
+          type: string
+          format: email
+          example: "john.doe@example.com"
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        firstName:
+          type: string
+          example: "John"
+        lastName:
+          type: string
+          example: "Doe"
+        email:
+          type: string
+          format: email
+          example: "john.doe@example.com"
+        role:
+          type: string
+          example: "Admin"
+          enum:
+            - Admin
+            - User
+        location:
+          $ref: "#/components/schemas/Location"
+        reportsTo:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 2
+            firstName:
+              type: string
+              example: "Jane"
+            lastName:
+              type: string
+              example: "Smith"
+    UserInput:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          example: "john.doe@example.com"
+        firstName:
+          type: string
+          example: "John"
+        lastName:
+          type: string
+          example: "Doe"
+        role:
+          type: string
+          example: "User"
+          enum:
+            - Admin
+            - User
+        locationId:
+          type: integer
+          example: 3
+        reportsToId:
+          type: integer
+          example: 2
+    MinimalDepartment:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "Engineering"
+    Department:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "Engineering"
+        description:
+          type: string
+          example: "Handles all engineering tasks."
+        locationId:
+          type: integer
+          example: 5
+    DepartmentCreateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Engineering"
+        description:
+          type: string
+          example: "Handles all engineering tasks."
+        locationId:
+          type: integer
+          example: 5
+    DepartmentUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Updated Department Name"
+        description:
+          type: string
+          example: "Updated description of the department."
+    UserDepartmentRequest:
+      type: object
+      properties:
+        userId:
+          type: integer
+          example: 87
+        departmentId:
+          type: integer
+          example: 4
+    UserInDepartment:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 87
+        firstName:
+          type: string
+          example: "Youssef"
+        lastName:
+          type: string
+          example: "Issa"
+        email:
+          type: string
+          example: "ysf@test.com"
+    SuccessResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Operation completed successfully."
 security:
   - cookieAuth: []
 paths:
@@ -36,7 +295,7 @@ paths:
         - Hello
       security: []
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
@@ -45,7 +304,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: 'Hello, World!'
+                    example: "Hello, World!"
   /locations:
     get:
       summary: Get all locations
@@ -74,23 +333,9 @@ paths:
               schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                      example: 1
-                    name:
-                      type: string
-                      example: 'New York Office'
-                    country:
-                      type: string
-                      example: 'US'
-                    city:
-                      type: string
-                      example: 'New York'
-                    address:
-                      type: string
-                      example: '5th Street - Building 100, first floor'
+                  $ref: '#/components/schemas/Location'
+        500:
+          description: Internal server error
     post:
       summary: Create a new location
       tags:
@@ -100,34 +345,14 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  example: 'New York Office'
-                country:
-                  type: string
-                  example: 'US'
-                city:
-                  type: string
-                  example: 'New York'
-                address:
-                  type: string
-                  example: '5th Street - Building 100, first floor'
-                workSettingId:
-                  type: integer
-                  example: 2
+              $ref: '#/components/schemas/LocationInput'
       responses:
         201:
           description: Location created successfully
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                    example: 1
+                $ref: '#/components/schemas/Location'
   /locations/count:
     get:
       summary: Retrieves the count of locations
@@ -135,7 +360,7 @@ paths:
         - Locations
       responses:
         200:
-          description: The count of departments
+          description: The count of locations
           content:
             application/json:
               schema:
@@ -153,58 +378,18 @@ paths:
         - name: locationId
           in: path
           required: true
+          description: The ID of the location
           schema:
             type: integer
-          description: The ID of the location
       responses:
         200:
           description: A location
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                    example: 1
-                  name:
-                    type: string
-                    example: 'New York Office'
-                  country:
-                    type: string
-                    example: 'US'
-                  city:
-                    type: string
-                    example: 'New York'
-                  address:
-                    type: string
-                    example: '5th Street - Building 100, first floor'
-                  workSetting:
-                    type: object
-                  users:
-                    type: array
-                    items:
-                      type: object
-                  departments:
-                    type: array
-                    items:
-                      type: object
-                  teams:
-                    type: array
-                    items:
-                      type: object
-                  groups:
-                    type: array
-                    items:
-                      type: object
-                  locationStatuses:
-                    type: array
-                    items:
-                      type: object
-                  daysOffLocation:
-                    type: array
-                    items:
-                      type: object
+                $ref: '#/components/schemas/Location'
+        404:
+          description: Location not found
     put:
       summary: Update a location by ID
       tags:
@@ -213,31 +398,15 @@ paths:
         - name: locationId
           in: path
           required: true
+          description: The ID of the location
           schema:
             type: integer
-          description: The ID of the location
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  example: 'New York Office'
-                country:
-                  type: string
-                  example: 'US'
-                city:
-                  type: string
-                  example: 'New York'
-                address:
-                  type: string
-                  example: '5th Street - Building 100, first floor'
-                workSettingId:
-                  type: integer
-                  example: 2
+              $ref: '#/components/schemas/LocationInput'
       responses:
         200:
           description: Location updated successfully
@@ -248,7 +417,7 @@ paths:
                 properties:
                   success:
                     type: string
-                    example: 'Location updated successfully'
+                    example: "Location updated successfully"
     delete:
       summary: Delete a location by ID
       tags:
@@ -257,9 +426,9 @@ paths:
         - name: locationId
           in: path
           required: true
+          description: The ID of the location
           schema:
             type: integer
-          description: The ID of the location
       responses:
         200:
           description: Location deleted successfully
@@ -270,7 +439,7 @@ paths:
                 properties:
                   success:
                     type: string
-                    example: 'Location deleted successfully'
+                    example: "Location deleted successfully"
   /login:
     post:
       summary: Generate a login token for a user
@@ -287,7 +456,7 @@ paths:
                 email:
                   type: string
                   format: email
-                  example: 'user@example.com'
+                  example: "user@example.com"
       security: []
       responses:
         200:
@@ -299,7 +468,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: 'Login token generated and email job created successfully'
+                    example: "Login token generated and email job created successfully"
   /validate-token:
     post:
       summary: Validate a login token
@@ -316,10 +485,10 @@ paths:
                 email:
                   type: string
                   format: email
-                  example: 'user@example.com'
+                  example: "user@example.com"
                 loginToken:
                   type: string
-                  example: '4c2fdef7-9d3b-4c2d-a1b6-9c2bfc51900b'
+                  example: "4c2fdef7-9d3b-4c2d-a1b6-9c2bfc51900b"
       security: []
       responses:
         200:
@@ -331,7 +500,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: 'Login token is valid'
+                    example: "Login token is valid"
   /logout:
     post:
       summary: User logout
@@ -342,7 +511,7 @@ paths:
         required: false
         content: {}
       responses:
-        '200':
+        "200":
           description: Successfully logged out.
   /users:
     get:
@@ -376,7 +545,7 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/MinimalUser'
+                      $ref: "#/components/schemas/MinimalUser"
                   next:
                     type: boolean
                     description: Indicates if there are more pages.
@@ -392,34 +561,16 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  format: email
-                firstName:
-                  type: string
-                lastName:
-                  type: string
-                role:
-                  type: string
-                  enum:
-                    - Admin
-                    - User
-                locationId:
-                  type: integer
-                reportsToId:
-                  type: integer
+              $ref: "#/components/schemas/UserInput"
       responses:
         201:
           description: User created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: "#/components/schemas/User"
         500:
           description: Server error
-
   /users/{id}:
     get:
       tags:
@@ -439,7 +590,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: "#/components/schemas/User"
         404:
           description: User not found
         500:
@@ -461,15 +612,14 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              additionalProperties: true
+              $ref: "#/components/schemas/UserInput"
       responses:
         200:
           description: User updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: "#/components/schemas/User"
         400:
           description: Invalid user ID
         500:
@@ -492,12 +642,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: "#/components/schemas/User"
         400:
           description: Invalid user ID
         500:
           description: Server error
- 
   /departments:
     get:
       summary: Get all departments
@@ -517,15 +666,15 @@ paths:
             type: integer
             default: 0
       responses:
-        '200':
+        "200":
           description: A list of departments
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/MinimalDepartment'
-        '500':
+                  $ref: "#/components/schemas/MinimalDepartment"
+        "500":
           description: Internal server error
     post:
       summary: Create a new department
@@ -536,27 +685,17 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  example: 'Engineering'
-                description:
-                  type: string
-                  example: 'Handles all engineering tasks'
-                locationId:
-                  type: integer
-                  example: 1
+              $ref: "#/components/schemas/DepartmentCreateRequest"
       responses:
-        '201':
+        "201":
           description: Department created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MinimalDepartment'
-        '400':
+                $ref: "#/components/schemas/MinimalDepartment"
+        "400":
           description: Bad request
-        '500':
+        "500":
           description: Internal server error
   /departments/{departmentId}:
     get:
@@ -571,13 +710,13 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: A department
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Department'
-        '404':
+                $ref: "#/components/schemas/Department"
+        "404":
           description: Department not found
     put:
       summary: Update a department by ID
@@ -595,22 +734,17 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                description:
-                  type: string
+              $ref: "#/components/schemas/DepartmentUpdateRequest"
       responses:
-        '200':
+        "200":
           description: Department updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MinimalDepartment'
-        '400':
+                $ref: "#/components/schemas/MinimalDepartment"
+        "400":
           description: Invalid department ID
-        '500':
+        "500":
           description: Internal server error
     delete:
       summary: Soft delete a department by ID
@@ -624,25 +758,20 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: Department soft-deleted successfully
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  success:
-                    type: string
-                    example: 'Department soft-deleted successfully'
-        '400':
+                $ref: "#/components/schemas/SuccessResponse"
+        "400":
           description: Invalid department ID
-        '500':
+        "500":
           description: Internal server error
   /userDepartments:
     post:
       summary: Assign a user to a department
       description: Creates a user-department relationship, assigning a user to a department.
-      operationId: createUserDepartment
       tags:
         - UserDepartment
       requestBody:
@@ -650,37 +779,24 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                userId:
-                  type: integer
-                  example: 87
-                departmentId:
-                  type: integer
-                  example: 4
+              $ref: "#/components/schemas/UserDepartmentRequest"
       responses:
-        '200':
+        "200":
           description: User successfully assigned to department
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "User successfully assigned to department."
-        '400':
+                $ref: "#/components/schemas/SuccessResponse"
+        "400":
           description: Bad request, invalid data
-        '404':
+        "404":
           description: User or department not found
-        '500':
+        "500":
           description: Internal server error
-
   /userDepartments/user/{userId}:
     get:
       summary: Get all departments assigned to a user
       description: Retrieves all departments that a user is assigned to.
-      operationId: getDepartmentsForUser
       tags:
         - UserDepartment
       parameters:
@@ -691,34 +807,22 @@ paths:
             type: integer
           description: ID of the user whose departments are being retrieved
       responses:
-        '200':
+        "200":
           description: List of departments assigned to user
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                      example: 4
-                    name:
-                      type: string
-                      example: "Marketing"
-                    description:
-                      type: string
-                      example: "Handles marketing and outreach"
-        '404':
+                  $ref: "#/components/schemas/MinimalDepartment"
+        "404":
           description: User not found
-        '500':
+        "500":
           description: Internal server error
-
   /userDepartments/department/{departmentId}:
     get:
       summary: Get all users assigned to a department
       description: Retrieves all users assigned to a particular department.
-      operationId: getUsersForDepartment
       tags:
         - UserDepartment
       parameters:
@@ -729,37 +833,22 @@ paths:
             type: integer
           description: ID of the department whose users are being retrieved
       responses:
-        '200':
+        "200":
           description: List of users assigned to department
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                      example: 87
-                    firstName:
-                      type: string
-                      example: "Youssef"
-                    lastName:
-                      type: string
-                      example: "Issa"
-                    email:
-                      type: string
-                      example: "ysf@test.com"
-        '404':
+                  $ref: "#/components/schemas/UserInDepartment"
+        "404":
           description: Department not found
-        '500':
+        "500":
           description: Internal server error
-
   /userDepartments/user/{userId}/department/{departmentId}:
     delete:
       summary: Remove a user from a department
       description: Deletes the user-department relationship, effectively removing the user from the department.
-      operationId: deleteUserDepartment
       tags:
         - UserDepartment
       parameters:
@@ -776,76 +865,156 @@ paths:
             type: integer
           description: ID of the department from which the user will be removed
       responses:
-        '200':
+        "200":
           description: User successfully removed from department
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "User successfully removed from department."
-        '404':
+                $ref: "#/components/schemas/SuccessResponse"
+        "404":
           description: User or department not found
+        "500":
+          description: Internal server error
+  /teams:
+    get:
+      summary: Get all teams
+      tags:
+        - Teams
+      parameters:
+        - name: page
+          in: query
+          description: Page number (default: 0)
+          required: false
+          schema:
+            type: integer
+            default: 0
+        - name: limit
+          in: query
+          description: Number of teams per page (default: 10)
+          required: false
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: A list of teams
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Team'
         '500':
           description: Internal server error
-
-components:
-  schemas:
-    MinimalUser:
-      type: object
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-        email:
-          type: string
-          format: email
-        role:
-          type: string
-    User:
-      type: object
-      properties:
-        id:
-          type: integer
-        email:
-          type: string
-          format: email
-        firstName:
-          type: string
-        lastName:
-          type: string
-        role:
-          type: string
-          enum:
-            - Admin
-            - User
-    MinimalDepartment:
-      type: object
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-        description:
-          type: string
-    Department:
-      type: object
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-        description:
-          type: string
-        location:
-          $ref: '#/components/schemas/MinimalLocation'
-    MinimalLocation:
-      type: object
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
+    post:
+      summary: Create a new team
+      description: Create a new team with the given details.
+      tags:
+        - Teams
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamInput'
+      responses:
+        201:
+          description: Team created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        400:
+          description: Invalid input
+        401:
+          description: Unauthorized
+        500:
+          description: Server error
+  /teams/{id}:
+    get:
+      summary: Get a team by ID
+      description: Retrieve a specific team by its ID.
+      tags:
+        - Teams
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the team
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Team details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        401:
+          description: Unauthorized
+        404:
+          description: Team not found
+        500:
+          description: Server error
+    put:
+      summary: Update a team
+      description: Update the details of an existing team by ID.
+      tags:
+        - Teams
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the team to update
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamInput'
+      responses:
+        200:
+          description: Team updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        400:
+          description: Invalid input
+        401:
+          description: Unauthorized
+        404:
+          description: Team not found
+        500:
+          description: Server error
+    delete:
+      summary: Delete (soft delete) a team
+      description: Soft delete a team by marking it as inactive and setting the `deletedAt` field.
+      tags:
+        - Teams
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the team to delete
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Team deleted successfully
+        401:
+          description: Unauthorized
+        404:
+          description: Team not found
+        500:
+          description: Server error

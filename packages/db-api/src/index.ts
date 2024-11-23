@@ -12,6 +12,7 @@ import userAuthRouter from './routes/userAuthRoutes';
 import userRouter from './routes/userRoutes';
 import departmentRouter from './routes/departmentRoutes';
 import userDepartmentRouter from './routes/userDepartmentRoutes';
+import teamRouter from './routes/teamRoutes';
 
 if (!process.env.DB_API_PORT) {
   process.env.DB_API_PORT = '5000';
@@ -46,6 +47,7 @@ const routers = [
   userRouter,
   departmentRouter,
   userDepartmentRouter,
+  teamRouter,
 ];
 
 routers.forEach((router) => {
