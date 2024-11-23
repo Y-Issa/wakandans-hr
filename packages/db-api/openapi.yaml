@@ -285,6 +285,24 @@ components:
         message:
           type: string
           example: "Operation completed successfully."
+    UserTeamResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "User successfully assigned to the team"
+        data:
+          type: object
+          properties:
+            userId:
+              type: integer
+              example: 1
+            teamId:
+              type: integer
+              example: 101
+            active:
+              type: boolean
+              example: true
 security:
   - cookieAuth: []
 paths:
@@ -1018,3 +1036,123 @@ paths:
           description: Team not found
         500:
           description: Server error
+  /userTeams:
+    post:
+      summary: Assign a user to a team
+      description: Creates a user-team relationship, assigning a user to a team.
+      tags:
+        - UserTeams
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: integer
+                  description: The ID of the user
+                  example: 1
+                teamId:
+                  type: integer
+                  description: The ID of the team
+                  example: 101
+                active:
+                  type: boolean
+                  description: Whether the user is actively assigned to the team (default: true)
+                  example: true
+      responses:
+        "201":
+          description: User successfully assigned to the team
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserTeamResponse'
+        "400":
+          description: Bad request (missing or invalid parameters)
+        "409":
+          description: User is already assigned to the team
+        "500":
+          description: Internal server error
+  /userTeams/user/{userId}:
+    get:
+      summary: Get all teams assigned to a user
+      description: Retrieves all teams that a user is assigned to.
+      tags:
+        - UserTeams
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: List of teams assigned to the user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Team'
+        "404":
+          description: User not found
+        "500":
+          description: Internal server error
+  /userTeams/team/{teamId}:
+    get:
+      summary: Get all users assigned to a team
+      description: Retrieves all users assigned to a particular team.
+      tags:
+        - UserTeams
+      parameters:
+        - name: teamId
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 101
+      responses:
+        "200":
+          description: List of users assigned to the team
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        "404":
+          description: Team not found
+        "500":
+          description: Internal server error
+  /userTeams/user/{userId}/team/{teamId}:
+    delete:
+      summary: Remove a user from a team
+      description: Deletes the user-team relationship, effectively removing the user from the team.
+      tags:
+        - UserTeams
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+        - name: teamId
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 101
+      responses:
+        "200":
+          description: User successfully removed from the team
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserTeamResponse'
+        "404":
+          description: User or team not found
+        "500":
+          description: Internal server error

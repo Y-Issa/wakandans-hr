@@ -3,7 +3,6 @@ import { writePrisma, readPrisma } from '../prisma';
 import { handle500Response } from '../helpers';
 import { COMPANY_ID } from '../constants';
 
-// Select minimal fields for team responses
 const minimalTeamSelect = {
   id: true,
   name: true,
