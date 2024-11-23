@@ -1247,7 +1247,6 @@ paths:
                 $ref: '#/components/schemas/Group'
         500:
           description: Server error
-
   /groups/{id}:
     get:
       tags:
@@ -1323,3 +1322,142 @@ paths:
           description: Group not found
         500:
           description: Server error
+  /userGroups:
+    post:
+      summary: Assign a user to a group
+      description: Assign a user to a group. If the user is already assigned, their status will be updated to active.
+      tags:
+        - User Groups
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userId
+                - groupId
+              properties:
+                userId:
+                  type: integer
+                  description: The ID of the user.
+                groupId:
+                  type: integer
+                  description: The ID of the group.
+                active:
+                  type: boolean
+                  description: Indicates if the user is active in the group. Defaults to true.
+      responses:
+        '201':
+          description: User successfully assigned to group.
+        '400':
+          description: Missing required fields.
+        '409':
+          description: User is already assigned to this group.
+        '500':
+          description: Server error.
+
+  /userGroups/user/{userId}:
+    get:
+      summary: Get groups for a user
+      description: Retrieve all groups a specific user is assigned to.
+      tags:
+        - User Groups
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the user.
+      responses:
+        '200':
+          description: User groups retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        active:
+                          type: boolean
+        '400':
+          description: Missing userId parameter.
+        '500':
+          description: Server error.
+
+  /userGroups/group/{groupId}:
+    get:
+      summary: Get users for a group
+      description: Retrieve all users assigned to a specific group.
+      tags:
+        - User Groups
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the group.
+      responses:
+        '200':
+          description: Group users retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        email:
+                          type: string
+        '400':
+          description: Missing groupId parameter.
+        '500':
+          description: Server error.
+
+  /userGroups/user/{userId}/group/{groupId}:
+    delete:
+      summary: Remove user from a group
+      description: Deactivate the association between a user and a group.
+      tags:
+        - User Groups
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the user.
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the group.
+      responses:
+        '200':
+          description: User successfully removed from group.
+        '400':
+          description: Missing userId or groupId parameter.
+        '500':
+          description: Server error.
