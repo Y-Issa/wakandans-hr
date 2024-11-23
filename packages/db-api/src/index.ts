@@ -6,7 +6,6 @@ import cors from 'cors';
 
 import { writePrisma, readPrisma, adminPrisma } from './prisma';
 
-import helloRouter from './routes/helloRoutes';
 import locationRouter from './routes/locationRoutes';
 import userAuthRouter from './routes/userAuthRoutes';
 import userRouter from './routes/userRoutes';
@@ -43,7 +42,6 @@ const swaggerDocument = YAML.load('./openapi.yaml');
 app.use(`/api/v1/docs`, swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const routers = [
-  helloRouter,
   locationRouter,
   userAuthRouter,
   userRouter,
