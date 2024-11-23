@@ -341,23 +341,6 @@ components:
 security:
   - cookieAuth: []
 paths:
-  /hello:
-    get:
-      summary: A simple hello world endpoint
-      tags:
-        - Hello
-      security: []
-      responses:
-        "200":
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Hello, World!"
   /locations:
     get:
       summary: Get all locations
