@@ -19,6 +19,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
   try {
     const users = await readPrisma.user.findMany({
       where: {
+        companyId: COMPANY_ID,
         deletedAt: null,
       },
       select: minimalUserSelect,
@@ -127,13 +128,7 @@ export const updateUser = async (req: Request, res: Response) => {
     const updatedUser = await writePrisma.user.update({
       where: { id: idInt, companyId: COMPANY_ID },
       data: validData,
-      select: {
-        id: true,
-        email: true,
-        firstName: true,
-        lastName: true,
-        role: true,
-      },
+      select: validData,
     });
 
     res

@@ -15,6 +15,7 @@ import teamRouter from './routes/teamRoutes';
 import userTeamRouter from './routes/userTeamRoutes';
 import groupRouter from './routes/groupRoutes';
 import userGroupRouter from './routes/userGroupRoutes';
+import dayOffRouter from './routes/dayOffRoutes';
 
 if (!process.env.DB_API_PORT) {
   process.env.DB_API_PORT = '5000';
@@ -52,6 +53,7 @@ const routers = [
   userTeamRouter,
   groupRouter,
   userGroupRouter,
+  dayOffRouter,
 ];
 
 routers.forEach((router) => {

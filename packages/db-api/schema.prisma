@@ -267,18 +267,51 @@ model UserDepartment {
   @@schema("public")
 }
 
-// Holidays - moslty entered by the admin once per year 
+model CompanyConfiguration {
+  id          Int                          @id @default(autoincrement())
+  companyId   Int
+  logo        String?
+  description String?
+  holidays    CompanyConfigurationDayOff[]
+  createdAt   DateTime                     @default(now())
+  updatedAt   DateTime                     @updatedAt
+  deletedAt   DateTime?
+
+  company Company @relation(fields: [companyId], references: [id])
+
+  @@index([companyId])
+  @@index([deletedAt])
+  @@schema("public")
+}
+
 model DayOff {
-  id        Int       @id @default(autoincrement())
+  id        Int                          @id @default(autoincrement())
   name      String
   fromDate  DateTime
   toDate    DateTime
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt DateTime                     @default(now())
+  updatedAt DateTime                     @updatedAt
   deletedAt DateTime?
+  holidays  CompanyConfigurationDayOff[]
 
   @@index([fromDate, toDate])
   @@index([deletedAt])
+  @@schema("public")
+}
+
+model CompanyConfigurationDayOff {
+  id                     Int      @id @default(autoincrement())
+  companyConfigurationId Int
+  dayOffId               Int
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  companyConfiguration CompanyConfiguration @relation(fields: [companyConfigurationId], references: [id])
+  dayOff               DayOff               @relation(fields: [dayOffId], references: [id])
+
+  @@unique([companyConfigurationId, dayOffId])
+  @@index([companyConfigurationId])
+  @@index([dayOffId])
   @@schema("public")
 }
 
@@ -290,11 +323,12 @@ model Company {
   deletedAt             DateTime?
   externalEmailsAllowed Boolean   @default(false)
 
-  locations   Location[]
-  departments Department[]
-  teams       Team[]
-  groups      Group[]
-  users       User[]
+  companyConfiguration CompanyConfiguration[]
+  locations            Location[]
+  departments          Department[]
+  teams                Team[]
+  groups               Group[]
+  users                User[]
 
   @@index([deletedAt])
   @@schema("public")

@@ -180,6 +180,19 @@ CREATE TABLE "public"."UserDepartment" (
 );
 
 -- CreateTable
+CREATE TABLE "public"."CompanyConfiguration" (
+    "id" SERIAL NOT NULL,
+    "companyId" INTEGER NOT NULL,
+    "logo" TEXT,
+    "description" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deletedAt" TIMESTAMP(3),
+
+    CONSTRAINT "CompanyConfiguration_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "public"."DayOff" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
@@ -190,6 +203,17 @@ CREATE TABLE "public"."DayOff" (
     "deletedAt" TIMESTAMP(3),
 
     CONSTRAINT "DayOff_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."CompanyConfigurationDayOff" (
+    "id" SERIAL NOT NULL,
+    "companyConfigurationId" INTEGER NOT NULL,
+    "dayOffId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "CompanyConfigurationDayOff_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -335,10 +359,25 @@ CREATE INDEX "Group_companyId_locationId_idx" ON "public"."Group"("companyId", "
 CREATE INDEX "Group_deletedAt_idx" ON "public"."Group"("deletedAt");
 
 -- CreateIndex
+CREATE INDEX "CompanyConfiguration_companyId_idx" ON "public"."CompanyConfiguration"("companyId");
+
+-- CreateIndex
+CREATE INDEX "CompanyConfiguration_deletedAt_idx" ON "public"."CompanyConfiguration"("deletedAt");
+
+-- CreateIndex
 CREATE INDEX "DayOff_fromDate_toDate_idx" ON "public"."DayOff"("fromDate", "toDate");
 
 -- CreateIndex
 CREATE INDEX "DayOff_deletedAt_idx" ON "public"."DayOff"("deletedAt");
+
+-- CreateIndex
+CREATE INDEX "CompanyConfigurationDayOff_companyConfigurationId_idx" ON "public"."CompanyConfigurationDayOff"("companyConfigurationId");
+
+-- CreateIndex
+CREATE INDEX "CompanyConfigurationDayOff_dayOffId_idx" ON "public"."CompanyConfigurationDayOff"("dayOffId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "CompanyConfigurationDayOff_companyConfigurationId_dayOffId_key" ON "public"."CompanyConfigurationDayOff"("companyConfigurationId", "dayOffId");
 
 -- CreateIndex
 CREATE INDEX "Company_deletedAt_idx" ON "public"."Company"("deletedAt");
@@ -351,6 +390,9 @@ CREATE INDEX "UserHistory_userId_idx" ON "private"."UserHistory"("userId");
 
 -- CreateIndex
 CREATE INDEX "WorkSetting_deletedAt_idx" ON "public"."WorkSetting"("deletedAt");
+
+-- AddForeignKey
+ALTER TABLE "public"."User" ADD CONSTRAINT "User_companyId_fkey" FOREIGN KEY ("companyId") REFERENCES "public"."Company"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "public"."User" ADD CONSTRAINT "User_reportsToId_fkey" FOREIGN KEY ("reportsToId") REFERENCES "public"."User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -414,3 +456,12 @@ ALTER TABLE "public"."UserDepartment" ADD CONSTRAINT "UserDepartment_userId_fkey
 
 -- AddForeignKey
 ALTER TABLE "public"."UserDepartment" ADD CONSTRAINT "UserDepartment_departmentId_fkey" FOREIGN KEY ("departmentId") REFERENCES "public"."Department"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."CompanyConfiguration" ADD CONSTRAINT "CompanyConfiguration_companyId_fkey" FOREIGN KEY ("companyId") REFERENCES "public"."Company"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."CompanyConfigurationDayOff" ADD CONSTRAINT "CompanyConfigurationDayOff_companyConfigurationId_fkey" FOREIGN KEY ("companyConfigurationId") REFERENCES "public"."CompanyConfiguration"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."CompanyConfigurationDayOff" ADD CONSTRAINT "CompanyConfigurationDayOff_dayOffId_fkey" FOREIGN KEY ("dayOffId") REFERENCES "public"."DayOff"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
