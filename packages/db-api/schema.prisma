@@ -272,6 +272,7 @@ model CompanyConfiguration {
   companyId   Int
   logo        String?
   description String?
+  website     String?
   holidays    CompanyConfigurationDayOff[]
   createdAt   DateTime                     @default(now())
   updatedAt   DateTime                     @updatedAt

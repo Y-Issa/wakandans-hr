@@ -10,6 +10,10 @@ import { seedStatuses } from './statuses';
 import { seedTeams } from './teams';
 import { seedUsers } from './users';
 import { seedWorkSettings } from './workSettings';
+import {
+  seedCompanyConfigurations,
+  seedCompanyConfigurationsDaysOff,
+} from './companyConfigurations';
 
 const main = async () => {
   const company = await readPrisma.company.findMany({
@@ -38,6 +42,8 @@ const main = async () => {
   await seedProfiles();
   await seedDaysOff();
   await seedCalendarStatuses();
+  await seedCompanyConfigurations();
+  await seedCompanyConfigurationsDaysOff();
 
   console.log('Database seeded successfully!');
 

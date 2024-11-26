@@ -185,6 +185,7 @@ CREATE TABLE "public"."CompanyConfiguration" (
     "companyId" INTEGER NOT NULL,
     "logo" TEXT,
     "description" TEXT,
+    "website" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deletedAt" TIMESTAMP(3),
