@@ -46,7 +46,7 @@ export const getDayOffById = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
-    const dayOff = await readPrisma.dayOff.findFirst({
+    const dayOff = await readPrisma.dayOff.findUnique({
       where: {
         id: parseInt(id),
         deletedAt: null,

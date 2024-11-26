@@ -48,7 +48,7 @@ export const getGroupById = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
-    const group = await readPrisma.group.findFirst({
+    const group = await readPrisma.group.findUnique({
       where: {
         id: parseInt(id),
         companyId: COMPANY_ID,
