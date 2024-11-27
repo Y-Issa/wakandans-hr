@@ -10,11 +10,8 @@ import locationRouter from './routes/locationRoutes';
 import userAuthRouter from './routes/userAuthRoutes';
 import userRouter from './routes/userRoutes';
 import departmentRouter from './routes/departmentRoutes';
-import userDepartmentRouter from './routes/userDepartmentRoutes';
 import teamRouter from './routes/teamRoutes';
-import userTeamRouter from './routes/userTeamRoutes';
 import groupRouter from './routes/groupRoutes';
-import userGroupRouter from './routes/userGroupRoutes';
 
 if (!process.env.DB_API_PORT) {
   process.env.DB_API_PORT = '5000';
@@ -47,11 +44,8 @@ const routers = [
   userAuthRouter,
   userRouter,
   departmentRouter,
-  userDepartmentRouter,
   teamRouter,
-  userTeamRouter,
   groupRouter,
-  userGroupRouter,
 ];
 
 routers.forEach((router) => {
