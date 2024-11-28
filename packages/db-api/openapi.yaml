@@ -35,16 +35,17 @@ components:
           example: 1
         name:
           type: string
-          example: "New York Office"
+          example: 'New York Office'
         country:
           type: string
-          example: "US"
+          example: 'US'
         city:
           type: string
-          example: "New York"
+          example: 'New York'
         address:
           type: string
-          example: "5th Street - Building 100, first floor"
+          example: '5th Street - Building 100, first floor'
+
         workSetting:
           type: object
         users:
@@ -81,16 +82,16 @@ components:
       properties:
         name:
           type: string
-          example: "New York Office"
+          example: 'New York Office'
         country:
           type: string
-          example: "US"
+          example: 'US'
         city:
           type: string
-          example: "New York"
+          example: 'New York'
         address:
           type: string
-          example: "5th Street - Building 100, first floor"
+          example: '5th Street - Building 100, first floor'
         workSettingId:
           type: integer
           example: 2
@@ -141,14 +142,14 @@ components:
           example: 1
         firstName:
           type: string
-          example: "John"
+          example: 'John'
         lastName:
           type: string
-          example: "Doe"
+          example: 'Doe'
         email:
           type: string
           format: email
-          example: "john.doe@example.com"
+          example: 'john.doe@example.com'
     User:
       type: object
       properties:
@@ -157,22 +158,23 @@ components:
           example: 1
         firstName:
           type: string
-          example: "John"
+          example: 'John'
         lastName:
           type: string
-          example: "Doe"
+          example: 'Doe'
         email:
           type: string
           format: email
-          example: "john.doe@example.com"
+          example: 'john.doe@example.com'
         role:
           type: string
-          example: "Admin"
+          example: 'Admin'
           enum:
             - Admin
             - User
         location:
-          $ref: "#/components/schemas/Location"
+          $ref: '#/components/schemas/Location'
+
         reportsTo:
           type: object
           properties:
@@ -181,26 +183,26 @@ components:
               example: 2
             firstName:
               type: string
-              example: "Jane"
+              example: 'Jane'
             lastName:
               type: string
-              example: "Smith"
+              example: 'Smith'
     UserInput:
       type: object
       properties:
         email:
           type: string
           format: email
-          example: "john.doe@example.com"
+          example: 'john.doe@example.com'
         firstName:
           type: string
-          example: "John"
+          example: 'John'
         lastName:
           type: string
-          example: "Doe"
+          example: 'Doe'
         role:
           type: string
-          example: "User"
+          example: 'User'
           enum:
             - Admin
             - User
@@ -218,7 +220,7 @@ components:
           example: 1
         name:
           type: string
-          example: "Engineering"
+          example: 'Engineering'
     Department:
       type: object
       properties:
@@ -227,10 +229,10 @@ components:
           example: 1
         name:
           type: string
-          example: "Engineering"
+          example: 'Engineering'
         description:
           type: string
-          example: "Handles all engineering tasks."
+          example: 'Handles all engineering tasks.'
         locationId:
           type: integer
           example: 5
@@ -239,10 +241,10 @@ components:
       properties:
         name:
           type: string
-          example: "Engineering"
+          example: 'Engineering'
         description:
           type: string
-          example: "Handles all engineering tasks."
+          example: 'Handles all engineering tasks.'
         locationId:
           type: integer
           example: 5
@@ -251,10 +253,10 @@ components:
       properties:
         name:
           type: string
-          example: "Updated Department Name"
+          example: 'Updated Department Name'
         description:
           type: string
-          example: "Updated description of the department."
+          example: 'Updated description of the department.'
     UserDepartmentRequest:
       type: object
       properties:
@@ -272,25 +274,25 @@ components:
           example: 87
         firstName:
           type: string
-          example: "Youssef"
+          example: 'Youssef'
         lastName:
           type: string
-          example: "Issa"
+          example: 'Issa'
         email:
           type: string
-          example: "ysf@test.com"
+          example: 'ysf@test.com'
     SuccessResponse:
       type: object
       properties:
         message:
           type: string
-          example: "Operation completed successfully."
+          example: 'Operation completed successfully.'
     UserTeamResponse:
       type: object
       properties:
         message:
           type: string
-          example: "User successfully assigned to the team"
+          example: 'User successfully assigned to the team'
         data:
           type: object
           properties:
@@ -303,26 +305,44 @@ components:
             active:
               type: boolean
               example: true
+    Group:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Engineering Team
+        description:
+          type: string
+          example: A group focused on engineering tasks.
+        locationId:
+          type: integer
+          example: 2
+        createdAt:
+          type: string
+          format: date-time
+          example: '2024-01-01T12:00:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          example: '2024-01-01T12:30:00Z'
+    GroupInput:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Marketing Team
+        description:
+          type: string
+          example: A group for marketing initiatives.
+        locationId:
+          type: integer
+          example: 3
 security:
   - cookieAuth: []
 paths:
-  /hello:
-    get:
-      summary: A simple hello world endpoint
-      tags:
-        - Hello
-      security: []
-      responses:
-        "200":
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Hello, World!"
   /locations:
     get:
       summary: Get all locations
@@ -579,7 +599,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UserInput"
+              $ref: '#/components/schemas/UserInput'
       responses:
         201:
           description: User created successfully
@@ -630,7 +650,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UserInput"
+              $ref: '#/components/schemas/UserInput'
       responses:
         200:
           description: User updated successfully
@@ -703,7 +723,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/DepartmentCreateRequest"
+              $ref: '#/components/schemas/DepartmentCreateRequest'
       responses:
         "201":
           description: Department created successfully
@@ -752,7 +772,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/DepartmentUpdateRequest"
+              $ref: '#/components/schemas/DepartmentUpdateRequest'
       responses:
         "200":
           description: Department updated successfully
@@ -781,8 +801,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SuccessResponse"
-        "400":
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
           description: Invalid department ID
         "500":
           description: Internal server error
@@ -797,15 +817,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UserDepartmentRequest"
+              $ref: '#/components/schemas/UserDepartmentRequest'
       responses:
         "200":
           description: User successfully assigned to department
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SuccessResponse"
-        "400":
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
           description: Bad request, invalid data
         "404":
           description: User or department not found
@@ -832,8 +852,8 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/MinimalDepartment"
-        "404":
+                  $ref: '#/components/schemas/MinimalDepartment'
+        '404':
           description: User not found
         "500":
           description: Internal server error
@@ -858,8 +878,8 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/UserInDepartment"
-        "404":
+                  $ref: '#/components/schemas/UserInDepartment'
+        '404':
           description: Department not found
         "500":
           description: Internal server error
@@ -888,8 +908,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SuccessResponse"
-        "404":
+                $ref: '#/components/schemas/SuccessResponse'
+        '404':
           description: User or department not found
         "500":
           description: Internal server error
@@ -909,6 +929,37 @@ paths:
         - name: limit
           in: query
           description: Number of teams per page (default: 10)
+          required: false
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: A list of teams
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Team'
+        '500':
+          description: Internal server error
+  /teams:
+    get:
+      summary: Get all teams
+      tags:
+        - Teams
+      parameters:
+        - name: page
+          in: query
+          description: 'Page number (default: 0)'
+          required: false
+          schema:
+            type: integer
+            default: 0
+        - name: limit
+          in: query
+          description: 'Number of teams per page (default: 10)'
           required: false
           schema:
             type: integer
@@ -1059,20 +1110,21 @@ paths:
                   example: 101
                 active:
                   type: boolean
-                  description: Whether the user is actively assigned to the team (default: true)
+                  description: 'Whether the user is actively assigned to the team (default: true)'
                   example: true
       responses:
-        "201":
+        '201':
           description: User successfully assigned to the team
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserTeamResponse'
-        "400":
+        '400':
           description: Bad request (missing or invalid parameters)
-        "409":
+        '409':
           description: User is already assigned to the team
-        "500":
+        '500':
+
           description: Internal server error
   /userTeams/user/{userId}:
     get:
@@ -1088,7 +1140,8 @@ paths:
             type: integer
             example: 1
       responses:
-        "200":
+        '200':
+
           description: List of teams assigned to the user
           content:
             application/json:
@@ -1096,9 +1149,9 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Team'
-        "404":
+        '404':
           description: User not found
-        "500":
+        '500':
           description: Internal server error
   /userTeams/team/{teamId}:
     get:
@@ -1114,7 +1167,8 @@ paths:
             type: integer
             example: 101
       responses:
-        "200":
+        '200':
+
           description: List of users assigned to the team
           content:
             application/json:
@@ -1122,9 +1176,9 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/User'
-        "404":
+        '404':
           description: Team not found
-        "500":
+        '500':
           description: Internal server error
   /userTeams/user/{userId}/team/{teamId}:
     delete:
@@ -1146,13 +1200,283 @@ paths:
             type: integer
             example: 101
       responses:
-        "200":
+        '200':
           description: User successfully removed from the team
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserTeamResponse'
-        "404":
+        '404':
           description: User or team not found
-        "500":
+        '500':
           description: Internal server error
+  /groups:
+    get:
+      tags:
+        - Group
+      summary: Get all groups
+      description: Retrieve a list of all groups with pagination.
+      parameters:
+        - name: page
+          in: query
+          description: Page number for pagination (default is 0)
+          schema:
+            type: integer
+            example: 0
+        - name: limit
+          in: query
+          description: Number of groups to fetch per page (default is 10)
+          schema:
+            type: integer
+            example: 10
+      responses:
+        200:
+          description: A list of groups
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Group'
+                  next:
+                    type: boolean
+                    description: Whether there are more groups to fetch
+        500:
+          description: Server error
+    post:
+      tags:
+        - Group
+      summary: Create a new group
+      description: Add a new group to the system.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupInput'
+      responses:
+        201:
+          description: Group created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+        500:
+          description: Server error
+  /groups/{id}:
+    get:
+      tags:
+        - Group
+      summary: Get a group by ID
+      description: Retrieve a single group by its unique ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique ID of the group
+          schema:
+            type: integer
+            example: 1
+      responses:
+        200:
+          description: Group details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+        404:
+          description: Group not found
+        500:
+          description: Server error
+    put:
+      tags:
+        - Group
+      summary: Update a group
+      description: Update the details of an existing group.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique ID of the group
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupInput'
+      responses:
+        200:
+          description: Group updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+        404:
+          description: Group not found
+        500:
+          description: Server error
+    delete:
+      tags:
+        - Group
+      summary: Delete a group
+      description: Soft delete a group by marking it as inactive.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique ID of the group
+          schema:
+            type: integer
+            example: 1
+      responses:
+        200:
+          description: Group deleted successfully
+        404:
+          description: Group not found
+        500:
+          description: Server error
+  /userGroups:
+    post:
+      summary: Assign a user to a group
+      description: Assign a user to a group. If the user is already assigned, their status will be updated to active.
+      tags:
+        - User Groups
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userId
+                - groupId
+              properties:
+                userId:
+                  type: integer
+                  description: The ID of the user.
+                groupId:
+                  type: integer
+                  description: The ID of the group.
+                active:
+                  type: boolean
+                  description: Indicates if the user is active in the group. Defaults to true.
+      responses:
+        '201':
+          description: User successfully assigned to group.
+        '400':
+          description: Missing required fields.
+        '409':
+          description: User is already assigned to this group.
+        '500':
+          description: Server error.
+
+  /userGroups/user/{userId}:
+    get:
+      summary: Get groups for a user
+      description: Retrieve all groups a specific user is assigned to.
+      tags:
+        - User Groups
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the user.
+      responses:
+        '200':
+          description: User groups retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        active:
+                          type: boolean
+        '400':
+          description: Missing userId parameter.
+        '500':
+          description: Server error.
+
+  /userGroups/group/{groupId}:
+    get:
+      summary: Get users for a group
+      description: Retrieve all users assigned to a specific group.
+      tags:
+        - User Groups
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the group.
+      responses:
+        '200':
+          description: Group users retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        email:
+                          type: string
+        '400':
+          description: Missing groupId parameter.
+        '500':
+          description: Server error.
+
+  /userGroups/user/{userId}/group/{groupId}:
+    delete:
+      summary: Remove user from a group
+      description: Deactivate the association between a user and a group.
+      tags:
+        - User Groups
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the user.
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the group.
+      responses:
+        '200':
+          description: User successfully removed from group.
+        '400':
+          description: Missing userId or groupId parameter.
+        '500':
+          description: Server error.

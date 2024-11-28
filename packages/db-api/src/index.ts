@@ -6,7 +6,6 @@ import cors from 'cors';
 
 import { writePrisma, readPrisma, adminPrisma } from './prisma';
 
-import helloRouter from './routes/helloRoutes';
 import locationRouter from './routes/locationRoutes';
 import userAuthRouter from './routes/userAuthRoutes';
 import userRouter from './routes/userRoutes';
@@ -14,6 +13,8 @@ import departmentRouter from './routes/departmentRoutes';
 import userDepartmentRouter from './routes/userDepartmentRoutes';
 import teamRouter from './routes/teamRoutes';
 import userTeamRouter from './routes/userTeamRoutes';
+import groupRouter from './routes/groupRoutes';
+import userGroupRouter from './routes/userGroupRoutes';
 
 if (!process.env.DB_API_PORT) {
   process.env.DB_API_PORT = '5000';
@@ -42,7 +43,6 @@ const swaggerDocument = YAML.load('./openapi.yaml');
 app.use(`/api/v1/docs`, swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const routers = [
-  helloRouter,
   locationRouter,
   userAuthRouter,
   userRouter,
@@ -50,6 +50,8 @@ const routers = [
   userDepartmentRouter,
   teamRouter,
   userTeamRouter,
+  groupRouter,
+  userGroupRouter,
 ];
 
 routers.forEach((router) => {
