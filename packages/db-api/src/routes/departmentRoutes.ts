@@ -6,6 +6,10 @@ import {
   createDepartment,
   updateDepartment,
   DeleteDepartment,
+  assignUserDepartment,
+  getDepartmentsForUser,
+  getUsersForDepartment,
+  deleteUserDepartment,
 } from '../controllers/departmentController';
 import {
   authMiddleware,
@@ -15,6 +19,7 @@ import {
 const router = express.Router();
 
 router.use('/departments', authMiddleware);
+router.use('/userDepartments', authMiddleware);
 
 router.get(
   '/departments',
@@ -44,6 +49,31 @@ router.delete(
   '/departments/:id',
   authRolesMiddleware([UserRole.ADMIN]),
   DeleteDepartment,
+);
+
+// userDepartmentRoutes
+router.post(
+  '/userDepartments',
+  authRolesMiddleware([UserRole.ADMIN]),
+  assignUserDepartment,
+);
+
+router.get(
+  '/userDepartments/user/:userId',
+  authRolesMiddleware([UserRole.ADMIN]),
+  getDepartmentsForUser,
+);
+
+router.get(
+  '/userDepartments/department/:departmentId',
+  authRolesMiddleware([UserRole.ADMIN]),
+  getUsersForDepartment,
+);
+
+router.delete(
+  '/userDepartments/user/:userId/department/:departmentId',
+  authRolesMiddleware([UserRole.ADMIN]),
+  deleteUserDepartment,
 );
 
 export default router;

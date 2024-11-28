@@ -45,7 +45,6 @@ components:
         address:
           type: string
           example: '5th Street - Building 100, first floor'
-
         workSetting:
           type: object
         users:
@@ -174,7 +173,6 @@ components:
             - User
         location:
           $ref: '#/components/schemas/Location'
-
         reportsTo:
           type: object
           properties:
@@ -911,37 +909,6 @@ paths:
                 $ref: '#/components/schemas/SuccessResponse'
         '404':
           description: User or department not found
-        "500":
-          description: Internal server error
-  /teams:
-    get:
-      summary: Get all teams
-      tags:
-        - Teams
-      parameters:
-        - name: page
-          in: query
-          description: Page number (default: 0)
-          required: false
-          schema:
-            type: integer
-            default: 0
-        - name: limit
-          in: query
-          description: Number of teams per page (default: 10)
-          required: false
-          schema:
-            type: integer
-            default: 10
-      responses:
-        '200':
-          description: A list of teams
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Team'
         '500':
           description: Internal server error
   /teams:
@@ -1124,7 +1091,6 @@ paths:
         '409':
           description: User is already assigned to the team
         '500':
-
           description: Internal server error
   /userTeams/user/{userId}:
     get:
@@ -1141,7 +1107,6 @@ paths:
             example: 1
       responses:
         '200':
-
           description: List of teams assigned to the user
           content:
             application/json:
@@ -1168,7 +1133,6 @@ paths:
             example: 101
       responses:
         '200':
-
           description: List of users assigned to the team
           content:
             application/json:
@@ -1414,7 +1378,6 @@ paths:
           description: Missing userId parameter.
         '500':
           description: Server error.
-
   /userGroups/group/{groupId}:
     get:
       summary: Get users for a group

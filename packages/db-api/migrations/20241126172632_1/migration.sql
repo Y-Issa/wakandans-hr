@@ -353,6 +353,9 @@ CREATE INDEX "UserHistory_userId_idx" ON "private"."UserHistory"("userId");
 CREATE INDEX "WorkSetting_deletedAt_idx" ON "public"."WorkSetting"("deletedAt");
 
 -- AddForeignKey
+ALTER TABLE "public"."User" ADD CONSTRAINT "User_companyId_fkey" FOREIGN KEY ("companyId") REFERENCES "public"."Company"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "public"."User" ADD CONSTRAINT "User_reportsToId_fkey" FOREIGN KEY ("reportsToId") REFERENCES "public"."User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
