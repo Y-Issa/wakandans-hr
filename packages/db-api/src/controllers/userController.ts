@@ -121,7 +121,7 @@ export const updateUser = async (req: Request, res: Response) => {
   }
 
   const updateData = req.body;
-  const { user, ...validData } = updateData;
+  const { user, ...validData } = updateData; // eslint-disable-line
 
   try {
     const updatedUser = await writePrisma.user.update({
