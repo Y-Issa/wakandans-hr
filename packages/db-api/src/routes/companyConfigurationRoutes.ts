@@ -6,6 +6,11 @@ import {
   createCompanyConfiguration,
   updateCompanyConfiguration,
   deleteCompanyConfiguration,
+  getAllCompanyConfigurationDayOffs,
+  getCompanyConfigurationDayOffById,
+  createCompanyConfigurationDayOff,
+  updateCompanyConfigurationDayOff,
+  deleteCompanyConfigurationDayOff,
 } from '../controllers/companyConfigurationController';
 import {
   authMiddleware,
@@ -15,6 +20,7 @@ import {
 const router = express.Router();
 
 router.use('/company-configurations', authMiddleware);
+router.use('/company-configuration-day-offs', authMiddleware);
 
 router.get(
   '/company-configurations',
@@ -44,6 +50,37 @@ router.delete(
   '/company-configurations/:id',
   authRolesMiddleware([UserRole.ADMIN]),
   deleteCompanyConfiguration,
+);
+
+// companyConfigDayOff
+router.get(
+  '/company-configuration-day-offs',
+  authRolesMiddleware([UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE]),
+  getAllCompanyConfigurationDayOffs,
+);
+
+router.get(
+  '/company-configuration-day-offs/:id',
+  authRolesMiddleware([UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE]),
+  getCompanyConfigurationDayOffById,
+);
+
+router.post(
+  '/company-configuration-day-offs',
+  authRolesMiddleware([UserRole.ADMIN]),
+  createCompanyConfigurationDayOff,
+);
+
+router.put(
+  '/company-configuration-day-offs/:id',
+  authRolesMiddleware([UserRole.ADMIN]),
+  updateCompanyConfigurationDayOff,
+);
+
+router.delete(
+  '/company-configuration-day-offs/:id',
+  authRolesMiddleware([UserRole.ADMIN]),
+  deleteCompanyConfigurationDayOff,
 );
 
 export default router;

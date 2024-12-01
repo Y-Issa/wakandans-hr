@@ -1685,3 +1685,107 @@ paths:
           description: Day-off not found
         '500':
           description: Server error
+  /company-configuration-day-offs:
+    get:
+      summary: Get all company configuration day offs
+      tags:
+        - CompanyConfigurationDayOff
+      parameters:
+        - name: page
+          in: query
+          description: The page number for pagination
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: The number of results per page
+          required: false
+      responses:
+        '200':
+          description: List of all company configuration day offs
+        '500':
+          description: Internal server error
+    post:
+      summary: Create a new company configuration day off
+      tags:
+        - CompanyConfigurationDayOff
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                companyConfigurationId:
+                  type: integer
+                dayOffId:
+                  type: integer
+      responses:
+        '201':
+          description: Successfully created
+        '500':
+          description: Internal server error
+  /company-configuration-day-offs/{id}:
+    get:
+      summary: Get a company configuration day off by ID
+      tags:
+        - CompanyConfigurationDayOff
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Company configuration day off details
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+    put:
+      summary: Update a company configuration day off
+      tags:
+        - CompanyConfigurationDayOff
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                companyConfigurationId:
+                  type: integer
+                dayOffId:
+                  type: integer
+      responses:
+        '200':
+          description: Successfully updated
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+    delete:
+      summary: Delete a company configuration day off
+      tags:
+        - CompanyConfigurationDayOff
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully deleted
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error

@@ -190,3 +190,159 @@ export const deleteCompanyConfiguration = async (
     );
   }
 };
+
+// companyConfigurationDayOffController
+
+export const getAllCompanyConfigurationDayOffs = async (
+  req: Request,
+  res: Response,
+) => {
+  const page = parseInt(req.query.page as string, 10) || 0;
+  const limit = parseInt(req.query.limit as string, 10) || 10;
+  const take = limit + 1;
+
+  try {
+    const configurations = await readPrisma.companyConfigurationDayOff.findMany(
+      {
+        include: {
+          companyConfiguration: true,
+          dayOff: true,
+        },
+        skip: page * limit,
+        take,
+      },
+    );
+
+    const next = configurations.length > limit;
+    if (next) {
+      configurations.pop();
+    }
+
+    res.status(200).json({ data: configurations, next });
+  } catch (error) {
+    handle500Response(
+      res,
+      error,
+      'Error occurred while fetching company configurations',
+      'companyConfigurationController.getAllCompanyConfigurations',
+    );
+  }
+};
+
+export const getCompanyConfigurationDayOffById = async (
+  req: Request,
+  res: Response,
+) => {
+  const { id } = req.params;
+
+  try {
+    const dayOff = await readPrisma.companyConfigurationDayOff.findUnique({
+      where: {
+        id: parseInt(id, 10),
+      },
+      include: {
+        companyConfiguration: true,
+        dayOff: true,
+      },
+    });
+
+    if (!dayOff) {
+      res
+        .status(404)
+        .json({ message: 'Company Configuration Day Off not found' });
+      return;
+    }
+
+    res.status(200).json({ data: dayOff });
+  } catch (error) {
+    handle500Response(
+      res,
+      error,
+      'Error occurred while fetching company configuration day off',
+      'companyConfigurationDayOffController.getCompanyConfigurationDayOffById',
+    );
+  }
+};
+
+export const createCompanyConfigurationDayOff = async (
+  req: Request,
+  res: Response,
+) => {
+  const { companyConfigurationId, dayOffId } = req.body;
+
+  try {
+    const dayOff = await writePrisma.companyConfigurationDayOff.create({
+      data: {
+        companyConfigurationId,
+        dayOffId,
+      },
+    });
+
+    res.status(201).json({ data: dayOff });
+  } catch (error) {
+    handle500Response(
+      res,
+      error,
+      'Error creating company configuration day off',
+      'companyConfigurationDayOffController.createCompanyConfigurationDayOff',
+    );
+  }
+};
+
+export const updateCompanyConfigurationDayOff = async (
+  req: Request,
+  res: Response,
+) => {
+  const { id } = req.params;
+  const { companyConfigurationId, dayOffId } = req.body;
+
+  try {
+    const dayOff = await writePrisma.companyConfigurationDayOff.update({
+      where: {
+        id: parseInt(id, 10),
+      },
+      data: {
+        companyConfigurationId,
+        dayOffId,
+      },
+    });
+
+    res.status(200).json({
+      message: 'Company Configuration Day Off successfully updated',
+      data: dayOff,
+    });
+  } catch (error) {
+    handle500Response(
+      res,
+      error,
+      'Error updating company configuration day off',
+      'companyConfigurationDayOffController.updateCompanyConfigurationDayOff',
+    );
+  }
+};
+
+export const deleteCompanyConfigurationDayOff = async (
+  req: Request,
+  res: Response,
+) => {
+  const { id } = req.params;
+
+  try {
+    await writePrisma.companyConfigurationDayOff.delete({
+      where: {
+        id: parseInt(id, 10),
+      },
+    });
+
+    res
+      .status(200)
+      .json({ message: 'Company Configuration Day Off successfully deleted' });
+  } catch (error) {
+    handle500Response(
+      res,
+      error,
+      'Error deleting company configuration day off',
+      'companyConfigurationDayOffController.deleteCompanyConfigurationDayOff',
+    );
+  }
+};
