@@ -89,22 +89,6 @@ CREATE TABLE "public"."CalendarStatus" (
 );
 
 -- CreateTable
-CREATE TABLE "public"."Location" (
-    "id" SERIAL NOT NULL,
-    "name" TEXT NOT NULL,
-    "country" TEXT NOT NULL,
-    "city" TEXT NOT NULL,
-    "address" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-    "deletedAt" TIMESTAMP(3),
-    "companyId" INTEGER NOT NULL,
-    "workSettingId" INTEGER,
-
-    CONSTRAINT "Location_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "public"."Department" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
@@ -180,6 +164,22 @@ CREATE TABLE "public"."UserDepartment" (
 );
 
 -- CreateTable
+CREATE TABLE "public"."Location" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "country" TEXT NOT NULL,
+    "city" TEXT NOT NULL,
+    "address" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deletedAt" TIMESTAMP(3),
+    "companyId" INTEGER NOT NULL,
+    "workSettingId" INTEGER,
+
+    CONSTRAINT "Location_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "public"."DayOff" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
@@ -190,6 +190,32 @@ CREATE TABLE "public"."DayOff" (
     "deletedAt" TIMESTAMP(3),
 
     CONSTRAINT "DayOff_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."CompanyConfiguration" (
+    "id" SERIAL NOT NULL,
+    "companyId" INTEGER NOT NULL,
+    "locationId" INTEGER,
+    "logo" TEXT,
+    "description" TEXT,
+    "website" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deletedAt" TIMESTAMP(3),
+
+    CONSTRAINT "CompanyConfiguration_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."CompanyConfigurationDayOff" (
+    "id" SERIAL NOT NULL,
+    "companyConfigurationId" INTEGER NOT NULL,
+    "dayOffId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "CompanyConfigurationDayOff_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -311,12 +337,6 @@ CREATE INDEX "CalendarStatus_userId_idx" ON "public"."CalendarStatus"("userId");
 CREATE INDEX "CalendarStatus_deletedAt_idx" ON "public"."CalendarStatus"("deletedAt");
 
 -- CreateIndex
-CREATE INDEX "Location_companyId_idx" ON "public"."Location"("companyId");
-
--- CreateIndex
-CREATE INDEX "Location_deletedAt_idx" ON "public"."Location"("deletedAt");
-
--- CreateIndex
 CREATE INDEX "Department_companyId_locationId_idx" ON "public"."Department"("companyId", "locationId");
 
 -- CreateIndex
@@ -335,10 +355,34 @@ CREATE INDEX "Group_companyId_locationId_idx" ON "public"."Group"("companyId", "
 CREATE INDEX "Group_deletedAt_idx" ON "public"."Group"("deletedAt");
 
 -- CreateIndex
+CREATE INDEX "Location_companyId_idx" ON "public"."Location"("companyId");
+
+-- CreateIndex
+CREATE INDEX "Location_deletedAt_idx" ON "public"."Location"("deletedAt");
+
+-- CreateIndex
 CREATE INDEX "DayOff_fromDate_toDate_idx" ON "public"."DayOff"("fromDate", "toDate");
 
 -- CreateIndex
 CREATE INDEX "DayOff_deletedAt_idx" ON "public"."DayOff"("deletedAt");
+
+-- CreateIndex
+CREATE INDEX "CompanyConfiguration_companyId_idx" ON "public"."CompanyConfiguration"("companyId");
+
+-- CreateIndex
+CREATE INDEX "CompanyConfiguration_locationId_idx" ON "public"."CompanyConfiguration"("locationId");
+
+-- CreateIndex
+CREATE INDEX "CompanyConfiguration_deletedAt_idx" ON "public"."CompanyConfiguration"("deletedAt");
+
+-- CreateIndex
+CREATE INDEX "CompanyConfigurationDayOff_companyConfigurationId_idx" ON "public"."CompanyConfigurationDayOff"("companyConfigurationId");
+
+-- CreateIndex
+CREATE INDEX "CompanyConfigurationDayOff_dayOffId_idx" ON "public"."CompanyConfigurationDayOff"("dayOffId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "CompanyConfigurationDayOff_companyConfigurationId_dayOffId_key" ON "public"."CompanyConfigurationDayOff"("companyConfigurationId", "dayOffId");
 
 -- CreateIndex
 CREATE INDEX "Company_deletedAt_idx" ON "public"."Company"("deletedAt");
@@ -377,12 +421,6 @@ ALTER TABLE "public"."CalendarStatus" ADD CONSTRAINT "CalendarStatus_userId_fkey
 ALTER TABLE "public"."CalendarStatus" ADD CONSTRAINT "CalendarStatus_statusId_fkey" FOREIGN KEY ("statusId") REFERENCES "public"."Status"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."Location" ADD CONSTRAINT "Location_workSettingId_fkey" FOREIGN KEY ("workSettingId") REFERENCES "public"."WorkSetting"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "public"."Location" ADD CONSTRAINT "Location_companyId_fkey" FOREIGN KEY ("companyId") REFERENCES "public"."Company"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "public"."Department" ADD CONSTRAINT "Department_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "public"."Location"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -417,3 +455,21 @@ ALTER TABLE "public"."UserDepartment" ADD CONSTRAINT "UserDepartment_userId_fkey
 
 -- AddForeignKey
 ALTER TABLE "public"."UserDepartment" ADD CONSTRAINT "UserDepartment_departmentId_fkey" FOREIGN KEY ("departmentId") REFERENCES "public"."Department"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."Location" ADD CONSTRAINT "Location_workSettingId_fkey" FOREIGN KEY ("workSettingId") REFERENCES "public"."WorkSetting"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."Location" ADD CONSTRAINT "Location_companyId_fkey" FOREIGN KEY ("companyId") REFERENCES "public"."Company"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."CompanyConfiguration" ADD CONSTRAINT "CompanyConfiguration_companyId_fkey" FOREIGN KEY ("companyId") REFERENCES "public"."Company"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."CompanyConfiguration" ADD CONSTRAINT "CompanyConfiguration_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "public"."Location"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."CompanyConfigurationDayOff" ADD CONSTRAINT "CompanyConfigurationDayOff_companyConfigurationId_fkey" FOREIGN KEY ("companyConfigurationId") REFERENCES "public"."CompanyConfiguration"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."CompanyConfigurationDayOff" ADD CONSTRAINT "CompanyConfigurationDayOff_dayOffId_fkey" FOREIGN KEY ("dayOffId") REFERENCES "public"."DayOff"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

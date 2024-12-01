@@ -16,9 +16,17 @@ const router = express.Router();
 
 router.use('/users', authMiddleware);
 
-router.get('/users', authRolesMiddleware([UserRole.ADMIN]), getAllUsers);
+router.get(
+  '/users',
+  authRolesMiddleware([UserRole.ADMIN, UserRole.EMPLOYEE, UserRole.MANAGER]),
+  getAllUsers,
+);
 
-router.get('/users/:id', authRolesMiddleware([UserRole.ADMIN]), getUserById);
+router.get(
+  '/users/:id',
+  authRolesMiddleware([UserRole.ADMIN, UserRole.EMPLOYEE, UserRole.MANAGER]),
+  getUserById,
+);
 
 router.post('/users', authRolesMiddleware([UserRole.ADMIN]), createUser);
 

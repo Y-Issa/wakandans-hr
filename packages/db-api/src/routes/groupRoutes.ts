@@ -21,9 +21,17 @@ const router = express.Router();
 router.use('/groups', authMiddleware);
 router.use('/userGroups', authMiddleware);
 
-router.get('/groups', authRolesMiddleware([UserRole.ADMIN]), getAllGroups);
+router.get(
+  '/groups',
+  authRolesMiddleware([UserRole.ADMIN, UserRole.EMPLOYEE, UserRole.MANAGER]),
+  getAllGroups,
+);
 
-router.get('/groups/:id', authRolesMiddleware([UserRole.ADMIN]), getGroupById);
+router.get(
+  '/groups/:id',
+  authRolesMiddleware([UserRole.ADMIN, UserRole.EMPLOYEE, UserRole.MANAGER]),
+  getGroupById,
+);
 
 router.post('/groups', authRolesMiddleware([UserRole.ADMIN]), createGroup);
 
@@ -44,13 +52,13 @@ router.post(
 
 router.get(
   '/userGroups/user/:userId',
-  authRolesMiddleware([UserRole.ADMIN]),
+  authRolesMiddleware([UserRole.ADMIN, UserRole.EMPLOYEE, UserRole.MANAGER]),
   getGroupsForUser,
 );
 
 router.get(
   '/userGroups/group/:groupId',
-  authRolesMiddleware([UserRole.ADMIN]),
+  authRolesMiddleware([UserRole.ADMIN, UserRole.EMPLOYEE, UserRole.MANAGER]),
   getUsersForGroup,
 );
 
