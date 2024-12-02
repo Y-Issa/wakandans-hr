@@ -1789,3 +1789,93 @@ paths:
           description: Not found
         '500':
           description: Internal server error
+  /company-configuration-day-offs/configuration/{companyConfigurationId}:
+    get:
+      summary: Get all day offs for a given company configuration
+      description: Fetch all day offs associated with a specific company configuration ID.
+      tags:
+        - CompanyConfigurationDayOff
+      parameters:
+        - name: companyConfigurationId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the company configuration.
+      responses:
+        '200':
+          description: List of day offs.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        companyConfigurationId:
+                          type: integer
+                        dayOff:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            name:
+                              type: string
+                            fromDate:
+                              type: string
+                              format: date
+                            toDate:
+                              type: string
+                              format: date
+        '404':
+          description: No day offs found for the specified company configuration ID.
+        '500':
+          description: Internal server error.
+  /company-configuration-day-offs/dayOff/{dayOffId}:
+    get:
+      summary: Get all company configurations for a given day off
+      description: Fetch all company configurations associated with a specific day off ID.
+      tags:
+        - CompanyConfigurationDayOff
+      parameters:
+        - name: dayOffId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the day off.
+      responses:
+        '200':
+          description: List of company configurations.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        dayOffId:
+                          type: integer
+                        companyConfiguration:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            name:
+                              type: string
+                            value:
+                              type: string
+        '404':
+          description: No company configurations found for the specified day off ID.
+        '500':
+          description: Internal server error.

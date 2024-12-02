@@ -346,3 +346,73 @@ export const deleteCompanyConfigurationDayOff = async (
     );
   }
 };
+
+export const getDayOffsByCompanyConfigurationId = async (
+  req: Request,
+  res: Response,
+) => {
+  const { companyConfigurationId } = req.params;
+
+  try {
+    const dayOffs = await readPrisma.companyConfigurationDayOff.findMany({
+      where: {
+        companyConfigurationId: parseInt(companyConfigurationId, 10),
+      },
+      include: {
+        dayOff: true,
+      },
+    });
+
+    if (!dayOffs.length) {
+      res
+        .status(404)
+        .json({ message: 'No day offs found for this configuration ID' });
+      return;
+    }
+
+    res.status(200).json({ data: dayOffs });
+  } catch (error) {
+    handle500Response(
+      res,
+      error,
+      'Error fetching day offs for the given configuration ID',
+      'companyConfigurationDayOffController.getDayOffsByCompanyConfigurationId',
+    );
+  }
+};
+
+export const getCompanyConfigurationsByDayOffId = async (
+  req: Request,
+  res: Response,
+) => {
+  const { dayOffId } = req.params;
+
+  try {
+    const configurations = await readPrisma.companyConfigurationDayOff.findMany(
+      {
+        where: {
+          dayOffId: parseInt(dayOffId, 10),
+        },
+        include: {
+          companyConfiguration: true,
+        },
+      },
+    );
+
+    if (!configurations.length) {
+      res
+        .status(404)
+        .json({ message: 'No configurations found for this day off ID' });
+      return;
+    }
+
+    res.status(200).json({ data: configurations });
+  } catch (error) {
+    handle500Response(
+      res,
+      error,
+      'Error fetching configurations for the given day off ID',
+      'companyConfigurationDayOffController.getCompanyConfigurationsByDayOffId',
+    );
+  }
+};

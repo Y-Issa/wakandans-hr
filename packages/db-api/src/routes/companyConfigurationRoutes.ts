@@ -11,6 +11,8 @@ import {
   createCompanyConfigurationDayOff,
   updateCompanyConfigurationDayOff,
   deleteCompanyConfigurationDayOff,
+  getCompanyConfigurationsByDayOffId,
+  getDayOffsByCompanyConfigurationId,
 } from '../controllers/companyConfigurationController';
 import {
   authMiddleware,
@@ -83,4 +85,15 @@ router.delete(
   deleteCompanyConfigurationDayOff,
 );
 
+router.get(
+  '/company-configuration-day-offs/configuration/:companyConfigurationId',
+  authRolesMiddleware([UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE]),
+  getDayOffsByCompanyConfigurationId,
+);
+
+router.get(
+  '/company-configuration-day-offs/dayOff/:dayOffId',
+  authRolesMiddleware([UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE]),
+  getCompanyConfigurationsByDayOffId,
+);
 export default router;
