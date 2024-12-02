@@ -338,6 +338,76 @@ components:
         locationId:
           type: integer
           example: 3
+    WorkSetting:
+      type: object
+      properties:
+        id:
+          type: integer
+        remoteWorkAllowed:
+          type: boolean
+        hybridWorkAllowed:
+          type: boolean
+        inOfficeAvailable:
+          type: boolean
+        flexibleHours:
+          type: boolean
+        partTime:
+          type: boolean
+        timeZone:
+          type: string
+        workingSchedule:
+          type: object
+          description: JSON object representing the working schedule.
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        deletedAt:
+          type: string
+          format: date-time
+        maxDaysOffPerYear:
+          type: integer
+        maxOooMinsPerDay:
+          type: integer
+        pdAllowancePerYear:
+          type: integer
+    CreateWorkSetting:
+      type: object
+      required:
+        - timeZone
+        - workingSchedule
+      properties:
+        remoteWorkAllowed:
+          type: boolean
+          default: false
+        hybridWorkAllowed:
+          type: boolean
+          default: false
+        inOfficeAvailable:
+          type: boolean
+          default: true
+        flexibleHours:
+          type: boolean
+          default: false
+        partTime:
+          type: boolean
+          default: false
+        timeZone:
+          type: string
+        workingSchedule:
+          type: object
+          description: JSON object representing the working schedule.
+        maxDaysOffPerYear:
+          type: integer
+          default: 20
+        maxOooMinsPerDay:
+          type: integer
+          default: 149
+        pdAllowancePerYear:
+          type: integer
+          default: 1000
 security:
   - cookieAuth: []
 paths:
@@ -1879,3 +1949,146 @@ paths:
           description: No company configurations found for the specified day off ID.
         '500':
           description: Internal server error.
+  /work-settings:
+    get:
+      summary: Get all work settings
+      tags:
+        - WorkSettings
+      description: Retrieve a paginated list of all work settings.
+      parameters:
+        - name: page
+          in: query
+          description: Page number (0-based index).
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: Number of items per page.
+          required: false
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Successful response with a list of work settings.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/WorkSetting'
+                  next:
+                    type: boolean
+                    description: Indicates if there is a next page.
+        403:
+          description: Forbidden - Insufficient role privileges.
+        500:
+          description: Server error.
+    post:
+      summary: Create a new work setting
+      tags:
+        - WorkSettings
+      description: Add a new work setting to the database.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWorkSetting'
+      responses:
+        201:
+          description: Successfully created a new work setting.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkSetting'
+        403:
+          description: Forbidden - Insufficient role privileges.
+        500:
+          description: Server error.
+  /work-settings/{id}:
+    get:
+      summary: Get a specific work setting by ID
+      tags:
+        - WorkSettings
+      description: Retrieve details of a specific work setting using its ID.
+      parameters:
+        - name: id
+          in: path
+          description: ID of the work setting.
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Successful response with the work setting details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkSetting'
+        403:
+          description: Forbidden - Insufficient role privileges.
+        404:
+          description: Work setting not found.
+        500:
+          description: Server error.
+    put:
+      summary: Update a specific work setting by ID
+      tags:
+        - WorkSettings
+      description: Modify details of a specific work setting using its ID.
+      parameters:
+        - name: id
+          in: path
+          description: ID of the work setting.
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWorkSetting'
+      responses:
+        200:
+          description: Successfully updated the work setting.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkSetting'
+        403:
+          description: Forbidden - Insufficient role privileges.
+        404:
+          description: Work setting not found.
+        500:
+          description: Server error.
+
+    delete:
+      summary: Delete a specific work setting by ID
+      tags:
+        - WorkSettings
+      description: Soft delete a specific work setting by marking its `deletedAt` field. Requires the user to be authenticated and have the `ADMIN` role.
+      parameters:
+        - name: id
+          in: path
+          description: ID of the work setting.
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Successfully deleted the work setting.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkSetting'
+        403:
+          description: Forbidden - Insufficient role privileges.
+        404:
+          description: Work setting not found.
+        500:
+          description: Server error.
