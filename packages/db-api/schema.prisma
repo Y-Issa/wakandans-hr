@@ -14,6 +14,7 @@ enum UserRole {
   ADMIN
   EMPLOYEE
   MANAGER
+  HR
 
   @@schema("public")
 }
@@ -34,6 +35,7 @@ enum JobType {
   SMS
   PUSH_NOTIFICATION
   SLACK
+  CANDIDATE
 
   @@schema("jobs")
 }
@@ -70,6 +72,8 @@ model User {
   @@index([reportsToId])
   @@index([deletedAt])
   @@schema("public")
+  CommunicationLog CommunicationLog[]
+  Interview Interview[]
 }
 
 model Profile {
@@ -412,5 +416,128 @@ model WorkSetting {
   users     User[]
 
   @@index([deletedAt])
+  @@schema("public")
+}
+
+model Candidate {
+  id                Int       @id @default(autoincrement())
+  firstName         String
+  lastName          String
+  email             String    @unique
+  phone             String?
+  tags              Json?     // JSON array for tags like "backend", "senior", etc.
+  linkedInProfile   String?
+  resumeUrl         String?
+  notes             String?
+  status            CandidateStatus @default(INITIAL)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  deletedAt         DateTime?
+  interviews        Interview[]
+  communicationLogs CommunicationLog[]
+
+  @@schema("public")
+}
+
+enum CandidateStatus {
+  INITIAL
+  SCHEDULED_FOR_INTERVIEW
+  CODE_CHALLENGE_SENT
+  OFFER_SENT
+  OFFER_REJECTED
+  HIRED
+
+  @@schema("public")
+}
+
+model Interview {
+  id               Int       @id @default(autoincrement())
+  candidateId      Int
+  interviewerId    Int       // Refers to User (HR or manager conducting the interview)
+  scheduledAt      DateTime
+  feedback         String?   // Feedback notes
+  score            Int?      // Scoring out of 10 or any scale
+  templateUsed     String?   // Refers to a template/question bank
+  status           InterviewStatus @default(SCHEDULED)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  candidate        Candidate @relation(fields: [candidateId], references: [id])
+  interviewer      User      @relation(fields: [interviewerId], references: [id])
+
+  @@index([candidateId])
+  @@index([interviewerId])
+  @@schema("public")
+}
+
+enum InterviewStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELED
+
+  @@schema("public")
+}
+
+model CommunicationLog {
+  id             Int       @id @default(autoincrement())
+  candidateId    Int
+  userId         Int       // Refers to User (HR team member)
+  type           CommunicationType
+  message        String
+  createdAt      DateTime  @default(now())
+
+  candidate      Candidate @relation(fields: [candidateId], references: [id])
+  user           User      @relation(fields: [userId], references: [id])
+
+  @@index([candidateId])
+  @@index([userId])
+  @@schema("public")
+}
+
+enum CommunicationType {
+  EMAIL
+  PHONE_CALL
+  SMS
+  MEETING
+
+  @@schema("public")
+}
+
+model QuestionBank {
+  id           Int       @id @default(autoincrement())
+  name         String
+  description  String?
+  questions    Json      // Array of questions
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@schema("public")
+}
+
+model PipelineStage {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@schema("public")
+}
+
+model InterviewType {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@schema("public")
+}
+
+model Tag {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@schema("public")
 }

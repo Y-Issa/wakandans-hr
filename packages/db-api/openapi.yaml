@@ -677,6 +677,50 @@ paths:
                 $ref: '#/components/schemas/User'
         500:
           description: Server error
+  /candidates:
+    get:
+      summary: Get all candidates
+      tags:
+        - Candidates
+      parameters:
+        - name: limit
+          in: query
+          description: Number of iterms per page
+          required: false
+          schema:
+            type: integer
+            default: 10
+      responses:
+        200:
+          description: A list of candidates
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    firstName:
+                      type: string
+                      example: 'John'
+                    lastName:
+                      type: string
+                      example: 'Doe'
+                    email:
+                      type: string
+                      example: 'user@example.com'
+                    phone:
+                      type: string
+                      example: '1234567890'
+                    resume:
+                      type: string
+                      example: 'http://example.com/resume.pdf'
+                    status:
+                      type: string
+                      example: 'Pending'
   /users/{id}:
     get:
       tags:
@@ -892,6 +936,11 @@ paths:
           content:
             application/json:
               schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'User successfully assigned to department.'
                 $ref: '#/components/schemas/SuccessResponse'
         '400':
           description: Bad request, invalid data
@@ -920,6 +969,17 @@ paths:
               schema:
                 type: array
                 items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 4
+                    name:
+                      type: string
+                      example: 'Marketing'
+                    description:
+                      type: string
+                      example: 'Handles marketing and outreach'
                   $ref: '#/components/schemas/MinimalDepartment'
         '404':
           description: User not found
@@ -946,6 +1006,20 @@ paths:
               schema:
                 type: array
                 items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 87
+                    firstName:
+                      type: string
+                      example: 'Youssef'
+                    lastName:
+                      type: string
+                      example: 'Issa'
+                    email:
+                      type: string
+                      example: 'ysf@test.com'
                   $ref: '#/components/schemas/UserInDepartment'
         '404':
           description: Department not found
@@ -1487,6 +1561,12 @@ paths:
         '500':
           description: Server error.
 
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
   /userGroups/user/{userId}/group/{groupId}:
     delete:
       summary: Remove user from a group

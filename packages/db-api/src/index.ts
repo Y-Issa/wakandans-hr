@@ -10,6 +10,8 @@ import locationRouter from './routes/locationRoutes';
 import userAuthRouter from './routes/userAuthRoutes';
 import userRouter from './routes/userRoutes';
 import departmentRouter from './routes/departmentRoutes';
+import userDepartmentRouter from './routes/userDepartmentRoutes';
+import candidateRouter from './routes/candidateRoutes';
 import teamRouter from './routes/teamRoutes';
 import groupRouter from './routes/groupRoutes';
 import companyConfigRouter from './routes/companyConfigurationRoutes';
@@ -47,6 +49,8 @@ const routers = [
   userAuthRouter,
   userRouter,
   departmentRouter,
+  userDepartmentRouter,
+  candidateRouter,
   teamRouter,
   groupRouter,
   companyConfigRouter,

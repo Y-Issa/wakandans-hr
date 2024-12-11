@@ -117,7 +117,7 @@ export const updateDepartment = async (req: Request, res: Response) => {
   }
 
   const updateData = req.body;
-  const { user, ...validData } = updateData; //eslint-disable-line
+  const { ...validData } = updateData;
 
   try {
     const updatedDepartment = await writePrisma.department.update({
