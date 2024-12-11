@@ -21,9 +21,17 @@ const router = express.Router();
 router.use('/teams', authMiddleware);
 router.use('/userTeams', authMiddleware);
 
-router.get('/teams', authRolesMiddleware([UserRole.ADMIN]), getAllTeams);
+router.get(
+  '/teams',
+  authRolesMiddleware([UserRole.ADMIN, UserRole.EMPLOYEE, UserRole.MANAGER]),
+  getAllTeams,
+);
 
-router.get('/teams/:id', authRolesMiddleware([UserRole.ADMIN]), getTeamById);
+router.get(
+  '/teams/:id',
+  authRolesMiddleware([UserRole.ADMIN, UserRole.EMPLOYEE, UserRole.MANAGER]),
+  getTeamById,
+);
 
 router.post('/teams', authRolesMiddleware([UserRole.ADMIN]), createTeam);
 
@@ -41,13 +49,13 @@ router.post(
 
 router.get(
   '/userTeams/user/:userId',
-  authRolesMiddleware([UserRole.ADMIN]),
+  authRolesMiddleware([UserRole.ADMIN, UserRole.EMPLOYEE, UserRole.MANAGER]),
   getTeamsForUser,
 );
 
 router.get(
   '/userTeams/team/:teamId',
-  authRolesMiddleware([UserRole.ADMIN]),
+  authRolesMiddleware([UserRole.ADMIN, UserRole.EMPLOYEE, UserRole.MANAGER]),
   getUsersForTeam,
 );
 

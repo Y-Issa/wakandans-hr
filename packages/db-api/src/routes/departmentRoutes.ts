@@ -23,13 +23,13 @@ router.use('/userDepartments', authMiddleware);
 
 router.get(
   '/departments',
-  authRolesMiddleware([UserRole.ADMIN]),
+  authRolesMiddleware([UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE]),
   getAllDepartments,
 );
 
 router.get(
   '/departments/:id',
-  authRolesMiddleware([UserRole.ADMIN]),
+  authRolesMiddleware([UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE]),
   getDepartmentById,
 );
 
@@ -60,13 +60,13 @@ router.post(
 
 router.get(
   '/userDepartments/user/:userId',
-  authRolesMiddleware([UserRole.ADMIN]),
+  authRolesMiddleware([UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE]),
   getDepartmentsForUser,
 );
 
 router.get(
   '/userDepartments/department/:departmentId',
-  authRolesMiddleware([UserRole.ADMIN]),
+  authRolesMiddleware([UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE]),
   getUsersForDepartment,
 );
 
