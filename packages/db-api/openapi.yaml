@@ -338,6 +338,76 @@ components:
         locationId:
           type: integer
           example: 3
+    WorkSetting:
+      type: object
+      properties:
+        id:
+          type: integer
+        remoteWorkAllowed:
+          type: boolean
+        hybridWorkAllowed:
+          type: boolean
+        inOfficeAvailable:
+          type: boolean
+        flexibleHours:
+          type: boolean
+        partTime:
+          type: boolean
+        timeZone:
+          type: string
+        workingSchedule:
+          type: object
+          description: JSON object representing the working schedule.
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        deletedAt:
+          type: string
+          format: date-time
+        maxDaysOffPerYear:
+          type: integer
+        maxOooMinsPerDay:
+          type: integer
+        pdAllowancePerYear:
+          type: integer
+    CreateWorkSetting:
+      type: object
+      required:
+        - timeZone
+        - workingSchedule
+      properties:
+        remoteWorkAllowed:
+          type: boolean
+          default: false
+        hybridWorkAllowed:
+          type: boolean
+          default: false
+        inOfficeAvailable:
+          type: boolean
+          default: true
+        flexibleHours:
+          type: boolean
+          default: false
+        partTime:
+          type: boolean
+          default: false
+        timeZone:
+          type: string
+        workingSchedule:
+          type: object
+          description: JSON object representing the working schedule.
+        maxDaysOffPerYear:
+          type: integer
+          default: 20
+        maxOooMinsPerDay:
+          type: integer
+          default: 149
+        pdAllowancePerYear:
+          type: integer
+          default: 1000
 security:
   - cookieAuth: []
 paths:
@@ -1442,4 +1512,583 @@ paths:
         '400':
           description: Missing userId or groupId parameter.
         '500':
+          description: Server error.
+  /company-configurations:
+    get:
+      summary: Get all company configurations
+      tags:
+        - Company Configurations
+      parameters:
+        - name: page
+          in: query
+          description: The page number for pagination
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: The number of results per page
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully retrieved company configurations
+        '500':
+          description: Server error
+    post:
+      summary: Create a new company configuration
+      tags:
+        - Company Configurations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                logo:
+                  type: string
+                  example: 'https://example.com/logo.png'
+                description:
+                  type: string
+                  example: 'A company configuration'
+                website:
+                  type: string
+                  example: 'https://example.com'
+                locationId:
+                  type: integer
+                  example: 1
+      responses:
+        '201':
+          description: Company configuration successfully created
+        '500':
+          description: Server error
+  /company-configurations/{id}:
+    get:
+      summary: Get a company configuration by ID
+      tags:
+        - Company Configurations
+      parameters:
+        - name: id
+          in: path
+          description: ID of the company configuration
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully retrieved the company configuration
+        '404':
+          description: Company configuration not found
+        '500':
+          description: Server error
+    put:
+      summary: Update a company configuration
+      tags:
+        - Company Configurations
+      parameters:
+        - name: id
+          in: path
+          description: ID of the company configuration
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                logo:
+                  type: string
+                  example: 'https://example.com/logo.png'
+                description:
+                  type: string
+                  example: 'A company configuration'
+                website:
+                  type: string
+                  example: 'https://example.com'
+                locationId:
+                  type: integer
+                  example: 1
+      responses:
+        '200':
+          description: Successfully updated the company configuration
+        '404':
+          description: Company configuration not found
+        '500':
+          description: Server error
+    delete:
+      summary: Delete a company configuration
+      tags:
+        - Company Configurations
+      parameters:
+        - name: id
+          in: path
+          description: ID of the company configuration
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Company configuration successfully deleted
+        '404':
+          description: Company configuration not found
+        '500':
+          description: Server error
+  /day-offs:
+    get:
+      summary: Get all day-offs
+      tags:
+        - DayOff
+      parameters:
+        - name: page
+          in: query
+          description: The page number for pagination
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: The number of results per page
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully retrieved day-offs
+        '500':
+          description: Server error
+    post:
+      summary: Create a new day-off
+      tags:
+        - DayOff
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                fromDate:
+                  type: string
+                  format: date-time
+                toDate:
+                  type: string
+                  format: date-time
+      responses:
+        '201':
+          description: Day-off successfully created
+        '500':
+          description: Server error
+  /day-offs/{id}:
+    get:
+      summary: Get a day-off by ID
+      tags:
+        - DayOff
+      parameters:
+        - name: id
+          in: path
+          description: ID of the day-off
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully retrieved the day-off
+        '404':
+          description: Day-off not found
+        '500':
+          description: Server error
+    put:
+      summary: Update a day-off
+      tags:
+        - DayOff
+      parameters:
+        - name: id
+          in: path
+          description: ID of the day-off
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                fromDate:
+                  type: string
+                  format: date-time
+                toDate:
+                  type: string
+                  format: date-time
+      responses:
+        '200':
+          description: Successfully updated the day-off
+        '404':
+          description: Day-off not found
+        '500':
+          description: Server error
+    delete:
+      summary: Delete a day-off
+      tags:
+        - DayOff
+      parameters:
+        - name: id
+          in: path
+          description: ID of the day-off
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Day-off successfully deleted
+        '404':
+          description: Day-off not found
+        '500':
+          description: Server error
+  /company-configuration-day-offs:
+    get:
+      summary: Get all company configuration day offs
+      tags:
+        - CompanyConfigurationDayOff
+      parameters:
+        - name: page
+          in: query
+          description: The page number for pagination
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: The number of results per page
+          required: false
+      responses:
+        '200':
+          description: List of all company configuration day offs
+        '500':
+          description: Internal server error
+    post:
+      summary: Create a new company configuration day off
+      tags:
+        - CompanyConfigurationDayOff
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                companyConfigurationId:
+                  type: integer
+                dayOffId:
+                  type: integer
+      responses:
+        '201':
+          description: Successfully created
+        '500':
+          description: Internal server error
+  /company-configuration-day-offs/{id}:
+    get:
+      summary: Get a company configuration day off by ID
+      tags:
+        - CompanyConfigurationDayOff
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Company configuration day off details
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+    put:
+      summary: Update a company configuration day off
+      tags:
+        - CompanyConfigurationDayOff
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                companyConfigurationId:
+                  type: integer
+                dayOffId:
+                  type: integer
+      responses:
+        '200':
+          description: Successfully updated
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+    delete:
+      summary: Delete a company configuration day off
+      tags:
+        - CompanyConfigurationDayOff
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully deleted
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+  /company-configuration-day-offs/configuration/{companyConfigurationId}:
+    get:
+      summary: Get all day offs for a given company configuration
+      description: Fetch all day offs associated with a specific company configuration ID.
+      tags:
+        - CompanyConfigurationDayOff
+      parameters:
+        - name: companyConfigurationId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the company configuration.
+      responses:
+        '200':
+          description: List of day offs.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        companyConfigurationId:
+                          type: integer
+                        dayOff:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            name:
+                              type: string
+                            fromDate:
+                              type: string
+                              format: date
+                            toDate:
+                              type: string
+                              format: date
+        '404':
+          description: No day offs found for the specified company configuration ID.
+        '500':
+          description: Internal server error.
+  /company-configuration-day-offs/dayOff/{dayOffId}:
+    get:
+      summary: Get all company configurations for a given day off
+      description: Fetch all company configurations associated with a specific day off ID.
+      tags:
+        - CompanyConfigurationDayOff
+      parameters:
+        - name: dayOffId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the day off.
+      responses:
+        '200':
+          description: List of company configurations.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        dayOffId:
+                          type: integer
+                        companyConfiguration:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            name:
+                              type: string
+                            value:
+                              type: string
+        '404':
+          description: No company configurations found for the specified day off ID.
+        '500':
+          description: Internal server error.
+  /work-settings:
+    get:
+      summary: Get all work settings
+      tags:
+        - WorkSettings
+      description: Retrieve a paginated list of all work settings.
+      parameters:
+        - name: page
+          in: query
+          description: Page number (0-based index).
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: Number of items per page.
+          required: false
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Successful response with a list of work settings.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/WorkSetting'
+                  next:
+                    type: boolean
+                    description: Indicates if there is a next page.
+        403:
+          description: Forbidden - Insufficient role privileges.
+        500:
+          description: Server error.
+    post:
+      summary: Create a new work setting
+      tags:
+        - WorkSettings
+      description: Add a new work setting to the database.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWorkSetting'
+      responses:
+        201:
+          description: Successfully created a new work setting.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkSetting'
+        403:
+          description: Forbidden - Insufficient role privileges.
+        500:
+          description: Server error.
+  /work-settings/{id}:
+    get:
+      summary: Get a specific work setting by ID
+      tags:
+        - WorkSettings
+      description: Retrieve details of a specific work setting using its ID.
+      parameters:
+        - name: id
+          in: path
+          description: ID of the work setting.
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Successful response with the work setting details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkSetting'
+        403:
+          description: Forbidden - Insufficient role privileges.
+        404:
+          description: Work setting not found.
+        500:
+          description: Server error.
+    put:
+      summary: Update a specific work setting by ID
+      tags:
+        - WorkSettings
+      description: Modify details of a specific work setting using its ID.
+      parameters:
+        - name: id
+          in: path
+          description: ID of the work setting.
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWorkSetting'
+      responses:
+        200:
+          description: Successfully updated the work setting.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkSetting'
+        403:
+          description: Forbidden - Insufficient role privileges.
+        404:
+          description: Work setting not found.
+        500:
+          description: Server error.
+
+    delete:
+      summary: Delete a specific work setting by ID
+      tags:
+        - WorkSettings
+      description: Soft delete a specific work setting by marking its `deletedAt` field. Requires the user to be authenticated and have the `ADMIN` role.
+      parameters:
+        - name: id
+          in: path
+          description: ID of the work setting.
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Successfully deleted the work setting.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkSetting'
+        403:
+          description: Forbidden - Insufficient role privileges.
+        404:
+          description: Work setting not found.
+        500:
           description: Server error.

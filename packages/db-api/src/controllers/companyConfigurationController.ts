@@ -1,0 +1,418 @@
+import { Request, Response } from 'express';
+import { writePrisma, readPrisma } from '../prisma';
+import { handle500Response } from '../helpers';
+import { COMPANY_ID } from '../constants';
+
+const minimalCompanyConfigurationSelect = {
+  id: true,
+  logo: true,
+  description: true,
+  website: true,
+  companyId: true,
+  locationId: true,
+  createdAt: true,
+  updatedAt: true,
+  deletedAt: true,
+};
+
+export const getAllCompanyConfigurations = async (
+  req: Request,
+  res: Response,
+) => {
+  const page = parseInt(req.query.page as string, 10) || 0;
+  const limit = parseInt(req.query.limit as string, 10) || 10;
+  const take = limit + 1;
+
+  try {
+    const configurations = await readPrisma.companyConfiguration.findMany({
+      where: {
+        companyId: COMPANY_ID,
+        deletedAt: null,
+      },
+      select: minimalCompanyConfigurationSelect,
+      skip: page * limit,
+      take,
+    });
+
+    const next = configurations.length > limit;
+    if (next) {
+      configurations.pop();
+    }
+
+    res.status(200).json({ data: configurations, next });
+  } catch (error) {
+    handle500Response(
+      res,
+      error,
+      'Error occurred while fetching company configurations',
+      'companyConfigurationController.getAllCompanyConfigurations',
+    );
+  }
+};
+
+export const getCompanyConfigurationById = async (
+  req: Request,
+  res: Response,
+) => {
+  const { id } = req.params;
+
+  try {
+    const configuration = await readPrisma.companyConfiguration.findUnique({
+      where: {
+        id: parseInt(id),
+      },
+      select: minimalCompanyConfigurationSelect,
+    });
+
+    if (!configuration || configuration.deletedAt) {
+      res.status(404).json({ message: 'Company Configuration not found' });
+      return;
+    }
+
+    res.status(200).json({ data: configuration });
+  } catch (error) {
+    handle500Response(
+      res,
+      error,
+      'Error occurred while fetching company configuration',
+      'companyConfigurationController.getCompanyConfigurationById',
+    );
+  }
+};
+
+export const createCompanyConfiguration = async (
+  req: Request,
+  res: Response,
+) => {
+  const { logo, description, website, locationId } = req.body;
+
+  try {
+    const configuration = await writePrisma.companyConfiguration.create({
+      data: {
+        companyId: COMPANY_ID,
+        locationId, // Optional, specific to a location
+        logo,
+        description,
+        website,
+      },
+      select: minimalCompanyConfigurationSelect,
+    });
+
+    res.status(201).json({ data: configuration });
+  } catch (error) {
+    handle500Response(
+      res,
+      error,
+      'Error creating company configuration',
+      'companyConfigurationController.createCompanyConfiguration',
+      JSON.stringify(req.body),
+    );
+  }
+};
+
+export const updateCompanyConfiguration = async (
+  req: Request,
+  res: Response,
+) => {
+  const { id } = req.params;
+  const { logo, description, website, locationId } = req.body;
+
+  try {
+    const existingConfiguration =
+      await readPrisma.companyConfiguration.findUnique({
+        where: { id: parseInt(id) },
+      });
+
+    if (!existingConfiguration || existingConfiguration.deletedAt) {
+      res.status(404).json({ message: 'Company Configuration not found' });
+      return;
+    }
+
+    const configuration = await writePrisma.companyConfiguration.update({
+      where: { id: parseInt(id) },
+      data: {
+        logo,
+        description,
+        website,
+        locationId, // Update location if applicable
+      },
+      select: minimalCompanyConfigurationSelect,
+    });
+
+    res.status(200).json({
+      message: 'Company Configuration successfully updated',
+      data: configuration,
+    });
+  } catch (error) {
+    handle500Response(
+      res,
+      error,
+      'Error updating company configuration',
+      'companyConfigurationController.updateCompanyConfiguration',
+      JSON.stringify(req.body),
+    );
+  }
+};
+
+export const deleteCompanyConfiguration = async (
+  req: Request,
+  res: Response,
+) => {
+  const { id } = req.params;
+
+  try {
+    const existingConfiguration =
+      await readPrisma.companyConfiguration.findUnique({
+        where: { id: parseInt(id) },
+      });
+
+    if (!existingConfiguration || existingConfiguration.deletedAt) {
+      res.status(404).json({ message: 'Company Configuration not found' });
+      return;
+    }
+
+    const configuration = await writePrisma.companyConfiguration.update({
+      where: { id: parseInt(id) },
+      data: { deletedAt: new Date() },
+    });
+
+    res.status(200).json({
+      message: 'Company Configuration successfully deleted',
+      data: configuration,
+    });
+  } catch (error) {
+    handle500Response(
+      res,
+      error,
+      'Error deleting company configuration',
+      'companyConfigurationController.deleteCompanyConfiguration',
+      JSON.stringify(req.params),
+    );
+  }
+};
+
+// companyConfigurationDayOffController
+
+export const getAllCompanyConfigurationDayOffs = async (
+  req: Request,
+  res: Response,
+) => {
+  const page = parseInt(req.query.page as string, 10) || 0;
+  const limit = parseInt(req.query.limit as string, 10) || 10;
+  const take = limit + 1;
+
+  try {
+    const configurations = await readPrisma.companyConfigurationDayOff.findMany(
+      {
+        include: {
+          companyConfiguration: true,
+          dayOff: true,
+        },
+        skip: page * limit,
+        take,
+      },
+    );
+
+    const next = configurations.length > limit;
+    if (next) {
+      configurations.pop();
+    }
+
+    res.status(200).json({ data: configurations, next });
+  } catch (error) {
+    handle500Response(
+      res,
+      error,
+      'Error occurred while fetching company configurations',
+      'companyConfigurationController.getAllCompanyConfigurations',
+    );
+  }
+};
+
+export const getCompanyConfigurationDayOffById = async (
+  req: Request,
+  res: Response,
+) => {
+  const { id } = req.params;
+
+  try {
+    const dayOff = await readPrisma.companyConfigurationDayOff.findUnique({
+      where: {
+        id: parseInt(id, 10),
+      },
+      include: {
+        companyConfiguration: true,
+        dayOff: true,
+      },
+    });
+
+    if (!dayOff) {
+      res
+        .status(404)
+        .json({ message: 'Company Configuration Day Off not found' });
+      return;
+    }
+
+    res.status(200).json({ data: dayOff });
+  } catch (error) {
+    handle500Response(
+      res,
+      error,
+      'Error occurred while fetching company configuration day off',
+      'companyConfigurationDayOffController.getCompanyConfigurationDayOffById',
+    );
+  }
+};
+
+export const createCompanyConfigurationDayOff = async (
+  req: Request,
+  res: Response,
+) => {
+  const { companyConfigurationId, dayOffId } = req.body;
+
+  try {
+    const dayOff = await writePrisma.companyConfigurationDayOff.create({
+      data: {
+        companyConfigurationId,
+        dayOffId,
+      },
+    });
+
+    res.status(201).json({ data: dayOff });
+  } catch (error) {
+    handle500Response(
+      res,
+      error,
+      'Error creating company configuration day off',
+      'companyConfigurationDayOffController.createCompanyConfigurationDayOff',
+    );
+  }
+};
+
+export const updateCompanyConfigurationDayOff = async (
+  req: Request,
+  res: Response,
+) => {
+  const { id } = req.params;
+  const { companyConfigurationId, dayOffId } = req.body;
+
+  try {
+    const dayOff = await writePrisma.companyConfigurationDayOff.update({
+      where: {
+        id: parseInt(id, 10),
+      },
+      data: {
+        companyConfigurationId,
+        dayOffId,
+      },
+    });
+
+    res.status(200).json({
+      message: 'Company Configuration Day Off successfully updated',
+      data: dayOff,
+    });
+  } catch (error) {
+    handle500Response(
+      res,
+      error,
+      'Error updating company configuration day off',
+      'companyConfigurationDayOffController.updateCompanyConfigurationDayOff',
+    );
+  }
+};
+
+export const deleteCompanyConfigurationDayOff = async (
+  req: Request,
+  res: Response,
+) => {
+  const { id } = req.params;
+
+  try {
+    await writePrisma.companyConfigurationDayOff.delete({
+      where: {
+        id: parseInt(id, 10),
+      },
+    });
+
+    res
+      .status(200)
+      .json({ message: 'Company Configuration Day Off successfully deleted' });
+  } catch (error) {
+    handle500Response(
+      res,
+      error,
+      'Error deleting company configuration day off',
+      'companyConfigurationDayOffController.deleteCompanyConfigurationDayOff',
+    );
+  }
+};
+
+export const getDayOffsByCompanyConfigurationId = async (
+  req: Request,
+  res: Response,
+) => {
+  const { companyConfigurationId } = req.params;
+
+  try {
+    const dayOffs = await readPrisma.companyConfigurationDayOff.findMany({
+      where: {
+        companyConfigurationId: parseInt(companyConfigurationId, 10),
+      },
+      include: {
+        dayOff: true,
+      },
+    });
+
+    if (!dayOffs.length) {
+      res
+        .status(404)
+        .json({ message: 'No day offs found for this configuration ID' });
+      return;
+    }
+
+    res.status(200).json({ data: dayOffs });
+  } catch (error) {
+    handle500Response(
+      res,
+      error,
+      'Error fetching day offs for the given configuration ID',
+      'companyConfigurationDayOffController.getDayOffsByCompanyConfigurationId',
+    );
+  }
+};
+
+export const getCompanyConfigurationsByDayOffId = async (
+  req: Request,
+  res: Response,
+) => {
+  const { dayOffId } = req.params;
+
+  try {
+    const configurations = await readPrisma.companyConfigurationDayOff.findMany(
+      {
+        where: {
+          dayOffId: parseInt(dayOffId, 10),
+        },
+        include: {
+          companyConfiguration: true,
+        },
+      },
+    );
+
+    if (!configurations.length) {
+      res
+        .status(404)
+        .json({ message: 'No configurations found for this day off ID' });
+      return;
+    }
+
+    res.status(200).json({ data: configurations });
+  } catch (error) {
+    handle500Response(
+      res,
+      error,
+      'Error fetching configurations for the given day off ID',
+      'companyConfigurationDayOffController.getCompanyConfigurationsByDayOffId',
+    );
+  }
+};

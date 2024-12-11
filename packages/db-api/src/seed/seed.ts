@@ -1,6 +1,10 @@
 import { COMPANY_ID } from '../constants';
 import { readPrisma, writePrisma } from '../prisma';
 import { seedCalendarStatuses } from './calendarStatuses';
+import {
+  seedCompanyConfigurations,
+  seedCompanyConfigurationsDaysOff,
+} from './companyConfigs';
 import { seedDaysOff } from './daysOff';
 import { seedDepartments } from './departments';
 import { seedGroups } from './groups';
@@ -38,6 +42,8 @@ const main = async () => {
   await seedProfiles();
   await seedDaysOff();
   await seedCalendarStatuses();
+  await seedCompanyConfigurations();
+  await seedCompanyConfigurationsDaysOff();
 
   console.log('Database seeded successfully!');
 
