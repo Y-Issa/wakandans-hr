@@ -977,7 +977,6 @@ paths:
                     name:
                       type: string
                       example: 'Marketing'
-                      example: 'Marketing'
                     description:
                       type: string
                       example: 'Handles marketing and outreach'
@@ -1014,10 +1013,8 @@ paths:
                     firstName:
                       type: string
                       example: 'Youssef'
-                      example: 'Youssef'
                     lastName:
                       type: string
-                      example: 'Issa'
                       example: 'Issa'
                     email:
                       type: string
