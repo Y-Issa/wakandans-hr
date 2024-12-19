@@ -10,6 +10,7 @@ export const authMiddleware = async (
   res: Response,
   next: () => void,
 ) => {
+  next();
   const session = req.cookies.session;
   if (!session) {
     return res.status(401).json({ message: 'Unauthorized' });

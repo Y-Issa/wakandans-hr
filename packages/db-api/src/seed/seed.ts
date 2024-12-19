@@ -12,6 +12,7 @@ import { seedLocations } from './locations';
 import { seedProfiles } from './profiles';
 import { seedStatuses } from './statuses';
 import { seedTalentPool } from './talentPool';
+import { seedTalentPool } from './talentPool';
 import { seedTeams } from './teams';
 import { seedUsers } from './users';
 import { seedWorkSettings } from './workSettings';
@@ -44,8 +45,6 @@ const main = async () => {
   await seedDaysOff();
   await seedCalendarStatuses();
   await seedTalentPool();
-  await seedCompanyConfigurations();
-  await seedCompanyConfigurationsDaysOff();
 
   console.log('Database seeded successfully!');
 

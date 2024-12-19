@@ -14,18 +14,34 @@
     "css:watch": "sass --watch src/styles:dist/css"
   },
   "dependencies": {
-    "react": "19.0.0-rc-69d4b800-20241021",
-    "react-dom": "19.0.0-rc-69d4b800-20241021",
-    "next": "15.0.1"
+    "@radix-ui/react-avatar": "^1.1.0",
+    "@radix-ui/react-tabs": "^1.1.0",
+    "axios": "^1.7.7",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "js-cookie": "^3.0.5",
+    "lucide-react": "^0.414.0",
+    "next": "14.2.12",
+    "react": "^18",
+    "react-dom": "^18",
+    "recharts": "^2.12.7",
+    "swr": "^2.2.5",
+    "tailwind-merge": "^2.4.0",
+    "tailwindcss-animate": "^1.0.7",
+    "zustand": "^5.0.0-rc.2"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "14.2.12",
+    "lint-staged": "^15.2.7",
     "postcss": "^8",
+    "prettier": "^3.3.2",
+    "sass": "^1.77.8",
     "tailwindcss": "^3.4.1",
-    "eslint": "^8",
-    "eslint-config-next": "15.0.1"
+    "typescript": "^5"
   }
 }
