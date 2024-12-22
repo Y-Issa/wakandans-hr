@@ -17,7 +17,9 @@ const LoginPage = () => {
       const response = await axios.post(`${API_BASE_URL}/login`, { email });
 
       if (response.status === 200) {
-        setMessage(response.data.message);
+        setMessage(
+          'Success! Please check your email for instructions to log in.',
+        );
         console.log(response.data);
         setError(null);
       } else {

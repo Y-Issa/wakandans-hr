@@ -129,7 +129,9 @@ export const validateLoginToken = async (req: Request, res: Response) => {
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
     });
 
-    return res.status(200).json({ message: 'Token is valid' });
+    return res
+      .status(200)
+      .json({ id: userAuth.userId, message: 'Token is valid' });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Internal server error' });
