@@ -16,6 +16,7 @@ import groupRouter from './routes/groupRoutes';
 import companyConfigRouter from './routes/companyConfigurationRoutes';
 import dayOffRouter from './routes/dayOffRoutes';
 import workSettingRouter from './routes/workSettingRoutes';
+import profileRouter from './routes/profileRoutes';
 
 if (!process.env.DB_API_PORT) {
   process.env.DB_API_PORT = '5000';
@@ -54,6 +55,7 @@ const routers = [
   companyConfigRouter,
   dayOffRouter,
   workSettingRouter,
+  profileRouter,
 ];
 
 routers.forEach((router) => {

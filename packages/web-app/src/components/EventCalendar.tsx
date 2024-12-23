@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import HolidayList from './HolidayList';
 
 type ValuePiece = Date | null;
 
@@ -43,9 +44,10 @@ const EventCalendar = () => {
           className='rounded-lg border'
         />
       </div>
+      <HolidayList />
 
       {/* Events Header */}
-      <div className='flex items-center justify-between mb-4'>
+      <div className='flex items-center justify-between my-4'>
         <h1 className='text-2xl font-semibold text-gray-700'>Events</h1>
       </div>
 

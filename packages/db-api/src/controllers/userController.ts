@@ -9,6 +9,7 @@ const minimalUserSelect = {
   role: true,
   firstName: true,
   lastName: true,
+  profile: true,
 };
 
 export const getAllUsers = async (req: Request, res: Response) => {

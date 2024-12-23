@@ -2,31 +2,31 @@ const TaskList = () => {
   const tasks = [
     {
       id: 1,
-      name: 'Update Homepage',
+      name: 'Review User Permissions',
       priority: 'High',
       status: 'In Progress',
-      team: 'Frontend Team',
+      team: 'Admin Team',
     },
     {
       id: 2,
-      name: 'Fix Login Bug',
+      name: 'Update Company Policies',
       priority: 'Medium',
       status: 'Pending',
-      team: 'Backend Team',
+      team: 'HR Team',
     },
     {
       id: 3,
-      name: 'Prepare Marketing Plan',
-      priority: 'Low',
+      name: 'Audit Security Logs',
+      priority: 'High',
       status: 'Completed',
-      team: 'Marketing Team',
+      team: 'Security Team',
     },
     {
       id: 4,
-      name: 'Optimize Database',
-      priority: 'High',
+      name: 'Generate Monthly Reports',
+      priority: 'Low',
       status: 'In Progress',
-      team: 'Database Team',
+      team: 'Operations Team',
     },
   ];
 

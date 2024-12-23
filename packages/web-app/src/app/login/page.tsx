@@ -9,18 +9,21 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading) return; // Prevent multiple submissions
+
+    setLoading(true); // Start loading state
 
     try {
       const response = await axios.post(`${API_BASE_URL}/login`, { email });
 
       if (response.status === 200) {
-        setMessage(
-          'Success! Please check your email for instructions to log in.',
-        );
-        console.log(response.data);
+        setMessage('Success! Please check your email for login instructions.');
+        setSuccess(true); // Mark success
         setError(null);
       } else {
         setError('Something went wrong. Please try again.');
@@ -28,6 +31,12 @@ const LoginPage = () => {
     } catch (error) {
       console.error(error);
       setError('Failed to log in. Please check your email and try again.');
+    } finally {
+      if (!success) {
+        setTimeout(() => {
+          setLoading(false);
+        }, 2000);
+      }
     }
   };
 
@@ -69,19 +78,28 @@ const LoginPage = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className='mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500'
+              disabled={success} // Disable input after success
+              className={`mt-1 block w-full px-4 py-2 border ${
+                success
+                  ? 'bg-gray-100 border-gray-300 cursor-not-allowed'
+                  : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+              } rounded-md shadow-sm`}
             />
           </div>
           <button
             type='submit'
-            disabled={!email}
+            disabled={!email || loading || success}
             className={`w-full py-2 text-white font-semibold rounded-md ${
-              email
-                ? 'bg-blue-600 hover:bg-blue-700'
-                : 'bg-blue-300 cursor-not-allowed'
+              !email || loading || success
+                ? 'bg-blue-300 cursor-not-allowed'
+                : 'bg-blue-600 hover:bg-blue-700'
             }`}
           >
-            Sign In
+            {success
+              ? 'Check your email for login instructions'
+              : loading
+                ? 'Processing...'
+                : 'Sign In'}
           </button>
         </form>
 

@@ -52,12 +52,6 @@ const Page = ({ params }: PageProps) => {
             withCredentials: true,
           },
         );
-        // const profileResponse = await axios.get(
-        //   `${API_BASE_URL}/profiles/${response.data.id}`,
-        //   {
-        //     withCredentials: true,
-        //   },
-        // );
 
         setUser({
           id: userResponse.data.id,
@@ -68,7 +62,7 @@ const Page = ({ params }: PageProps) => {
           profileImage: userResponse.data.profile.profileImage,
           title: userResponse.data.profile.title,
         });
-        router.push('/');
+        router.push('/home');
       } catch (err) {
         console.error(err);
         setError('An unexpected error occurred.');

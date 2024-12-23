@@ -29,7 +29,7 @@ const menuItems = [
       {
         icon: <FaHome />,
         label: 'Home',
-        href: '/admin',
+        href: '/home',
         visible: ['admin', 'employee', 'manager'],
       },
       {
