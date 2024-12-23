@@ -15,6 +15,8 @@ RUN chmod +x ./wait-for-postgres.sh
 RUN npm install
 RUN npx prisma generate
 
+RUN apk add --no-cache openssl
+
 RUN apk update && \
     apk add postgresql-client
 

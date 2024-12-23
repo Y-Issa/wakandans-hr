@@ -49,5 +49,15 @@ services:
       - postgres-data:/var/lib/postgresql/data
       - ./init-scripts:/docker-entrypoint-initdb.d
 
+  maildev:
+    image: maildev/maildev:latest
+    container_name: maildev
+    ports:
+      - "1080:1080" # Web interface
+      - "1025:1025" # SMTP server
+    environment:
+      - MAILDEV_INCOMING_USER=
+      - MAILDEV_INCOMING_PASS=
+
 volumes:
   postgres-data:

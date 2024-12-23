@@ -1,8 +1,9 @@
 import { JsonValue, JsonObject } from '@prisma/client/runtime/library';
 import prisma from './prisma';
-import { sendLoginEmail } from './sendgrid';
+// import { sendLoginEmail } from './sendgrid';
 import { Job, JobType, JobStatus } from '@prisma/client';
 import { markJobAsFailed, markJobAsRetry, markJobAsRunning } from './helpers';
+import { sendLoginEmail } from './email';
 
 export const runPendingJobs = async () => {
   try {
@@ -72,11 +73,16 @@ const executeJob = async (job: Job) => {
   switch (job.type) {
     case JobType.EMAIL:
       if (isValidPayload(job.payload)) {
-        // TODO: add rate limiting to prevent abuse
         await markJobAsRunning(job.id);
         const { toEmail, token } = job.payload;
         try {
-          await sendLoginEmail(toEmail, token, job.id);
+          const emailData = {
+            to: toEmail,
+            subject: 'Your Login Token',
+            text: `Use this token to log in: ${token}`,
+            html: `<p>Use this token to log in: <strong>${token}</strong></p>`,
+          };
+          await sendLoginEmail(emailData.to, token, job.id);
         } catch (error) {
           console.error('Failed to send login email with job id: ', job.id);
           await markJobAsRetry(job.id, job.failureCount, error as Error);
