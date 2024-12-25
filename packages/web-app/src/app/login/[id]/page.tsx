@@ -52,6 +52,7 @@ const Page = ({ params }: PageProps) => {
             withCredentials: true,
           },
         );
+        console.log(userResponse.data);
 
         setUser({
           id: userResponse.data.id,
@@ -59,8 +60,8 @@ const Page = ({ params }: PageProps) => {
           lastName: userResponse.data.lastName,
           email: userResponse.data.email,
           role: userResponse.data.role,
-          profileImage: userResponse.data.profile.profileImage,
-          title: userResponse.data.profile.title,
+          profileImage: userResponse?.data.profile?.profileImage,
+          title: userResponse?.data.profile?.title,
         });
         router.push('/home');
       } catch (err) {

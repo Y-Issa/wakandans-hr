@@ -6,6 +6,7 @@ import {
   createUser,
   updateUser,
   DeleteUser,
+  getAllManagers,
 } from '../controllers/userController';
 import {
   authMiddleware,
@@ -20,6 +21,12 @@ router.get(
   '/users',
   authRolesMiddleware([UserRole.ADMIN, UserRole.EMPLOYEE, UserRole.MANAGER]),
   getAllUsers,
+);
+
+router.get(
+  '/users/managers',
+  authRolesMiddleware([UserRole.ADMIN, UserRole.MANAGER]),
+  getAllManagers,
 );
 
 router.get(

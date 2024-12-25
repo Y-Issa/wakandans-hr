@@ -10,12 +10,17 @@ const minimalUserSelect = {
   firstName: true,
   lastName: true,
   profile: true,
+  locationId: true,
+  reportsToId: true,
 };
 
 export const getAllUsers = async (req: Request, res: Response) => {
   const page = parseInt(req.query.page as string, 10) || 0;
   const limit = parseInt(req.query.limit as string, 10) || 10;
   const take = limit + 1;
+
+  const sortField = (req.query.sortField as string) || 'role';
+  const sortOrder = (req.query.sortOrder as string) || 'asc';
 
   try {
     const users = await readPrisma.user.findMany({
@@ -25,6 +30,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
       select: minimalUserSelect,
       skip: page * limit,
       take,
+      orderBy: [{ [sortField]: sortOrder }, { firstName: 'asc' }],
     });
 
     const next = users.length > limit;
@@ -43,6 +49,27 @@ export const getAllUsers = async (req: Request, res: Response) => {
   }
 };
 
+export const getAllManagers = async (_req: Request, res: Response) => {
+  try {
+    const managers = await readPrisma.user.findMany({
+      where: {
+        deletedAt: null,
+        role: { in: ['MANAGER', 'ADMIN'] },
+      },
+      select: minimalUserSelect,
+    });
+
+    res.status(200).json({ data: managers });
+  } catch (error) {
+    handle500Response(
+      res,
+      error,
+      'Error occurred while fetching managers',
+      'userController.getAllManagers',
+    );
+  }
+};
+
 export const getUserById = async (req: Request, res: Response) => {
   const { id } = req.params;
   const idInt = parseInt(id, 10);
@@ -56,7 +83,7 @@ export const getUserById = async (req: Request, res: Response) => {
       where: {
         id: idInt,
       },
-      select: minimalUserSelect,
+      select: { ...minimalUserSelect, location: true },
     });
 
     if (!user) {
@@ -77,17 +104,86 @@ export const getUserById = async (req: Request, res: Response) => {
 export const createUser = async (req: Request, res: Response) => {
   const { email, firstName, lastName, role, locationId, reportsToId } =
     req.body;
+  const locationIdInt = parseInt(locationId, 10);
+  const reportsToIdInt =
+    typeof reportsToId === 'string' && reportsToId.length > 0
+      ? parseInt(reportsToId, 10)
+      : null;
 
   try {
+    // Check if the user already exists
+    const existingUser = await writePrisma.user.findUnique({
+      where: { email },
+      include: { profile: true },
+    });
+
+    if (existingUser) {
+      if (existingUser.deletedAt) {
+        // Reactivate the user
+        const reactivatedUser = await writePrisma.user.update({
+          where: { id: existingUser.id },
+          data: {
+            deletedAt: null,
+            firstName,
+            lastName,
+            role,
+            locationId: locationIdInt,
+            reportsToId: reportsToIdInt,
+            profile: existingUser.profile
+              ? undefined // Keep the existing profile if it exists
+              : {
+                  create: {
+                    title: null,
+                    employedAt: null,
+                    dateOfBirth: null,
+                    profileImage: null,
+                  },
+                },
+          },
+          select: {
+            id: true,
+            email: true,
+            firstName: true,
+            lastName: true,
+            role: true,
+            profile: {
+              select: {
+                id: true,
+              },
+            },
+          },
+        });
+
+        return res.status(200).json({
+          message: `User ${reactivatedUser.id} reactivated successfully with Profile ${reactivatedUser.profile?.id}`,
+          data: reactivatedUser,
+        });
+      }
+
+      return res.status(409).json({
+        message: `User with email ${email} already exists.`,
+        data: existingUser,
+      });
+    }
+
+    // Create a new user and profile
     const newUser = await writePrisma.user.create({
       data: {
         email,
         firstName,
         lastName,
         role,
-        locationId,
-        reportsToId,
+        locationId: locationIdInt,
+        reportsToId: reportsToIdInt,
         companyId: COMPANY_ID,
+        profile: {
+          create: {
+            title: null,
+            employedAt: null,
+            dateOfBirth: null,
+            profileImage: null,
+          },
+        },
       },
       select: {
         id: true,
@@ -95,11 +191,16 @@ export const createUser = async (req: Request, res: Response) => {
         firstName: true,
         lastName: true,
         role: true,
+        profile: {
+          select: {
+            id: true,
+          },
+        },
       },
     });
 
     res.status(201).json({
-      message: `User ${newUser.id} created successfully`,
+      message: `User ${newUser.id} created successfully with Profile ${newUser.profile?.id}`,
       data: newUser,
     });
   } catch (error) {
@@ -122,12 +223,20 @@ export const updateUser = async (req: Request, res: Response) => {
   }
 
   const updateData = req.body;
-  const { ...validData } = updateData;
+  const { firstName, lastName, email, role, locationId, reportsToId } =
+    updateData;
 
   try {
     const updatedUser = await writePrisma.user.update({
       where: { id: idInt, companyId: COMPANY_ID },
-      data: validData,
+      data: {
+        firstName,
+        lastName,
+        email,
+        role,
+        locationId: parseInt(locationId, 10),
+        reportsToId: parseInt(reportsToId, 10),
+      },
       select: {
         id: true,
         email: true,
@@ -160,6 +269,16 @@ export const DeleteUser = async (req: Request, res: Response) => {
   }
 
   try {
+    await writePrisma.profile.updateMany({
+      where: { userId: idInt },
+      data: {
+        employedAt: null,
+        dateOfBirth: null,
+        profileImage: null,
+        additionalInfo: {},
+      },
+    });
+
     const deletedUser = await writePrisma.user.update({
       where: { id: idInt, companyId: COMPANY_ID },
       data: {
@@ -175,7 +294,7 @@ export const DeleteUser = async (req: Request, res: Response) => {
       },
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       message: `User ${id} soft-deleted successfully`,
       data: deletedUser,
     });
@@ -184,7 +303,7 @@ export const DeleteUser = async (req: Request, res: Response) => {
       res,
       error,
       `Error soft-deleting user with ID: ${id}`,
-      'userController.softDeleteUser',
+      'userController.DeleteUser',
     );
   }
 };
