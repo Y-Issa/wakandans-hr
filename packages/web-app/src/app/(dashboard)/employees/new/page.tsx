@@ -15,6 +15,9 @@ const NewEmployeePage = () => {
     role: '',
     locationId: '',
     reportsToId: '',
+    profile: {
+      title: '',
+    },
   });
 
   const [locations, setLocations] = useState<{ id: string; name: string }[]>(
@@ -51,7 +54,15 @@ const NewEmployeePage = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (name === 'title') {
+      setFormData((prev) => ({
+        ...prev,
+        profile: { ...prev.profile, [name]: value },
+      }));
+      return;
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -78,15 +89,55 @@ const NewEmployeePage = () => {
   };
 
   return (
-    <div className='flex items-center justify-center'>
-      <div className='w-full max-w-lg p-6 bg-white rounded-lg shadow-md'>
-        <h1 className='text-2xl font-bold text-center text-gray-900 mb-4'>
+    <div className='flex items-center justify-center bg-gray-50'>
+      <div className='w-full max-w-lg p-6 bg-white rounded-lg shadow-lg'>
+        <h1 className='text-2xl font-bold text-center text-gray-900 mb-6'>
           Add New Employee
         </h1>
         {error && (
           <p className='text-xs text-red-500 text-center mb-4'>{error}</p>
         )}
-        <form onSubmit={handleSubmit} className='space-y-4'>
+        <form onSubmit={handleSubmit} className='space-y-6'>
+          <div className='flex space-x-4'>
+            {/* First Name */}
+            <div className='w-1/2'>
+              <label
+                htmlFor='firstName'
+                className='block text-xs font-semibold text-gray-600'
+              >
+                First Name
+              </label>
+              <input
+                type='text'
+                name='firstName'
+                id='firstName'
+                value={formData.firstName}
+                onChange={handleChange}
+                required
+                className='mt-2 block w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-teal-500'
+              />
+            </div>
+
+            {/* Last Name */}
+            <div className='w-1/2'>
+              <label
+                htmlFor='lastName'
+                className='block text-xs font-semibold text-gray-600'
+              >
+                Last Name
+              </label>
+              <input
+                type='text'
+                name='lastName'
+                id='lastName'
+                value={formData.lastName}
+                onChange={handleChange}
+                required
+                className='mt-2 block w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-teal-500'
+              />
+            </div>
+          </div>
+
           {/* Email */}
           <div>
             <label
@@ -102,45 +153,7 @@ const NewEmployeePage = () => {
               value={formData.email}
               onChange={handleChange}
               required
-              className='mt-1 block w-full px-3 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-400'
-            />
-          </div>
-
-          {/* First Name */}
-          <div>
-            <label
-              htmlFor='firstName'
-              className='block text-xs font-semibold text-gray-600'
-            >
-              First Name
-            </label>
-            <input
-              type='text'
-              name='firstName'
-              id='firstName'
-              value={formData.firstName}
-              onChange={handleChange}
-              required
-              className='mt-1 block w-full px-3 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-400'
-            />
-          </div>
-
-          {/* Last Name */}
-          <div>
-            <label
-              htmlFor='lastName'
-              className='block text-xs font-semibold text-gray-600'
-            >
-              Last Name
-            </label>
-            <input
-              type='text'
-              name='lastName'
-              id='lastName'
-              value={formData.lastName}
-              onChange={handleChange}
-              required
-              className='mt-1 block w-full px-3 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-400'
+              className='mt-2 block w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-teal-500'
             />
           </div>
 
@@ -158,13 +171,32 @@ const NewEmployeePage = () => {
               value={formData.role}
               onChange={handleChange}
               required
-              className='mt-1 block w-full px-3 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-400'
+              className='mt-2 block w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-teal-500'
             >
               <option value=''>Select a role</option>
               <option value='ADMIN'>Admin</option>
               <option value='EMPLOYEE'>Employee</option>
               <option value='MANAGER'>Manager</option>
             </select>
+          </div>
+
+          {/* Title */}
+          <div>
+            <label
+              htmlFor='title'
+              className='block text-xs font-semibold text-gray-600'
+            >
+              Title
+            </label>
+            <input
+              type='text'
+              name='title'
+              id='title'
+              value={formData.profile.title}
+              onChange={handleChange}
+              required
+              className='mt-2 block w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-teal-500'
+            />
           </div>
 
           {/* Location */}
@@ -181,7 +213,7 @@ const NewEmployeePage = () => {
               value={formData.locationId}
               onChange={handleChange}
               required
-              className='mt-1 block w-full px-3 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-400'
+              className='mt-2 block w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-teal-500'
             >
               <option value=''>Select a location</option>
               {locations.map((location) => (
@@ -205,7 +237,7 @@ const NewEmployeePage = () => {
               id='reportsToId'
               value={formData.reportsToId}
               onChange={handleChange}
-              className='mt-1 block w-full px-3 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-400'
+              className='mt-2 block w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-teal-500'
             >
               <option value=''>Select a manager</option>
               {users.map((user) => (
@@ -220,7 +252,7 @@ const NewEmployeePage = () => {
           <button
             type='submit'
             disabled={loading}
-            className={`w-full px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-sm hover:bg-blue-700 transition ${
+            className={`w-full px-4 py-2 text-sm font-semibold text-white bg-teal-600 rounded-sm hover:bg-teal-700 transition-all duration-300 ease-in-out focus:outline-none ${
               loading && 'cursor-not-allowed opacity-60'
             }`}
           >

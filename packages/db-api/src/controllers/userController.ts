@@ -102,7 +102,7 @@ export const getUserById = async (req: Request, res: Response) => {
 };
 
 export const createUser = async (req: Request, res: Response) => {
-  const { email, firstName, lastName, role, locationId, reportsToId } =
+  const { email, firstName, lastName, role, locationId, reportsToId, profile } =
     req.body;
   const locationIdInt = parseInt(locationId, 10);
   const reportsToIdInt =
@@ -133,7 +133,7 @@ export const createUser = async (req: Request, res: Response) => {
               ? undefined // Keep the existing profile if it exists
               : {
                   create: {
-                    title: null,
+                    title: profile?.title,
                     employedAt: null,
                     dateOfBirth: null,
                     profileImage: null,
@@ -178,7 +178,7 @@ export const createUser = async (req: Request, res: Response) => {
         companyId: COMPANY_ID,
         profile: {
           create: {
-            title: null,
+            title: profile?.title,
             employedAt: null,
             dateOfBirth: null,
             profileImage: null,
@@ -223,7 +223,7 @@ export const updateUser = async (req: Request, res: Response) => {
   }
 
   const updateData = req.body;
-  const { firstName, lastName, email, role, locationId, reportsToId } =
+  const { firstName, lastName, email, role, locationId, reportsToId, profile } =
     updateData;
 
   try {
@@ -236,6 +236,15 @@ export const updateUser = async (req: Request, res: Response) => {
         role,
         locationId: parseInt(locationId, 10),
         reportsToId: parseInt(reportsToId, 10),
+        profile: {
+          update: {
+            title: profile?.title,
+            employedAt: profile?.employedAt,
+            dateOfBirth: profile?.dateOfBirth,
+            profileImage: profile?.profileImage,
+            additionalInfo: profile?.additionalInfo,
+          },
+        },
       },
       select: {
         id: true,

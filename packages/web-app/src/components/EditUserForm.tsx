@@ -19,6 +19,9 @@ interface EditUserFormProps {
     role: string;
     locationId: string;
     reportsToId: string;
+    profile: {
+      title: string;
+    };
   };
   onChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -127,6 +130,22 @@ const EditUserForm: React.FC<EditUserFormProps> = ({
               <option value='EMPLOYEE'>Employee</option>
               <option value='MANAGER'>Manager</option>
             </select>
+          </div>
+          <div>
+            <label
+              htmlFor='title'
+              className='block text-sm font-medium text-gray-700'
+            >
+              Title
+            </label>
+            <input
+              type='text'
+              id='title'
+              name='title'
+              value={formData.profile?.title}
+              onChange={onChange}
+              className='mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500'
+            />
           </div>
           <div>
             <label

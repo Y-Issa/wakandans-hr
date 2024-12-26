@@ -7,9 +7,10 @@ import { API_BASE_URL } from '@/lib/constants';
 import { HiPlus } from 'react-icons/hi2';
 import UserRow from '@/components/UserRow';
 import Pagination from '@/components/Pagination';
-import EditUserForm from '@/components/forms/EditUserForm';
+import EditUserForm from '@/components/EditUserForm';
 import { useRouter } from 'next/navigation';
 import { BiSortAlt2, BiSortAZ, BiSortZA } from 'react-icons/bi';
+import useStore from '@/lib/store';
 
 interface User {
   id: string;
@@ -33,6 +34,8 @@ const fetcher = (url: string) =>
 
 const UsersList = () => {
   const router = useRouter();
+  const user = useStore((state) => state.user);
+
   const [page, setPage] = useState(0);
   const [sortBy, setSortBy] = useState('firstName');
   const [sortOrder, setSortOrder] = useState('asc');
@@ -113,18 +116,21 @@ const UsersList = () => {
   const hasNextPage = data?.next || false;
 
   return (
-    <div className='bg-gray-50 shadow-lg rounded-lg p-6 m-4'>
+    <div className='bg-gray-50 shadow-lg rounded-lg p-6 m-4 overflow-y-scroll lg:max-h-[85vh]'>
       <div className='flex justify-between items-center mb-6'>
         <h1 className='text-2xl font-bold text-gray-800'>All Employees</h1>
-        <button
-          onClick={() => router.push('/employees/new')}
-          className='px-4 py-2 text-white bg-blue-600 rounded-lg shadow hover:bg-blue-700 focus:outline-none'
-        >
-          <HiPlus size={20} />
-        </button>
+        {user?.role === 'ADMIN' && (
+          <button
+            onClick={() => router.push('/employees/new')}
+            className='px-4 py-2 flex items-center justify-center gap-2 text-white bg-teal-600 rounded-lg shadow-md transition-all duration-300 ease-in-out hover:bg-teal-700 hover:shadow-lg focus:outline-none transform hover:scale-105'
+          >
+            <HiPlus size={20} />
+            <span className='hidden md:inline'>Add Employee</span>
+          </button>
+        )}
       </div>
 
-      <div className='overflow-hidden rounded-lg border border-gray-200 shadow-sm'>
+      <div className='overflow-x-auto rounded-lg border border-gray-200 shadow-sm'>
         <table className='min-w-full bg-white divide-y divide-gray-200'>
           <thead className='bg-gray-100'>
             <tr>
@@ -149,8 +155,8 @@ const UsersList = () => {
                 onClick={() => handleSort('email')}
                 className='px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider cursor-pointer'
               >
-                Email
-                <span className='inline-block px-2 py-1 bg-gray-200 rounded-full align-baseline'>
+                Email{' '}
+                <span className='inline-block px-2 py-1 bg-gray-200 rounded-full align-middle'>
                   {sortBy === 'email' ? (
                     sortOrder === 'asc' ? (
                       <BiSortAZ />
@@ -167,7 +173,7 @@ const UsersList = () => {
                 className='px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider cursor-pointer'
               >
                 Role{' '}
-                <span className='inline-block px-2 py-1 bg-gray-200 rounded-full align-center'>
+                <span className='inline-block px-2 py-1 bg-gray-200 rounded-full align-middle'>
                   {sortBy === 'role' ? (
                     sortOrder === 'asc' ? (
                       <BiSortAZ />
@@ -241,12 +247,23 @@ const UsersList = () => {
       {isEditModalOpen && selectedUser && (
         <EditUserForm
           formData={selectedUser}
-          onChange={(e) =>
-            setSelectedUser({
-              ...selectedUser,
-              [e.target.name]: e.target.value,
-            })
-          }
+          onChange={(e) => {
+            console.log(e.target.name, e.target.value);
+            if (e.target.name === 'title') {
+              setSelectedUser({
+                ...selectedUser,
+                profile: {
+                  ...selectedUser.profile,
+                  [e.target.name]: e.target.value,
+                },
+              });
+            } else {
+              setSelectedUser({
+                ...selectedUser,
+                [e.target.name]: e.target.value,
+              });
+            }
+          }}
           onSubmit={(e) => {
             e.preventDefault();
             handleEditSubmit(selectedUser);

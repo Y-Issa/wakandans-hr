@@ -1,10 +1,13 @@
+'use client';
+import useStore from '@/lib/store';
 import Image from 'next/image';
 import { LuMegaphone, LuMessageCircle, LuSearch } from 'react-icons/lu';
 
 const Navbar = () => {
+  const user = useStore((state) => state.user);
+
   return (
     <div className='flex items-center justify-between p-4'>
-      {/* SEARCH BAR */}
       <div className='hidden md:flex items-center gap-2 text-xs rounded-full ring-[1.5px] ring-gray-300 px-2'>
         <LuSearch />
         <input
@@ -14,7 +17,6 @@ const Navbar = () => {
           suppressHydrationWarning
         />
       </div>
-      {/* ICONS AND USER */}
       <div className='flex items-center gap-6 justify-end w-full'>
         <div className='bg-white rounded-full w-7 h-7 flex items-center justify-center cursor-pointer'>
           <LuMessageCircle />
@@ -26,11 +28,15 @@ const Navbar = () => {
           </div>
         </div>
         <div className='flex flex-col'>
-          <span className='text-xs leading-3 font-medium'>John Doe</span>
-          <span className='text-[10px] text-gray-500 text-right'>Admin</span>
+          <span className='text-xs leading-3 font-medium'>
+            {user?.firstName} {user?.lastName}
+          </span>
+          <span className='text-[10px] text-gray-500 text-right'>
+            {user?.role}
+          </span>
         </div>
         <Image
-          src='/avatar.png'
+          src={user?.profileImage || '/avatar.png'}
           alt=''
           width={36}
           height={36}

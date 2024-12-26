@@ -12,7 +12,6 @@ const AdminPage = () => {
       {/* LEFT */}
       <div className='w-full lg:w-2/3 flex flex-col gap-8'>
         <div className='flex flex-col md:flex-row gap-4'>
-          {/* PROJECT OVERVIEW */}
           <div className='w-full md:w-1/2'>
             <CompanySettingsOverview />
             <ProjectOverview />

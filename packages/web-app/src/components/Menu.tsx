@@ -19,8 +19,7 @@ import {
   FaRegClock,
   FaDollarSign,
 } from 'react-icons/fa6';
-
-const role = 'admin';
+import useStore from '@/lib/store';
 
 const menuItems = [
   {
@@ -30,73 +29,73 @@ const menuItems = [
         icon: <FaHome />,
         label: 'Home',
         href: '/home',
-        visible: ['admin', 'employee', 'manager'],
+        visible: ['ADMIN', 'EMPLOYEE', 'MANAGER'],
       },
       {
         icon: <FaUsers />,
         label: 'Employees',
         href: '/employees',
-        visible: ['admin', 'employee', 'manager'],
+        visible: ['ADMIN', 'EMPLOYEE', 'MANAGER'],
       },
       {
         icon: <FaBuildingUser />,
         label: 'Departments',
         href: '/departments',
-        visible: ['admin', 'employee', 'manager'],
+        visible: ['ADMIN', 'EMPLOYEE', 'MANAGER'],
       },
       {
         icon: <FaUserFriends />,
         label: 'Teams',
         href: '/teams',
-        visible: ['admin', 'employee', 'manager'],
+        visible: ['ADMIN', 'EMPLOYEE', 'MANAGER'],
       },
       {
         icon: <FaProjectDiagram />,
         label: 'Projects',
         href: '/projects',
-        visible: ['admin', 'employee', 'manager'],
+        visible: ['ADMIN', 'EMPLOYEE', 'MANAGER'],
       },
       {
         icon: <FaTasks />,
         label: 'Tasks',
         href: '/tasks',
-        visible: ['admin', 'employee', 'manager'],
+        visible: ['ADMIN', 'EMPLOYEE', 'MANAGER'],
       },
       {
         icon: <FaUserCircle />,
         label: 'Clients',
         href: '/clients',
-        visible: ['admin', 'employee', 'manager'],
+        visible: ['ADMIN', 'EMPLOYEE', 'MANAGER'],
       },
       {
         icon: <FaCalendarAlt />,
         label: 'Calendar',
         href: '/calendar',
-        visible: ['admin', 'employee', 'manager'],
+        visible: ['ADMIN', 'EMPLOYEE', 'MANAGER'],
       },
       {
         icon: <FaRegClock />,
         label: 'Attendance',
         href: '/attendance',
-        visible: ['admin', 'employee', 'manager'],
+        visible: ['ADMIN', 'EMPLOYEE', 'MANAGER'],
       },
       {
         icon: <FaDollarSign />,
         label: 'Payroll',
         href: '/payroll',
-        visible: ['admin', 'employee', 'manager'],
+        visible: ['ADMIN', 'EMPLOYEE', 'MANAGER'],
       },
       {
         icon: <FaFileAlt />,
         label: 'Reports',
         href: '/reports',
-        visible: ['admin', 'employee', 'manager'],
+        visible: ['ADMIN', 'EMPLOYEE', 'MANAGER'],
       },
       {
         icon: <FaCogs />,
         label: 'Settings',
         href: '/settings',
-        visible: ['admin', 'employee', 'manager'],
+        visible: ['ADMIN', 'EMPLOYEE', 'MANAGER'],
       },
     ],
   },
@@ -106,21 +105,23 @@ const menuItems = [
       {
         icon: <FaUserCircle />,
         label: 'Profile',
-        href: '/profile',
-        visible: ['admin', 'teacher', 'student', 'parent'],
+        href: '/employees/',
+        visible: ['ADMIN', 'EMPLOYEE', 'MANAGER'],
       },
       {
         icon: <FaSignOutAlt />,
         label: 'Logout',
         href: '/logout',
-        visible: ['admin', 'teacher', 'student', 'parent'],
+        visible: ['ADMIN', 'EMPLOYEE', 'MANAGER'],
       },
     ],
   },
 ];
 
 const Menu = () => {
-  const [selected, setSelected] = useState<string>('/');
+  const [selected, setSelected] = useState<string>('/home');
+  const user = useStore((state) => state.user);
+  const role = user?.role || 'EMPLOYEE';
 
   return (
     <div className='mt-4 text-sm'>
@@ -131,16 +132,20 @@ const Menu = () => {
           </span>
           {section.items.map((item) => {
             if (item.visible.includes(role)) {
+              const isProfileItem = item.label === 'Profile';
+              const href =
+                isProfileItem && user ? `${item.href}${user.id}` : item.href;
+
               return (
                 <Link
-                  href={item.href}
+                  href={href}
                   key={item.label}
-                  className={`flex items-center justify-center lg:justify-start gap-4 text-gray-500 py-2 md:px-2 rounded-md menu-item ${
-                    selected === item.href ? 'selected' : ''
-                  }`}
-                  onClick={() => setSelected(item.href)}
+                  className={`flex items-center justify-start gap-4 text-gray-500 py-2 md:px-2 rounded-md transition-all duration-300 ease-in-out
+                    transform hover:translate-y-[-3px] hover:bg-teal-50 hover:shadow-lg 
+                    ${selected === href ? 'bg-teal-100 shadow-xl text-teal-700 font-semibold' : ''}`}
+                  onClick={() => setSelected(href)}
                 >
-                  <span className='text-lg text-blue-600'>{item.icon}</span>
+                  <span className='text-lg text-teal-600'>{item.icon}</span>
                   <span className='hidden lg:block'>{item.label}</span>
                 </Link>
               );

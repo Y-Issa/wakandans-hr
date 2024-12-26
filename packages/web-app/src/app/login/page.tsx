@@ -41,14 +41,14 @@ const LoginPage = () => {
   };
 
   return (
-    <div className='min-h-screen flex items-center justify-center bg-gray-100 relative'>
+    <div className='min-h-screen flex items-center justify-center bg-teal-50 relative'>
       {/* Error/Message Banner */}
       {(error || message) && (
         <div
           className={`fixed top-4 left-1/2 transform -translate-x-1/2 px-6 py-2 rounded-md shadow-md text-center max-w-md w-full ${
             error
               ? 'bg-red-100 text-red-600 border border-red-300'
-              : 'bg-green-100 text-green-600 border border-green-300'
+              : 'bg-teal-100 text-teal-600 border border-teal-300'
           }`}
         >
           {error || message}
@@ -59,7 +59,7 @@ const LoginPage = () => {
       <div className='bg-white rounded-lg shadow-lg p-6 max-w-md w-full'>
         {/* Logo and Heading */}
         <div className='text-center mb-6'>
-          <h1 className='text-2xl font-bold'>HR App</h1>
+          <h1 className='text-2xl font-bold text-teal-600'>HR App</h1>
           <p className='text-gray-500'>Sign in to your account</p>
         </div>
 
@@ -82,7 +82,7 @@ const LoginPage = () => {
               className={`mt-1 block w-full px-4 py-2 border ${
                 success
                   ? 'bg-gray-100 border-gray-300 cursor-not-allowed'
-                  : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                  : 'border-teal-300 focus:ring-teal-500 focus:border-teal-500'
               } rounded-md shadow-sm`}
             />
           </div>
@@ -91,8 +91,8 @@ const LoginPage = () => {
             disabled={!email || loading || success}
             className={`w-full py-2 text-white font-semibold rounded-md ${
               !email || loading || success
-                ? 'bg-blue-300 cursor-not-allowed'
-                : 'bg-blue-600 hover:bg-blue-700'
+                ? 'bg-teal-300 cursor-not-allowed'
+                : 'bg-teal-600 hover:bg-teal-700'
             }`}
           >
             {success
@@ -106,11 +106,11 @@ const LoginPage = () => {
         {/* Additional Information */}
         <p className='mt-4 text-center text-sm text-gray-500'>
           By signing in, you agree to our{' '}
-          <Link href='/terms' className='text-blue-600 hover:underline'>
+          <Link href='/terms' className='text-teal-600 hover:underline'>
             Terms of Service
           </Link>{' '}
           and{' '}
-          <Link href='/privacy' className='text-blue-600 hover:underline'>
+          <Link href='/privacy' className='text-teal-600 hover:underline'>
             Privacy Policy
           </Link>
           .

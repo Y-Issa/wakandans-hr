@@ -3,7 +3,6 @@
 import React from 'react';
 import useSWR from 'swr';
 import axios from 'axios';
-import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
 import EmployeeInfoCard from '@/components/EmployeeInfoCard';
 import DepartmentList from '@/components/DepartmentList';
@@ -18,7 +17,6 @@ const fetcher = (url: string) =>
   axios.get(url, { withCredentials: true }).then((res) => res.data);
 
 const EmployeePage = () => {
-  const router = useRouter();
   const { id } = useParams();
 
   const {
@@ -46,16 +44,14 @@ const EmployeePage = () => {
   const employee = employeeData;
   const departments = departmentData?.data || [];
   const teams = teamData?.data || [];
-  console.log(departments, teams, employee);
 
   return (
     <div className='flex-1 p-4 flex flex-col gap-4 xl:flex-row'>
-      <div className='w-full xl:w-2/3'>
-        <EmployeeInfoCard
-          employee={employee}
-          onEdit={() => router.push(`/employees/edit/${id}`)}
-        />
-        <AboutEmployee additionalInfo={employee?.profile?.additionalInfo} />
+      <div className='w-full xl:w-2/3 flex flex-col gap-4'>
+        <div className='flex flex-col xl:flex-row gap-4'>
+          <EmployeeInfoCard employee={employee} />
+          <AboutEmployee profile={employee?.profile} />
+        </div>
         <DepartmentList departments={departments} />
         <TeamList teams={teams} />
       </div>

@@ -1,9 +1,18 @@
 import React from 'react';
-import SectionWrapper from './sectionWraper';
+import {
+  FaGithub,
+  FaInstagram,
+  FaLinkedin,
+  FaSquareFacebook,
+  FaXTwitter,
+} from 'react-icons/fa6';
 
 interface SocialLinks {
   linkedin?: string;
   twitter?: string;
+  github?: string;
+  facebook?: string;
+  instagram?: string;
   [key: string]: string | undefined;
 }
 
@@ -12,58 +21,86 @@ interface AdditionalInfo {
   social?: SocialLinks;
 }
 
-interface AboutEmployeeProps {
+interface Profile {
   additionalInfo?: string;
 }
 
-const AboutEmployee: React.FC<AboutEmployeeProps> = ({ additionalInfo }) => {
+interface AboutEmployeeProps {
+  profile?: Profile;
+}
+
+const AboutEmployee: React.FC<AboutEmployeeProps> = ({ profile }) => {
+  const additionalInfo = profile?.additionalInfo;
+
   if (!additionalInfo) {
-    return <p className='text-gray-500'>No additional information provided.</p>;
+    return (
+      <div className='bg-teal-50 shadow-lg rounded-lg p-6 space-y-6 mt-4'>
+        <p className='text-teal-600 text-center'>
+          No additional information provided.
+        </p>
+      </div>
+    );
   }
 
   let parsedInfo: AdditionalInfo | null = null;
-  // const testString =
-  //   "{\n      bio: \"I love to play the guitar and I'm a huge fan of the Beatles.\",\n      social: {\n        linkedin: 'https://www.linkedin.com/in/john-lennon',\n        twitter: 'https://twitter.com/johnlennon',\n      },\n    }";
 
   try {
     parsedInfo = JSON.parse(additionalInfo);
   } catch (error) {
     console.error('Error parsing additionalInfo:', error);
     return (
-      <p className='text-red-500'>Error loading additional information.</p>
+      <p className='text-red-500 text-center'>
+        Error loading additional information.
+      </p>
     );
   }
 
+  const socialIcons: Record<string, React.ReactNode> = {
+    linkedin: <FaLinkedin />,
+    twitter: <FaXTwitter />,
+    github: <FaGithub />,
+    facebook: <FaSquareFacebook />,
+    instagram: <FaInstagram />,
+  };
+
   return (
-    <SectionWrapper title='About Employee'>
-      <div className='space-y-4'>
-        {parsedInfo?.bio && <p className='text-gray-700'>{parsedInfo.bio}</p>}
-        {parsedInfo?.social && (
-          <div className='space-y-2'>
-            <h2 className='text-sm font-semibold text-gray-600'>
-              Social Links:
-            </h2>
-            <ul className='list-disc list-inside text-blue-600'>
-              {Object.entries(parsedInfo.social).map(
-                ([platform, link]) =>
-                  link && (
-                    <li key={platform}>
-                      <a
-                        href={link}
-                        target='_blank'
-                        rel='noopener noreferrer'
-                        className='underline hover:text-blue-800'
-                      >
-                        {platform.charAt(0).toUpperCase() + platform.slice(1)}
-                      </a>
-                    </li>
-                  ),
-              )}
-            </ul>
+    <div className='bg-white shadow-lg rounded-lg p-6 space-y-6 mt-4'>
+      {/* Bio Section */}
+      {parsedInfo?.bio && (
+        <div className='text-teal-800 text-lg leading-relaxed'>
+          <h2 className='text-teal-700 font-semibold mb-4 text-base'>
+            About me:
+          </h2>
+          <p>{parsedInfo.bio}</p>
+        </div>
+      )}
+
+      {/* Social Links Section */}
+      {parsedInfo?.social && (
+        <div>
+          <h2 className='text-teal-700 font-semibold mb-4 text-base'>
+            Connect with me:
+          </h2>
+          <div className='flex flex-wrap gap-4'>
+            {Object.entries(parsedInfo.social).map(
+              ([platform, link]) =>
+                link && (
+                  <a
+                    key={platform}
+                    href={link}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    className='flex items-center justify-center w-12 h-12 rounded-full bg-gray-50 hover:bg-teal-100 text-teal-600 hover:text-teal-800 shadow-md transition-transform transform hover:scale-110'
+                    title={platform.charAt(0).toUpperCase() + platform.slice(1)}
+                  >
+                    {socialIcons[platform.toLowerCase()]}
+                  </a>
+                ),
+            )}
           </div>
-        )}
-      </div>
-    </SectionWrapper>
+        </div>
+      )}
+    </div>
   );
 };
 

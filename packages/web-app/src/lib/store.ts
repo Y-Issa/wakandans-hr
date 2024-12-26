@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 type User = {
   id: number;
@@ -26,14 +27,18 @@ type UserSlice = {
   clearUser: () => void;
 };
 
-const createUserSlice: import('zustand').StateCreator<UserSlice> = (set) => ({
-  user: null,
-  setUser: (userData: User) => set({ user: userData }),
-  clearUser: () => set({ user: null }),
-});
-
-const useStore = create<UserSlice>()((...args) => ({
-  ...createUserSlice(...args),
-}));
+const useStore = create<UserSlice>()(
+  persist(
+    (set) => ({
+      user: null,
+      setUser: (userData: User) => set({ user: userData }),
+      clearUser: () => set({ user: null }),
+    }),
+    {
+      name: 'user-storage',
+      partialize: (state) => ({ user: state.user }),
+    },
+  ),
+);
 
 export default useStore;

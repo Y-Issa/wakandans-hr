@@ -32,7 +32,7 @@ router.post('/profiles', authRolesMiddleware([UserRole.ADMIN]), createProfile);
 
 router.put(
   '/profiles/:id',
-  authRolesMiddleware([UserRole.ADMIN]),
+  authRolesMiddleware([UserRole.ADMIN, UserRole.EMPLOYEE, UserRole.MANAGER]),
   updateProfile,
 );
 
