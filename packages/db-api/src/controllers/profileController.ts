@@ -118,11 +118,12 @@ export const updateProfile = async (req: Request, res: Response) => {
   }
 
   const updateData = req.body;
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { user, ...validData } = updateData;
   try {
     const updatedProfile = await writePrisma.profile.update({
       where: { id: idInt },
-      data: updateData,
+      data: validData,
       select: minimalProfileSelect,
     });
 

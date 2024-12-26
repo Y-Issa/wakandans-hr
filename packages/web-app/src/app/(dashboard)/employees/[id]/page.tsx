@@ -44,18 +44,23 @@ const EmployeePage = () => {
   const employee = employeeData;
   const departments = departmentData?.data || [];
   const teams = teamData?.data || [];
+  console.log(employee);
 
   return (
     <div className='flex-1 p-4 flex flex-col gap-4 xl:flex-row'>
-      <div className='w-full xl:w-2/3 flex flex-col gap-4'>
-        <div className='flex flex-col xl:flex-row gap-4'>
-          <EmployeeInfoCard employee={employee} />
-          <AboutEmployee profile={employee?.profile} />
+      <div className='w-full xl:w-3/4 flex flex-col gap-4'>
+        <div className='flex flex-col md:flex-row gap-4'>
+          <div className='w-full lg:w-1/2 '>
+            <EmployeeInfoCard employee={employee} />
+            <DepartmentList departments={departments} />
+            <TeamList teams={teams} />
+          </div>
+          <div className='w-full lg:w-1/2'>
+            <AboutEmployee profile={employee?.profile} />
+          </div>
         </div>
-        <DepartmentList departments={departments} />
-        <TeamList teams={teams} />
       </div>
-      <div className='w-full xl:w-1/3'>
+      <div className='w-full xl:w-1/4'>
         <QuickLinks employeeId={Array.isArray(id) ? id[0] : id} />
       </div>
     </div>

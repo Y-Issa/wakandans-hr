@@ -179,7 +179,7 @@ export const createUser = async (req: Request, res: Response) => {
         profile: {
           create: {
             title: profile?.title,
-            employedAt: null,
+            employedAt: new Date(),
             dateOfBirth: null,
             profileImage: null,
           },

@@ -22,6 +22,7 @@ interface AdditionalInfo {
 }
 
 interface Profile {
+  dateOfBirth?: string;
   additionalInfo?: string;
 }
 
@@ -34,7 +35,7 @@ const AboutEmployee: React.FC<AboutEmployeeProps> = ({ profile }) => {
 
   if (!additionalInfo) {
     return (
-      <div className='bg-teal-50 shadow-lg rounded-lg p-6 space-y-6 mt-4'>
+      <div className='bg-teal-50 shadow-lg rounded-lg p-6 space-y-6'>
         <p className='text-teal-600 text-center'>
           No additional information provided.
         </p>
@@ -45,7 +46,11 @@ const AboutEmployee: React.FC<AboutEmployeeProps> = ({ profile }) => {
   let parsedInfo: AdditionalInfo | null = null;
 
   try {
-    parsedInfo = JSON.parse(additionalInfo);
+    if (typeof additionalInfo === 'string') {
+      parsedInfo = JSON.parse(additionalInfo);
+    } else {
+      parsedInfo = additionalInfo as AdditionalInfo;
+    }
   } catch (error) {
     console.error('Error parsing additionalInfo:', error);
     return (
@@ -64,15 +69,36 @@ const AboutEmployee: React.FC<AboutEmployeeProps> = ({ profile }) => {
   };
 
   return (
-    <div className='bg-white shadow-lg rounded-lg p-6 space-y-6 mt-4'>
+    <div className='bg-white shadow-lg rounded-lg p-6 space-y-6 '>
       {/* Bio Section */}
       {parsedInfo?.bio && (
-        <div className='text-teal-800 text-lg leading-relaxed'>
-          <h2 className='text-teal-700 font-semibold mb-4 text-base'>
-            About me:
-          </h2>
-          <p>{parsedInfo.bio}</p>
-        </div>
+        <>
+          <div className='text-teal-800 text-lg leading-relaxed'>
+            <h2 className='text-teal-700 font-semibold mb-4 text-base'>
+              About me:
+            </h2>
+            <p>{parsedInfo.bio}</p>
+          </div>
+          <hr className='border-t border-gray-300' />
+        </>
+      )}
+
+      {/* Birthday Section */}
+      {profile?.dateOfBirth && (
+        <>
+          <div>
+            <h2 className='text-teal-700 font-semibold mb-4 text-base'>
+              Birthday:
+            </h2>
+            <p className='text-teal-800 font-semibold'>
+              {new Date(profile.dateOfBirth).toLocaleDateString('en-US', {
+                month: 'long',
+                day: 'numeric',
+              })}
+            </p>
+          </div>
+          <hr className='border-t border-gray-300' />
+        </>
       )}
 
       {/* Social Links Section */}
