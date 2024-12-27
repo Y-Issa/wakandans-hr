@@ -87,7 +87,7 @@ export const createDepartment = async (req: Request, res: Response) => {
       data: {
         name,
         description,
-        locationId,
+        locationId: parseInt(locationId, 10),
         companyId: COMPANY_ID,
       },
       select: minimalDepartmentSelect,
@@ -117,7 +117,8 @@ export const updateDepartment = async (req: Request, res: Response) => {
   }
 
   const updateData = req.body;
-  const { ...validData } = updateData;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { user, ...validData } = updateData;
 
   try {
     const updatedDepartment = await writePrisma.department.update({

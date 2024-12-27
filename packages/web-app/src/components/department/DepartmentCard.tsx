@@ -1,92 +1,57 @@
-import { API_BASE_URL } from '@/lib/constants';
 import useStore from '@/lib/store';
-import axios from 'axios';
-import { FaBuildingUser } from 'react-icons/fa6';
-import { useState } from 'react';
-import useSWR, { mutate } from 'swr';
 import DepartmentMembers from './DepartmentMembers';
 import AssignUserDepartment from './AssignUserDepartment';
+import { HiAdjustmentsHorizontal, HiOutlineTrash } from 'react-icons/hi2';
+import EditDepartment from './EditDepartment';
+import ConfirmDeleteDepartment from './ConfirmDeleteDepartment';
+import {
+  useDeleteDepartment,
+  useDepartmentDetails,
+  useEditForm,
+  useMemberActions,
+  useModalState,
+} from '@/hooks/useDepartment';
 
 interface DepartmentCardProps {
   department: {
     id: number;
     name: string;
     description: string;
+    locationId: number;
   };
+  page: number;
 }
 
-const fetcher = (url: string) =>
-  axios.get(url, { withCredentials: true }).then((res) => res.data);
-
-const useDepartmentData = (url: string | null, enabled: boolean) =>
-  useSWR(enabled ? url : null, fetcher, {
-    keepPreviousData: true,
-    revalidateOnFocus: false,
-  });
-
-const DepartmentCard = ({ department }: DepartmentCardProps) => {
+const DepartmentCard = ({ department, page }: DepartmentCardProps) => {
   const currentUser = useStore((state) => state.user);
-  const [modalState, setModalState] = useState({
-    showMembers: false,
-    showAssignModal: false,
-  });
 
-  const toggleModal = (
-    key: 'showMembers' | 'showAssignModal',
-    state: boolean,
-  ) => setModalState((prev) => ({ ...prev, [key]: state }));
+  const { modalState, toggleModal } = useModalState();
 
-  const { data: userCountData, error: userCountError } = useDepartmentData(
-    `${API_BASE_URL}/userDepartments/department/user-count/${department.id}`,
-    true,
+  const { userCountData, userCountError, departmentUsersData, allUsersData } =
+    useDepartmentDetails(department.id, modalState);
+
+  const { editFormData, handleEditChange, handleEditSubmit } = useEditForm(
+    {
+      name: department.name,
+      description: department.description,
+      locationId: department.locationId,
+    },
+    department.id,
+    page,
+    toggleModal,
   );
 
-  const { data: departmentUsersData } = useDepartmentData(
-    modalState.showMembers || modalState.showAssignModal
-      ? `${API_BASE_URL}/userDepartments/department/${department.id}`
-      : null,
-    modalState.showMembers || modalState.showAssignModal,
+  const { handleDelete } = useDeleteDepartment(
+    department.id,
+    page,
+    toggleModal,
   );
 
-  const { data: allUsersData } = useDepartmentData(
-    modalState.showAssignModal ? `${API_BASE_URL}/users?limit=1100` : null,
-    modalState.showAssignModal,
-  );
+  const { handleMemberAction } = useMemberActions(department.id, toggleModal);
 
   const userCount = userCountData?.data || 0;
   const users = departmentUsersData?.data || [];
   const allUsers = allUsersData?.data || [];
-
-  const handleMemberAction = async (
-    userId: number,
-    action: 'assign' | 'delete',
-  ) => {
-    const url =
-      action === 'assign'
-        ? `${API_BASE_URL}/userDepartments/`
-        : `${API_BASE_URL}/userDepartments/user/${userId}/department/${department.id}`;
-    const method = action === 'assign' ? 'post' : 'delete';
-    const data =
-      action === 'assign' ? { userId, departmentId: department.id } : null;
-
-    try {
-      if (action === 'assign') {
-        await axios.post(url, data, { withCredentials: true });
-      } else {
-        await axios[method](url, { withCredentials: true });
-      }
-      mutate(`${API_BASE_URL}/userDepartments/department/${department.id}`);
-      mutate(
-        `${API_BASE_URL}/userDepartments/department/user-count/${department.id}`,
-      );
-      if (action === 'assign') toggleModal('showAssignModal', false);
-    } catch (error) {
-      console.error(
-        `Error ${action === 'assign' ? 'assigning' : 'deleting'} user:`,
-        error,
-      );
-    }
-  };
 
   return (
     <div className='rounded-2xl bg-gradient-to-b from-teal-50 to-teal-100 p-6 flex-1 shadow-md hover:shadow-lg transition-shadow min-w-44'>
@@ -96,8 +61,19 @@ const DepartmentCard = ({ department }: DepartmentCardProps) => {
             {department.name}
           </h2>
         </span>
-        <span className='text-teal-600'>
-          <FaBuildingUser />
+        <span className='flex gap-3'>
+          <button
+            className='w-8 h-8 flex items-center justify-center text-teal-600 bg-teal-50 rounded-full shadow-md transition-all duration-300 ease-in-out hover:bg-teal-100 hover:shadow-lg focus:outline-none'
+            onClick={() => toggleModal('showEditModal', true)}
+          >
+            <HiAdjustmentsHorizontal />
+          </button>
+          <button
+            className='w-8 h-8 flex items-center justify-center text-red-600 bg-red-50 rounded-full hover:bg-red-100'
+            onClick={() => toggleModal('showDeleteModal', true)}
+          >
+            <HiOutlineTrash />
+          </button>
         </span>
       </div>
       <div>
@@ -148,6 +124,21 @@ const DepartmentCard = ({ department }: DepartmentCardProps) => {
           handleAssignMember={(userId) => handleMemberAction(userId, 'assign')}
           handleAssignModalClose={() => toggleModal('showAssignModal', false)}
           usersInDepartment={users}
+        />
+      )}
+      {modalState.showDeleteModal && (
+        <ConfirmDeleteDepartment
+          department={department}
+          toggleModal={toggleModal}
+          handleDelete={handleDelete}
+        />
+      )}
+      {modalState.showEditModal && (
+        <EditDepartment
+          editFormData={editFormData}
+          handleEditChange={handleEditChange}
+          handleEditSubmit={handleEditSubmit}
+          toggleModal={toggleModal}
         />
       )}
     </div>
