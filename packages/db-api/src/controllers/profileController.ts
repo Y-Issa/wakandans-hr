@@ -122,7 +122,7 @@ export const updateProfile = async (req: Request, res: Response) => {
   const { user, ...validData } = updateData;
   try {
     const updatedProfile = await writePrisma.profile.update({
-      where: { id: idInt },
+      where: { userId: idInt },
       data: validData,
       select: minimalProfileSelect,
     });
