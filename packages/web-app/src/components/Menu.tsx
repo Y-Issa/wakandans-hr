@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import {
   FaCalendarAlt,
@@ -20,6 +20,7 @@ import {
   FaDollarSign,
 } from 'react-icons/fa6';
 import useStore from '@/lib/store';
+import { usePathname } from 'next/navigation';
 
 const menuItems = [
   {
@@ -121,7 +122,12 @@ const menuItems = [
 const Menu = () => {
   const [selected, setSelected] = useState<string>('/home');
   const user = useStore((state) => state.user);
+  const pathname = usePathname();
   const role = user?.role || 'EMPLOYEE';
+
+  useEffect(() => {
+    setSelected(pathname);
+  }, [pathname]);
 
   return (
     <div className='mt-4 text-sm'>

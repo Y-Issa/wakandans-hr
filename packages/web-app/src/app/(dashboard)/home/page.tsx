@@ -1,6 +1,5 @@
 import Announcements from '@/components/Announcements';
 import CompanySettingsOverview from '@/components/CompanySettingsOverview';
-import DepartmentCard from '@/components/DepartmentCard';
 import EventCalendar from '@/components/EventCalendar';
 import PostAnnouncement from '@/components/PostAnnouncement';
 import ProjectOverview from '@/components/ProjectOverview';
@@ -26,13 +25,7 @@ const AdminPage = () => {
         {/* DEPARTMENTS */}
         <div className=' bg-white p-6 rounded-lg shadow-md'>
           <h2 className='text-2xl font-semibold '>Departments</h2>
-          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 justify-center mt-3'>
-            <DepartmentCard name='HR' employeeCount={12} />
-            <DepartmentCard name='IT' employeeCount={5} />
-            <DepartmentCard name='Finance' employeeCount={8} />
-            <DepartmentCard name='Marketing' employeeCount={15} />
-            <DepartmentCard name='Engineering' employeeCount={10} />
-          </div>
+          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 justify-center mt-3'></div>
         </div>
       </div>
 

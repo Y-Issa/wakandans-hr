@@ -5,11 +5,11 @@ import useSWR from 'swr';
 import axios from 'axios';
 import { useParams } from 'next/navigation';
 import EmployeeInfoCard from '@/components/EmployeeInfoCard';
-import DepartmentList from '@/components/DepartmentList';
 import TeamList from '@/components/TeamList';
 import QuickLinks from '@/components/QuickLinks';
 import LoadingError from '@/components/LoadingError';
 import AboutEmployee from '@/components/AboutEmployee';
+import UserDepartmentList from '@/components/UserDepartmentList';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -52,7 +52,7 @@ const EmployeePage = () => {
         <div className='flex flex-col md:flex-row gap-4'>
           <div className='w-full lg:w-1/2 '>
             <EmployeeInfoCard employee={employee} />
-            <DepartmentList departments={departments} />
+            <UserDepartmentList departments={departments} />
             <TeamList teams={teams} />
           </div>
           <div className='w-full lg:w-1/2'>

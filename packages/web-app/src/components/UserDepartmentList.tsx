@@ -9,7 +9,7 @@ interface Department {
   };
 }
 
-const DepartmentList = ({ departments }: { departments: Department[] }) => (
+const UserDepartmentList = ({ departments }: { departments: Department[] }) => (
   <SectionWrapper title='Departments'>
     {departments.length > 0 ? (
       <ul className='space-y-3'>
@@ -26,4 +26,4 @@ const DepartmentList = ({ departments }: { departments: Department[] }) => (
   </SectionWrapper>
 );
 
-export default DepartmentList;
+export default UserDepartmentList;
