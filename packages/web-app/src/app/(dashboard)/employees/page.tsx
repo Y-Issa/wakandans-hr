@@ -5,12 +5,11 @@ import useSWR, { mutate } from 'swr';
 import axios from 'axios';
 import { API_BASE_URL } from '@/lib/constants';
 import { HiPlus } from 'react-icons/hi2';
-import UserRow from '@/components/UserRow';
 import Pagination from '@/components/Pagination';
 import EditUserForm from '@/components/EditUserForm';
 import { useRouter } from 'next/navigation';
-import { BiSortAlt2, BiSortAZ, BiSortZA } from 'react-icons/bi';
 import useStore from '@/lib/store';
+import UserTable from '@/components/UserTable';
 
 interface User {
   id: string;
@@ -131,79 +130,15 @@ const UsersList = () => {
       </div>
 
       <div className='overflow-x-auto rounded-lg border border-gray-200 shadow-sm'>
-        <table className='min-w-full bg-white divide-y divide-gray-200'>
-          <thead className='bg-gray-100'>
-            <tr>
-              <th
-                onClick={() => handleSort('firstName')}
-                className='px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider cursor-pointer'
-              >
-                Name{' '}
-                <span className='inline-block px-2 py-1 bg-gray-200 rounded-full align-middle'>
-                  {sortBy === 'firstName' ? (
-                    sortOrder === 'asc' ? (
-                      <BiSortAZ />
-                    ) : (
-                      <BiSortZA />
-                    )
-                  ) : (
-                    <BiSortAlt2 />
-                  )}
-                </span>
-              </th>
-              <th
-                onClick={() => handleSort('email')}
-                className='px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider cursor-pointer'
-              >
-                Email{' '}
-                <span className='inline-block px-2 py-1 bg-gray-200 rounded-full align-middle'>
-                  {sortBy === 'email' ? (
-                    sortOrder === 'asc' ? (
-                      <BiSortAZ />
-                    ) : (
-                      <BiSortZA />
-                    )
-                  ) : (
-                    <BiSortAlt2 />
-                  )}
-                </span>
-              </th>
-              <th
-                onClick={() => handleSort('role')}
-                className='px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider cursor-pointer'
-              >
-                Role{' '}
-                <span className='inline-block px-2 py-1 bg-gray-200 rounded-full align-middle'>
-                  {sortBy === 'role' ? (
-                    sortOrder === 'asc' ? (
-                      <BiSortAZ />
-                    ) : (
-                      <BiSortZA />
-                    )
-                  ) : (
-                    <BiSortAlt2 />
-                  )}
-                </span>
-              </th>
-              <th className='px-6 py-3 text-center text-xs font-medium text-gray-600 uppercase tracking-wider'>
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className='bg-white divide-y divide-gray-200'>
-            {users.map((user: User) => (
-              <UserRow
-                key={user.id}
-                user={user}
-                onEdit={handleEdit}
-                onDelete={() => {
-                  setSelectedUser(user);
-                  setIsDeleteModalOpen(true);
-                }}
-              />
-            ))}
-          </tbody>
-        </table>
+        <UserTable
+          users={users}
+          sortBy={sortBy}
+          sortOrder={sortOrder}
+          onSort={handleSort}
+          onEdit={handleEdit}
+          setSelectedUser={setSelectedUser}
+          setIsDeleteModalOpen={setIsDeleteModalOpen}
+        />
       </div>
 
       <Pagination

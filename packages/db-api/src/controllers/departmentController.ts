@@ -280,7 +280,7 @@ export const getUsersForDepartment = async (req: Request, res: Response) => {
 
   try {
     const departmentUsers = await writePrisma.userDepartment.findMany({
-      where: { departmentId: parseInt(departmentId) },
+      where: { departmentId: parseInt(departmentId), active: true },
       include: {
         user: true,
       },
@@ -296,6 +296,32 @@ export const getUsersForDepartment = async (req: Request, res: Response) => {
       error,
       `Error fetching users for department ${departmentId}`,
       'userDepartmentController.getUsersForDepartment',
+      JSON.stringify(req.params),
+    );
+  }
+};
+
+export const getUsersCountForDepartment = async (
+  req: Request,
+  res: Response,
+) => {
+  const { departmentId } = req.params;
+
+  try {
+    const usersCount = await writePrisma.userDepartment.count({
+      where: { departmentId: parseInt(departmentId), active: true },
+    });
+
+    res.status(200).json({
+      message: `Users count for department ${departmentId}`,
+      data: usersCount,
+    });
+  } catch (error) {
+    handle500Response(
+      res,
+      error,
+      `Error fetching users count for department ${departmentId}`,
+      'userDepartmentController.getUsersCountForDepartment',
       JSON.stringify(req.params),
     );
   }

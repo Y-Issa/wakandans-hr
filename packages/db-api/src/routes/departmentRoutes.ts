@@ -10,6 +10,7 @@ import {
   getDepartmentsForUser,
   getUsersForDepartment,
   deleteUserDepartment,
+  getUsersCountForDepartment,
 } from '../controllers/departmentController';
 import {
   authMiddleware,
@@ -72,6 +73,12 @@ router.get(
   authRolesMiddleware([UserRole.ADMIN, UserRole.EMPLOYEE, UserRole.MANAGER]),
 
   getUsersForDepartment,
+);
+
+router.get(
+  '/userDepartments/department/user-count/:departmentId',
+  authRolesMiddleware([UserRole.ADMIN, UserRole.EMPLOYEE, UserRole.MANAGER]),
+  getUsersCountForDepartment,
 );
 
 router.delete(
