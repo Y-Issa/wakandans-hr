@@ -1,5 +1,5 @@
 import React from 'react';
-import SectionWrapper from './sectionWraper';
+import SectionWrapper from '../sectionWraper';
 
 interface Team {
   team: {
@@ -9,7 +9,7 @@ interface Team {
   };
 }
 
-const TeamList = ({ teams }: { teams: Team[] }) => (
+const UserTeamList = ({ teams }: { teams: Team[] }) => (
   <SectionWrapper title='Teams'>
     {teams.length > 0 ? (
       <ul className='space-y-3'>
@@ -26,4 +26,4 @@ const TeamList = ({ teams }: { teams: Team[] }) => (
   </SectionWrapper>
 );
 
-export default TeamList;
+export default UserTeamList;

@@ -60,7 +60,6 @@ const EmployeeInfoCard: React.FC<EmployeeInfoCardProps> = ({ employee }) => {
   const handleFormSubmit = (updatedProfile: ProfileData) => {
     console.log('Updated Profile:', updatedProfile);
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { id, ...profileWithoutId } = updatedProfile;
       axios.put(`${API_BASE_URL}/profiles/${employee.id}`, profileWithoutId, {
         withCredentials: true,

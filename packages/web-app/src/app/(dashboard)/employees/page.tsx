@@ -1,118 +1,40 @@
 'use client';
 
-import React, { useState } from 'react';
-import useSWR, { mutate } from 'swr';
-import axios from 'axios';
-import { API_BASE_URL } from '@/lib/constants';
 import { HiPlus } from 'react-icons/hi2';
 import Pagination from '@/components/Pagination';
-import EditUserForm from '@/components/EditUserForm';
+import EditUserForm from '@/components/employees/EditUserForm';
 import { useRouter } from 'next/navigation';
 import useStore from '@/lib/store';
-import UserTable from '@/components/UserTable';
-
-interface User {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  role: string;
-  locationId: string;
-  reportsToId: string;
-  profile: {
-    profileImage: string;
-    title: string;
-    employedAt: Date;
-    dateOfBirth: Date;
-  };
-}
-
-// Fetcher function for SWR
-const fetcher = (url: string) =>
-  axios.get(url, { withCredentials: true }).then((res) => res.data);
+import UserTable from '@/components/employees/UserTable';
+import { useUsers } from '@/hooks/useUsers';
 
 const UsersList = () => {
   const router = useRouter();
   const user = useStore((state) => state.user);
 
-  const [page, setPage] = useState(0);
-  const [sortBy, setSortBy] = useState('firstName');
-  const [sortOrder, setSortOrder] = useState('asc');
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const limit = 10;
-
-  const { data, error, isLoading } = useSWR(
-    `${API_BASE_URL}/users?page=${page}&limit=${limit}&sortField=${sortBy}&sortOrder=${sortOrder}`,
-    fetcher,
-    {
-      keepPreviousData: true,
-      revalidateOnFocus: false,
-    },
-  );
-
-  const handleSort = (field: string) => {
-    if (sortBy === field) {
-      setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'));
-    } else {
-      setSortBy(field);
-      setSortOrder('asc');
-    }
-  };
-
-  const handleDelete = async (id: string) => {
-    try {
-      await axios.delete(`${API_BASE_URL}/users/${id}`, {
-        withCredentials: true,
-      });
-
-      mutate(
-        `${API_BASE_URL}/users?page=${page}&limit=${limit}&sortField=${sortBy}&sortOrder=${sortOrder}`,
-        async (cachedData) => ({
-          ...cachedData,
-          data: cachedData?.data?.filter((user: User) => user.id !== id),
-        }),
-        false,
-      );
-      setIsDeleteModalOpen(false);
-    } catch (error) {
-      console.error('Error deleting user:', error);
-    }
-  };
-
-  const handleEdit = (user: User) => {
-    setSelectedUser(user);
-    setIsEditModalOpen(true);
-  };
-
-  const handleEditSubmit = async (updatedUser: User) => {
-    try {
-      const { id, ...userWithoutId } = updatedUser;
-      await axios.put(`${API_BASE_URL}/users/${id}`, userWithoutId, {
-        withCredentials: true,
-      });
-      mutate(
-        `${API_BASE_URL}/users?page=${page}&limit=${limit}&sortField=${sortBy}&sortOrder=${sortOrder}`,
-        async (cachedData) => ({
-          ...cachedData,
-          data: cachedData?.data.map((user: User) =>
-            user.id === updatedUser.id ? updatedUser : user,
-          ),
-        }),
-        false,
-      );
-    } catch (error) {
-      console.error('Error updating user:', error);
-    }
-    setIsEditModalOpen(false);
-  };
+  const {
+    users,
+    page,
+    setPage,
+    sortBy,
+    sortOrder,
+    handleSort,
+    hasNextPage,
+    handleDelete,
+    handleEdit,
+    handleEditSubmit,
+    selectedUser,
+    setSelectedUser,
+    isEditModalOpen,
+    setIsEditModalOpen,
+    isDeleteModalOpen,
+    setIsDeleteModalOpen,
+    isLoading,
+    error,
+  } = useUsers();
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
-
-  const users = data?.data || [];
-  const hasNextPage = data?.next || false;
 
   return (
     <div className='bg-gray-50 shadow-lg rounded-lg p-6 m-4 overflow-y-scroll lg:max-h-[85vh]'>

@@ -1,15 +1,5 @@
-import { API_BASE_URL } from '@/lib/constants';
-import axios from 'axios';
+import { useUserEditData } from '@/hooks/useUsers';
 import React from 'react';
-import useSWR from 'swr';
-
-const fetcher = (url: string) =>
-  axios.get(url, { withCredentials: true }).then((res) => res.data);
-
-interface LocationData {
-  data: { id: string; name: string }[];
-  next: string | null | boolean;
-}
 
 interface EditUserFormProps {
   formData: {
@@ -36,16 +26,8 @@ const EditUserForm: React.FC<EditUserFormProps> = ({
   onSubmit,
   onCancel,
 }) => {
-  const { data: locationsdata, error: locationError } = useSWR<LocationData>(
-    `${API_BASE_URL}/locations`,
-    fetcher,
-  );
-  const { data: managersData, error: managerError } = useSWR<{
-    data: { id: string; firstName: string; lastName: string }[];
-  }>(`${API_BASE_URL}/users/managers`, fetcher);
-
-  const locations = locationsdata?.data;
-  const managers = managersData?.data;
+  const { locations, managers, locationError, managerError } =
+    useUserEditData();
 
   if (locationError || managerError)
     return (

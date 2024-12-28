@@ -81,6 +81,8 @@ const EditProfileForm: React.FC<EditProfileFormProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const { additionalInfo, ...restprofile } = profile;
+    console.log(additionalInfo, restprofile);
     onSubmit(profile);
   };
 

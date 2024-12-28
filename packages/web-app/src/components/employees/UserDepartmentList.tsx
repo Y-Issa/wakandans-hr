@@ -1,5 +1,5 @@
 import React from 'react';
-import SectionWrapper from './sectionWraper';
+import SectionWrapper from '../sectionWraper';
 
 interface Department {
   department: {

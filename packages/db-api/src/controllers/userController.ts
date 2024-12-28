@@ -26,6 +26,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
     const users = await readPrisma.user.findMany({
       where: {
         deletedAt: null,
+        companyId: COMPANY_ID,
       },
       select: minimalUserSelect,
       skip: page * limit,

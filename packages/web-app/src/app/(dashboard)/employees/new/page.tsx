@@ -1,92 +1,17 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useRouter } from 'next/navigation';
-import { API_BASE_URL } from '@/lib/constants';
+import { useCreateUser } from '@/hooks/useUsers';
 
 const NewEmployeePage = () => {
-  const router = useRouter();
-
-  const [formData, setFormData] = useState({
-    email: '',
-    firstName: '',
-    lastName: '',
-    role: '',
-    locationId: '',
-    reportsToId: '',
-    profile: {
-      title: '',
-    },
-  });
-
-  const [locations, setLocations] = useState<{ id: string; name: string }[]>(
-    [],
-  );
-  const [users, setUsers] = useState<
-    { id: string; firstName: string; lastName: string }[]
-  >([]);
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    const fetchLocationsAndUsers = async () => {
-      try {
-        const [locationsResponse, usersResponse] = await Promise.all([
-          axios.get(`${API_BASE_URL}/locations`, { withCredentials: true }),
-          axios.get(`${API_BASE_URL}/users/managers`, {
-            withCredentials: true,
-          }),
-        ]);
-
-        setLocations(locationsResponse.data.data);
-        setUsers(usersResponse.data.data);
-      } catch (err) {
-        console.error(err);
-        setError('Failed to fetch locations or users.');
-      }
-    };
-
-    fetchLocationsAndUsers();
-  }, []);
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
-    const { name, value } = e.target;
-    if (name === 'title') {
-      setFormData((prev) => ({
-        ...prev,
-        profile: { ...prev.profile, [name]: value },
-      }));
-      return;
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
-    console.log(formData);
-
-    try {
-      const response = await axios.post(`${API_BASE_URL}/users`, formData, {
-        withCredentials: true,
-      });
-
-      if (response.status === 201) {
-        alert('Employee created successfully');
-        router.push('/employees');
-      }
-    } catch (err) {
-      console.error(err);
-      setError('Failed to create employee. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    formData,
+    locations,
+    users,
+    error,
+    loading,
+    handleChange,
+    handleSubmit,
+  } = useCreateUser();
 
   return (
     <div className='flex items-center justify-center bg-gray-50'>

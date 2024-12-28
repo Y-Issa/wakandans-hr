@@ -1,7 +1,9 @@
 import { API_BASE_URL } from '@/lib/constants';
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useSWR, { mutate } from 'swr';
+const fetcher = (url: string) =>
+  axios.get(url, { withCredentials: true }).then((res) => res.data);
 
 export const useModalState = () => {
   const [modalState, setModalState] = useState({
@@ -22,8 +24,6 @@ export const useDepartmentDetails = (
   departmentId: number,
   modalState: { showMembers: boolean; showAssignModal: boolean },
 ) => {
-  const fetcher = (url: string) =>
-    axios.get(url, { withCredentials: true }).then((res) => res.data);
   // User count data
   const { data: userCountData, error: userCountError } = useSWR(
     `${API_BASE_URL}/userDepartments/department/user-count/${departmentId}`,
@@ -150,4 +150,102 @@ export const useMemberActions = (
   };
 
   return { handleMemberAction };
+};
+
+export const useDepartments = (page: number, limit: number) => {
+  const { data, error, isLoading } = useSWR(
+    `${API_BASE_URL}/departments?page=${page}&limit=${limit}`,
+    fetcher,
+    {
+      keepPreviousData: true,
+      revalidateOnFocus: false,
+    },
+  );
+
+  const departments = data?.data || [];
+  const hasNextPage = data?.next || false;
+
+  return { departments, hasNextPage, error, isLoading };
+};
+export const useDepartmentForm = (page: number, limit: number) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+    locationId: '',
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      const response = await axios.post(
+        `${API_BASE_URL}/departments`,
+        formData,
+        {
+          withCredentials: true,
+        },
+      );
+
+      if (response.status === 201) {
+        mutate(`${API_BASE_URL}/departments?page=${page}&limit=${limit}`);
+        setFormData({ name: '', description: '', locationId: '' });
+        setIsModalOpen(false);
+      }
+    } catch (err) {
+      console.error(err);
+      setError('Failed to create department. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return {
+    formData,
+    handleChange,
+    handleSubmit,
+    loading,
+    error,
+    isModalOpen,
+    setIsModalOpen,
+  };
+};
+
+export const useLocations = () => {
+  const [locations, setLocations] = useState<{ id: string; name: string }[]>(
+    [],
+  );
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    const fetchLocations = async () => {
+      try {
+        const response = await axios.get(`${API_BASE_URL}/locations`, {
+          withCredentials: true,
+        });
+        setLocations(response.data.data);
+      } catch (err) {
+        console.error('Failed to fetch locations:', err);
+        setError('Failed to fetch locations.');
+      }
+    };
+
+    fetchLocations();
+  }, [API_BASE_URL]);
+
+  return { locations, error };
 };
