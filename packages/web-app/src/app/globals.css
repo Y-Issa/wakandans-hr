@@ -25,34 +25,12 @@
 .react-calendar__tile--active {
   background-color: #c3ebfa !important;
   color: black !important;
-.menu-item {
-  transition:
-    transform 0.3s ease,
-    background-color 0.3s ease,
-    box-shadow 0.3s ease;
-}
-
-.menu-item:hover {
-  transform: translateY(-3px);
-  background-color: rgba(128, 0, 128, 0.1);
-  box-shadow: 0 4px 8px rgba(128, 0, 128, 0.3);
-}
-
-.menu-item.selected {
-  background-color: rgba(22, 188, 149, 0.2);
-  box-shadow: 0 4px 10px rgba(22, 188, 149, 0.6);
-  transform: translateY(0);
-  font-weight: bold;
-  color: rgba(9, 126, 59, 0.9);
-}
-
-.menu-item span {
-  transition: color 0.3s ease;
-}
-
-.menu-item:hover span,
-.menu-item.selected span {
-  color: rgba(128, 0, 128, 0.8);
+  .menu-item {
+    transition:
+      transform 0.3s ease,
+      background-color 0.3s ease,
+      box-shadow 0.3s ease;
+  }
 }
 
 .hide-scrollbar {
