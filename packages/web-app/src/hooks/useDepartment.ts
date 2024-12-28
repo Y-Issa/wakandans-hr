@@ -245,7 +245,8 @@ export const useLocations = () => {
     };
 
     fetchLocations();
-  }, [API_BASE_URL]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return { locations, error };
 };

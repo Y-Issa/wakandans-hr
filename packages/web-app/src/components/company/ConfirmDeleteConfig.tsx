@@ -2,7 +2,7 @@ import React from 'react';
 
 interface ConfirmDeleteConfigProps {
   selectedConfig: { company: { name: string } };
-  toggleDeleteModal: (value: any) => void;
+  toggleDeleteModal: (value: null) => void;
   confirmDelete: () => void;
 }
 

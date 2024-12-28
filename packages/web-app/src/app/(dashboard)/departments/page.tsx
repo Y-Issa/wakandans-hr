@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import DepartmentCard from '@/components/department/DepartmentCard';
 import Pagination from '@/components/Pagination';
 import CreateDepartmentForm from '@/components/department/CreateDepartmentForm';

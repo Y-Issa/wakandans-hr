@@ -9,6 +9,7 @@ services:
       - "5000:5000"
     depends_on:
       - db
+      - redis
     volumes:
       - ./packages/db-api:/usr/src/app
       - /usr/src/app/node_modules
@@ -21,6 +22,7 @@ services:
       - .env
     depends_on:
       - db
+      - redis
     volumes:
       - ./packages/jobs:/usr/src/app
       - /usr/src/app/node_modules
@@ -35,6 +37,7 @@ services:
       - "3000:3000"
     depends_on:
       - db-api
+      - redis
     volumes:
       - ./packages/web-app:/usr/src/app
       - /usr/src/app/node_modules
@@ -59,5 +62,13 @@ services:
       - MAILDEV_INCOMING_USER=
       - MAILDEV_INCOMING_PASS=
 
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
 volumes:
   postgres-data:
+  redis-data:

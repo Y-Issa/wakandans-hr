@@ -5,6 +5,7 @@ import { JobStatus, JobType } from '@prisma/client';
 import { writePrisma, jobsPrisma, readPrisma } from '../prisma';
 import { handle500Response } from '../helpers';
 import jwt from 'jsonwebtoken';
+import redis from '../redis';
 
 export const generateToken = async (userId: number) => {
   const loginToken = uuidv4();
@@ -44,6 +45,15 @@ export const loginWithEmail = async (req: Request, res: Response) => {
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
+
+    const cacheKey = `login:${email}`;
+    const cachedData = await redis.get(cacheKey);
+    if (cachedData) {
+      return res.status(429).json({
+        message: 'Too many requests. Please try again in 2 minutes',
+      });
+    }
+    await redis.set(cacheKey, 1, 'EX', 120); // 2 minutes
 
     const loginToken = await generateToken(user.id);
     await jobsPrisma.job.create({
