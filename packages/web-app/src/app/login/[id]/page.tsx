@@ -52,7 +52,7 @@ const Page = ({ params }: PageProps) => {
             withCredentials: true,
           },
         );
-        console.log(userResponse.data);
+
 
         setUser({
           id: userResponse.data.id,
@@ -64,6 +64,7 @@ const Page = ({ params }: PageProps) => {
           title: userResponse?.data.profile?.title,
         });
         router.push('/home');
+
       } catch (err) {
         console.error(err);
         setError('An unexpected error occurred.');

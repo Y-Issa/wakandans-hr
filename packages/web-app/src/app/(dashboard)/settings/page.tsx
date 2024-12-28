@@ -48,6 +48,7 @@ const SettingsPage = () => {
           </div>
         </div>
       )}
+
     </div>
   );
 };

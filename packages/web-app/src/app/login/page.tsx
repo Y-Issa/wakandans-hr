@@ -18,12 +18,14 @@ const LoginPage = () => {
 
     setLoading(true); // Start loading state
 
+
     try {
       const response = await axios.post(`${API_BASE_URL}/login`, { email });
 
       if (response.status === 200) {
         setMessage('Success! Please check your email for login instructions.');
-        setSuccess(true); // Mark success
+        setSuccess(true);
+
         setError(null);
       } else {
         setError('Something went wrong. Please try again.');
@@ -37,11 +39,13 @@ const LoginPage = () => {
           setLoading(false);
         }, 2000);
       }
+
     }
   };
 
   return (
     <div className='min-h-screen flex items-center justify-center bg-teal-50 relative'>
+
       {/* Error/Message Banner */}
       {(error || message) && (
         <div
@@ -49,6 +53,7 @@ const LoginPage = () => {
             error
               ? 'bg-red-100 text-red-600 border border-red-300'
               : 'bg-teal-100 text-teal-600 border border-teal-300'
+
           }`}
         >
           {error || message}
@@ -60,6 +65,7 @@ const LoginPage = () => {
         {/* Logo and Heading */}
         <div className='text-center mb-6'>
           <h1 className='text-2xl font-bold text-teal-600'>HR App</h1>
+
           <p className='text-gray-500'>Sign in to your account</p>
         </div>
 
@@ -78,12 +84,13 @@ const LoginPage = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              disabled={success} // Disable input after success
+              disabled={success} 
               className={`mt-1 block w-full px-4 py-2 border ${
                 success
                   ? 'bg-gray-100 border-gray-300 cursor-not-allowed'
                   : 'border-teal-300 focus:ring-teal-500 focus:border-teal-500'
               } rounded-md shadow-sm`}
+
             />
           </div>
           <button
@@ -100,6 +107,7 @@ const LoginPage = () => {
               : loading
                 ? 'Processing...'
                 : 'Sign In'}
+
           </button>
         </form>
 
@@ -111,6 +119,7 @@ const LoginPage = () => {
           </Link>{' '}
           and{' '}
           <Link href='/privacy' className='text-teal-600 hover:underline'>
+
             Privacy Policy
           </Link>
           .

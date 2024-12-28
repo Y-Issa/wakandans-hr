@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+
 import Link from 'next/link';
 import {
   FaCalendarAlt,
@@ -22,6 +23,7 @@ import {
 import useStore from '@/lib/store';
 import { usePathname } from 'next/navigation';
 
+
 const menuItems = [
   {
     title: 'MENU',
@@ -31,18 +33,21 @@ const menuItems = [
         label: 'Home',
         href: '/home',
         visible: ['ADMIN', 'EMPLOYEE', 'MANAGER'],
+
       },
       {
         icon: <FaUsers />,
         label: 'Employees',
         href: '/employees',
         visible: ['ADMIN', 'EMPLOYEE', 'MANAGER'],
+
       },
       {
         icon: <FaBuildingUser />,
         label: 'Departments',
         href: '/departments',
         visible: ['ADMIN', 'EMPLOYEE', 'MANAGER'],
+
       },
       {
         icon: <FaUserFriends />,
@@ -85,6 +90,7 @@ const menuItems = [
         label: 'Payroll',
         href: '/payroll',
         visible: ['ADMIN', 'EMPLOYEE', 'MANAGER'],
+
       },
       {
         icon: <FaFileAlt />,
@@ -152,6 +158,7 @@ const Menu = () => {
                   onClick={() => setSelected(href)}
                 >
                   <span className='text-lg text-teal-600'>{item.icon}</span>
+
                   <span className='hidden lg:block'>{item.label}</span>
                 </Link>
               );
