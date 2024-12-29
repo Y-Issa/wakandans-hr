@@ -1,14 +1,14 @@
 'use client';
 
-import { useLocations } from '@/hooks/useLocations';
-import LocationCard from '@/components/locations/LocationCard';
-import LocationForm from '@/components/locations/LocationForm';
-import ConfirmationModal from '@/components/locations/ConfirmationModal';
+import { useHolidays } from '@/hooks/useHolidays';
+import HolidayCard from '@/components/holidays/HolidayCard';
+import HolidayForm from '@/components/holidays/HolidayForm';
 import { useState } from 'react';
+import ConfirmationModal from '@/components/locations/ConfirmationModal';
 
-const LocationsPage = () => {
+const HolidaysPage = () => {
   const {
-    locations,
+    holidays,
     formData,
     error,
     loading,
@@ -16,58 +16,57 @@ const LocationsPage = () => {
     handleSubmit,
     handleDelete,
     setFormData,
-  } = useLocations();
+  } = useHolidays();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [locationToDelete, setLocationToDelete] = useState<number | null>(null);
+  const [holidayToDelete, setHolidayToDelete] = useState<number | null>(null);
 
-  const toggleEdit = (location: {
+  const toggleEdit = (holiday: {
     id: number;
     name: string;
-    address: string;
-    city: string;
-    country: string;
+    fromDate: string;
+    toDate: string;
   }) => {
-    setFormData(location);
+    setFormData(holiday);
   };
 
   const toggleDeleteModal = (id: number) => {
-    setLocationToDelete(id);
+    setHolidayToDelete(id);
     setIsModalOpen(true);
   };
 
   const handleConfirmDelete = () => {
-    if (locationToDelete !== null) {
-      handleDelete(locationToDelete);
-      setLocationToDelete(null);
+    if (holidayToDelete !== null) {
+      handleDelete(holidayToDelete);
+      setHolidayToDelete(null);
     }
     setIsModalOpen(false);
   };
 
   return (
     <div className='p-6 bg-gray-50'>
-      <h1 className='text-2xl font-semibold mb-6'>Manage Locations</h1>
+      <h1 className='text-2xl font-semibold mb-6'>Manage Holidays</h1>
 
       {error && <p className='text-red-500 text-sm mb-4'>{error}</p>}
 
       <div className='p-4 flex gap-4 flex-col md:flex-row'>
         <div className='w-full lg:w-2/3 flex flex-col gap-4'>
           <div className='space-y-4'>
-            {locations.map((location) => (
-              <LocationCard
-                key={location.id}
-                location={location}
+            {holidays.map((holiday) => (
+              <HolidayCard
+                key={holiday.id}
+                holiday={holiday}
                 toggleEdit={toggleEdit}
                 toggleDeleteModal={toggleDeleteModal}
               />
             ))}
-            {!locations.length && (
-              <p className='text-gray-500'>No locations found.</p>
+            {!holidays.length && (
+              <p className='text-gray-500'>No holidays found.</p>
             )}
           </div>
         </div>
 
-        <LocationForm
+        <HolidayForm
           formData={formData}
           loading={loading}
           handleChange={handleChange}
@@ -75,16 +74,15 @@ const LocationsPage = () => {
         />
       </div>
 
-      {/* Modal */}
       <ConfirmationModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={handleConfirmDelete}
-        title='Delete Location'
-        message='Are you sure you want to delete this location? This action cannot be undone.'
+        title='Delete Holiday'
+        message='Are you sure you want to delete this holiday? This action cannot be undone.'
       />
     </div>
   );
 };
 
-export default LocationsPage;
+export default HolidaysPage;

@@ -1,6 +1,8 @@
+// THIS IS A DUMMY COMPONENT, IT DOES NOT ACTUALLY POST AN ANNOUNCEMENT, ONLY A PLACEHOLDER
+
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const PostAnnouncement = () => {
   const [announcement, setAnnouncement] = useState({
@@ -89,7 +91,7 @@ const PostAnnouncement = () => {
       <div className='flex justify-end'>
         <button
           onClick={handleSubmit}
-          className='px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition'
+          className='px-6 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700 transition'
         >
           Post Announcement
         </button>

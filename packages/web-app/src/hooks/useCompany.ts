@@ -2,6 +2,7 @@ import useSWR from 'swr';
 import axios from 'axios';
 import { API_BASE_URL } from '@/lib/constants';
 import { useEffect, useState } from 'react';
+import axiosInstance from '@/lib/axiosInstance';
 
 export interface CompanyConfiguration {
   id: string;
@@ -31,7 +32,9 @@ export interface LocationData {
 }
 
 const fetcher = (url: string) =>
-  axios.get(url, { withCredentials: true }).then((res) => res.data.data);
+  axiosInstance
+    .get(url, { withCredentials: true })
+    .then((res) => res.data.data);
 
 export const useCompanyConfigurations = () => {
   const {

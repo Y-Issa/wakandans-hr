@@ -17,8 +17,8 @@ import {
 import {
   FaUsers,
   FaBuildingUser,
-  FaRegClock,
   FaLocationArrow,
+  FaUmbrellaBeach,
 } from 'react-icons/fa6';
 import useStore from '@/lib/store';
 import { usePathname } from 'next/navigation';
@@ -53,38 +53,39 @@ const menuItems = [
       },
       {
         icon: <FaProjectDiagram />,
-        label: 'Projects',
+        label: 'Projects (Development)',
         href: '/projects',
         visible: ['ADMIN', 'EMPLOYEE', 'MANAGER'],
       },
       {
         icon: <FaTasks />,
-        label: 'Tasks',
+        label: 'Tasks (Development)',
         href: '/tasks',
         visible: ['ADMIN', 'EMPLOYEE', 'MANAGER'],
       },
       {
         icon: <FaUserCircle />,
-        label: 'Clients',
+        label: 'Clients (Development)',
         href: '/clients',
         visible: ['ADMIN', 'EMPLOYEE', 'MANAGER'],
       },
       {
         icon: <FaCalendarAlt />,
-        label: 'Calendar',
+        label: 'Calendar (Development)',
         href: '/calendar',
         visible: ['ADMIN', 'EMPLOYEE', 'MANAGER'],
       },
+
       {
-        icon: <FaRegClock />,
-        label: 'Attendance',
-        href: '/attendance',
+        icon: <FaFileAlt />,
+        label: 'Reports (Development)',
+        href: '/reports',
         visible: ['ADMIN', 'EMPLOYEE', 'MANAGER'],
       },
       {
-        icon: <FaFileAlt />,
-        label: 'Reports',
-        href: '/reports',
+        icon: <FaUmbrellaBeach />,
+        label: 'Holidays',
+        href: '/holidays',
         visible: ['ADMIN', 'EMPLOYEE', 'MANAGER'],
       },
       {

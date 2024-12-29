@@ -1,3 +1,5 @@
+// THIS IS A DUMMY COMPONENT, ONLY A PLACEHOLDER
+
 const ProjectOverview = () => {
   const projects = [
     {

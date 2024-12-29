@@ -1,9 +1,9 @@
-import Announcements from '@/components/Announcements';
-import CompanySettingsOverview from '@/components/CompanySettingsOverview';
-import EventCalendar from '@/components/EventCalendar';
-import PostAnnouncement from '@/components/PostAnnouncement';
-import ProjectOverview from '@/components/ProjectOverview';
-import TaskList from '@/components/TaskList';
+import Announcements from '@/components/home/Announcements';
+import CompanySettingsOverview from '@/components/home/CompanySettingsOverview';
+import EventCalendar from '@/components/home/EventCalendar';
+import PostAnnouncement from '@/components/home/PostAnnouncement';
+import ProjectOverview from '@/components/home/ProjectOverview';
+import TaskList from '@/components/home/TaskList';
 
 const HomePage = () => {
   return (

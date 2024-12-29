@@ -1,3 +1,5 @@
+// DUMMY COMPONENT, ONLY A PLACEHOLDER
+
 const TaskList = () => {
   const tasks = [
     {

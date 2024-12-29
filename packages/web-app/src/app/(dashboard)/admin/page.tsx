@@ -1,8 +1,8 @@
-import Announcements from '@/components/Announcements';
+import Announcements from '@/components/home/Announcements';
 import DepartmentCard from '@/components/DepartmentCard';
-import EventCalendar from '@/components/EventCalendar';
-import ProjectOverview from '@/components/ProjectOverview';
-import TaskList from '@/components/TaskList';
+import EventCalendar from '@/components/home/EventCalendar';
+import ProjectOverview from '@/components/home/ProjectOverview';
+import TaskList from '@/components/home/TaskList';
 
 const AdminPage = () => {
   return (

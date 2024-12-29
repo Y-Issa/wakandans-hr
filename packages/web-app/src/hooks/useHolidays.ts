@@ -4,39 +4,40 @@ import axios from 'axios';
 import { API_BASE_URL } from '@/lib/constants';
 import axiosInstance from '@/lib/axiosInstance';
 
-interface Location {
+interface Holiday {
   id: number;
   name: string;
-  country: string;
-  city: string;
-  address: string;
+  fromDate: string;
+  toDate: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 const fetcher = (url: string) =>
   axiosInstance.get(url, { withCredentials: true }).then((res) => res.data);
 
-export const useLocations = () => {
-  const { data, error, mutate } = useSWR<{ data: Location[]; next: boolean }>(
-    `${API_BASE_URL}/locations`,
+export const useHolidays = () => {
+  const { data, error, mutate } = useSWR<{ data: Holiday[] }>(
+    `${API_BASE_URL}/day-offs?limit=50&page=0`,
     fetcher,
     {
       revalidateOnFocus: false,
     },
   );
 
-  const locations = data?.data || [];
-  const hasNextPage = data?.next || false;
-  const [formData, setFormData] = useState<Location>({
+  const holidays = data?.data || [];
+  const [formData, setFormData] = useState<Holiday>({
     id: 0,
     name: '',
-    country: '',
-    city: '',
-    address: '',
+    fromDate: '',
+    toDate: '',
   });
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -51,11 +52,11 @@ export const useLocations = () => {
 
     try {
       if (formData.id) {
-        await axios.put(`${API_BASE_URL}/locations/${formData.id}`, formData, {
+        await axios.put(`${API_BASE_URL}/day-offs/${formData.id}`, formData, {
           withCredentials: true,
         });
       } else {
-        await axios.post(`${API_BASE_URL}/locations`, formData, {
+        await axios.post(`${API_BASE_URL}/day-offs`, formData, {
           withCredentials: true,
         });
       }
@@ -63,13 +64,12 @@ export const useLocations = () => {
       setFormData({
         id: 0,
         name: '',
-        country: '',
-        city: '',
-        address: '',
+        fromDate: '',
+        toDate: '',
       });
     } catch (err) {
-      console.error('Failed to save location:', err);
-      setErrorMessage('Failed to save location. Please try again.');
+      console.error('Failed to save holiday:', err);
+      setErrorMessage('Failed to save holiday. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -77,19 +77,18 @@ export const useLocations = () => {
 
   const handleDelete = async (id: number) => {
     try {
-      await axios.delete(`${API_BASE_URL}/locations/${id}`, {
+      await axios.delete(`${API_BASE_URL}/day-offs/${id}`, {
         withCredentials: true,
       });
       mutate();
     } catch (err) {
-      console.error('Failed to delete location:', err);
-      setErrorMessage('Failed to delete location. Please try again.');
+      console.error('Failed to delete holiday:', err);
+      setErrorMessage('Failed to delete holiday. Please try again.');
     }
   };
 
   return {
-    locations,
-    hasNextPage,
+    holidays,
     formData,
     setFormData,
     handleChange,

@@ -6,6 +6,7 @@ import useSWR, { mutate } from 'swr';
 import Link from 'next/link';
 import useStore from '@/lib/store';
 import EditProfileForm from './EditProfileForm';
+import axiosInstance from '@/lib/axiosInstance';
 
 interface EmployeeInfoCardProps {
   employee: {
@@ -40,7 +41,7 @@ interface ProfileData {
   title?: string;
 }
 const fetcher = (url: string) =>
-  axios.get(url, { withCredentials: true }).then((res) => res.data);
+  axiosInstance.get(url, { withCredentials: true }).then((res) => res.data);
 
 const EmployeeInfoCard: React.FC<EmployeeInfoCardProps> = ({ employee }) => {
   const currentUser = useStore((state) => state.user);

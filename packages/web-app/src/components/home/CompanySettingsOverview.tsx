@@ -1,19 +1,25 @@
 'use client';
 
-import React from 'react';
 import Image from 'next/image';
+import { useState } from 'react';
 import { useCompanyConfigurations } from '@/hooks/useCompany';
+import { useRouter } from 'next/navigation';
+import { HiAdjustmentsHorizontal } from 'react-icons/hi2';
 
 const CompanySettingsOverview = () => {
-  const companySettings = {
-    name: 'Example Inc.',
-    logo: 'https://images.pexels.com/photos/2599244/pexels-photo-2599244.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-    description:
-      'A leading software development company specializing in HR solutions.',
-    website: 'https://www.example.com',
-  };
   const { configurations } = useCompanyConfigurations();
-  console.log(configurations);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const router = useRouter();
+
+  if (!configurations || configurations.length === 0) {
+    return <p>No configurations available.</p>;
+  }
+
+  const handleNext = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % configurations.length);
+  };
+
+  const currentConfiguration = configurations[currentIndex];
 
   return (
     <div className='bg-white p-6 rounded-lg shadow-md mb-4 space-y-6'>
@@ -23,12 +29,10 @@ const CompanySettingsOverview = () => {
           Company Overview
         </h2>
         <button
-          className='px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700 transition'
-          onClick={() => {
-            alert('Redirecting to the detailed settings page...');
-          }}
+          className='w-12 h-12 flex items-center justify-center text-gray-600 bg-gray-50 rounded-full hover:bg-gray-100'
+          onClick={() => router.push(`/settings`)}
         >
-          Edit Settings
+          <HiAdjustmentsHorizontal />
         </button>
       </div>
 
@@ -37,14 +41,14 @@ const CompanySettingsOverview = () => {
         {/* Name */}
         <div>
           <h3 className='text-lg font-medium text-gray-700'>Name</h3>
-          <p className='text-gray-600'>{companySettings.name}</p>
+          <p className='text-gray-600'>{currentConfiguration.company.name}</p>
         </div>
 
         {/* Logo */}
-        {companySettings.logo && (
+        {currentConfiguration.logo && (
           <div>
             <Image
-              src={companySettings.logo}
+              src={currentConfiguration.logo}
               alt='Company Logo'
               width={96}
               height={96}
@@ -57,7 +61,7 @@ const CompanySettingsOverview = () => {
         <div className='sm:col-span-2'>
           <h3 className='text-lg font-medium text-gray-700'>Description</h3>
           <p className='text-gray-600 leading-relaxed'>
-            {companySettings.description}
+            {currentConfiguration.description}
           </p>
         </div>
 
@@ -65,14 +69,24 @@ const CompanySettingsOverview = () => {
         <div className='sm:col-span-2'>
           <h3 className='text-lg font-medium text-gray-700'>Website</h3>
           <a
-            href={companySettings.website}
+            href={currentConfiguration.website}
             target='_blank'
             rel='noopener noreferrer'
-            className='text-blue-500 hover:underline break-all'
+            className='text-teal-500 hover:underline break-all'
           >
-            {companySettings.website}
+            {currentConfiguration.website}
           </a>
         </div>
+      </div>
+
+      {/* Navigation */}
+      <div className='mt-4'>
+        <button
+          className='px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700 transition'
+          onClick={handleNext}
+        >
+          Next Configuration
+        </button>
       </div>
     </div>
   );

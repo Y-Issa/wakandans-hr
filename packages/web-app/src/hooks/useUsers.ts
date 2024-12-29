@@ -3,9 +3,10 @@ import useSWR, { mutate } from 'swr';
 import axios from 'axios';
 import { API_BASE_URL } from '@/lib/constants';
 import { useRouter } from 'next/navigation';
+import axiosInstance from '@/lib/axiosInstance';
 
 const fetcher = (url: string) =>
-  axios.get(url, { withCredentials: true }).then((res) => res.data);
+  axiosInstance.get(url, { withCredentials: true }).then((res) => res.data);
 
 interface User {
   id: string;

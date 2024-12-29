@@ -3,13 +3,13 @@ import { writePrisma } from '../prisma';
 const daysOff = [
   {
     name: "New Year's Day",
-    fromDate: '2024-01-01T00:00:00Z',
-    toDate: '2024-01-01T23:59:59Z',
+    fromDate: '2025-01-01T00:00:00Z',
+    toDate: '2025-01-01T23:59:59Z',
   },
   {
     name: 'Saint Maroun Day',
-    fromDate: '2024-02-09T00:00:00Z',
-    toDate: '2024-02-09T23:59:59Z',
+    fromDate: '2025-02-09T00:00:00Z',
+    toDate: '2025-02-09T23:59:59Z',
   },
   {
     name: 'Good Friday',
@@ -23,8 +23,8 @@ const daysOff = [
   },
   {
     name: 'Eid El Fitr',
-    fromDate: '2024-04-10T00:00:00Z',
-    toDate: '2024-04-10T23:59:59Z',
+    fromDate: '2025-03-31T00:00:00Z',
+    toDate: '2025-04-01T23:59:59Z',
   },
   {
     name: 'Memorial Day',

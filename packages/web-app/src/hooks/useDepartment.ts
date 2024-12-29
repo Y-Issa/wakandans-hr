@@ -1,9 +1,10 @@
+import axiosInstance from '@/lib/axiosInstance';
 import { API_BASE_URL } from '@/lib/constants';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import useSWR, { mutate } from 'swr';
 const fetcher = (url: string) =>
-  axios.get(url, { withCredentials: true }).then((res) => res.data);
+  axiosInstance.get(url, { withCredentials: true }).then((res) => res.data);
 
 export const useModalState = () => {
   const [modalState, setModalState] = useState({
