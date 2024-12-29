@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
+import { useCompanyConfigurations } from '@/hooks/useCompany';
 
 const CompanySettingsOverview = () => {
   const companySettings = {
@@ -11,6 +12,8 @@ const CompanySettingsOverview = () => {
       'A leading software development company specializing in HR solutions.',
     website: 'https://www.example.com',
   };
+  const { configurations } = useCompanyConfigurations();
+  console.log(configurations);
 
   return (
     <div className='bg-white p-6 rounded-lg shadow-md mb-4 space-y-6'>
@@ -20,7 +23,7 @@ const CompanySettingsOverview = () => {
           Company Overview
         </h2>
         <button
-          className='px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition'
+          className='px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700 transition'
           onClick={() => {
             alert('Redirecting to the detailed settings page...');
           }}

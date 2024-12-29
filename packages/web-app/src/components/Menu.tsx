@@ -18,11 +18,10 @@ import {
   FaUsers,
   FaBuildingUser,
   FaRegClock,
-  FaDollarSign,
+  FaLocationArrow,
 } from 'react-icons/fa6';
 import useStore from '@/lib/store';
 import { usePathname } from 'next/navigation';
-
 
 const menuItems = [
   {
@@ -33,21 +32,18 @@ const menuItems = [
         label: 'Home',
         href: '/home',
         visible: ['ADMIN', 'EMPLOYEE', 'MANAGER'],
-
       },
       {
         icon: <FaUsers />,
         label: 'Employees',
         href: '/employees',
         visible: ['ADMIN', 'EMPLOYEE', 'MANAGER'],
-
       },
       {
         icon: <FaBuildingUser />,
         label: 'Departments',
         href: '/departments',
         visible: ['ADMIN', 'EMPLOYEE', 'MANAGER'],
-
       },
       {
         icon: <FaUserFriends />,
@@ -86,17 +82,16 @@ const menuItems = [
         visible: ['ADMIN', 'EMPLOYEE', 'MANAGER'],
       },
       {
-        icon: <FaDollarSign />,
-        label: 'Payroll',
-        href: '/payroll',
-        visible: ['ADMIN', 'EMPLOYEE', 'MANAGER'],
-
-      },
-      {
         icon: <FaFileAlt />,
         label: 'Reports',
         href: '/reports',
         visible: ['ADMIN', 'EMPLOYEE', 'MANAGER'],
+      },
+      {
+        icon: <FaLocationArrow />,
+        label: 'Locations',
+        href: '/locations',
+        visible: ['ADMIN', 'MANAGER'],
       },
       {
         icon: <FaCogs />,

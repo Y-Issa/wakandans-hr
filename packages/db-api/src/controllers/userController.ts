@@ -112,34 +112,27 @@ export const createUser = async (req: Request, res: Response) => {
       : null;
 
   try {
-    // Check if the user already exists
-    const existingUser = await writePrisma.user.findUnique({
-      where: { email },
+    // Check if the user exists, including soft-deleted users
+    const existingUser = await writePrisma.user.findFirst({
+      where: {
+        email,
+      },
       include: { profile: true },
     });
 
     if (existingUser) {
       if (existingUser.deletedAt) {
-        // Reactivate the user
+        // User is soft-deleted, reactivate them
         const reactivatedUser = await writePrisma.user.update({
           where: { id: existingUser.id },
           data: {
+            isActive: true,
             deletedAt: null,
             firstName,
             lastName,
             role,
             locationId: locationIdInt,
             reportsToId: reportsToIdInt,
-            profile: existingUser.profile
-              ? undefined // Keep the existing profile if it exists
-              : {
-                  create: {
-                    title: profile?.title,
-                    employedAt: null,
-                    dateOfBirth: null,
-                    profileImage: null,
-                  },
-                },
           },
           select: {
             id: true,
@@ -161,13 +154,14 @@ export const createUser = async (req: Request, res: Response) => {
         });
       }
 
+      // User already exists and is not deleted
       return res.status(409).json({
         message: `User with email ${email} already exists.`,
         data: existingUser,
       });
     }
 
-    // Create a new user and profile
+    // Create a new user
     const newUser = await writePrisma.user.create({
       data: {
         email,

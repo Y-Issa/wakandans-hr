@@ -53,7 +53,7 @@ export const loginWithEmail = async (req: Request, res: Response) => {
         message: 'Too many requests. Please try again in 2 minutes',
       });
     }
-    await redis.set(cacheKey, 1, 'EX', 120); // 2 minutes
+    await redis.set(cacheKey, 1, 'EX', 30); // 30 seconds
 
     const loginToken = await generateToken(user.id);
     await jobsPrisma.job.create({

@@ -268,7 +268,7 @@ export const useCreateUser = () => {
         withCredentials: true,
       });
 
-      if (response.status === 201) {
+      if (response.status === 201 || response.status === 200) {
         alert('Employee created successfully');
         router.push('/employees');
       }
