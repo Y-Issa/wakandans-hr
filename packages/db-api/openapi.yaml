@@ -685,7 +685,7 @@ paths:
       parameters:
         - name: limit
           in: query
-          description: Number of iterms per page
+          description: Number of items per page
           required: false
           schema:
             type: integer
@@ -721,6 +721,473 @@ paths:
                     status:
                       type: string
                       example: 'Pending'
+
+  /pipeline-stages:
+    get:
+      summary: Get all pipeline stages
+      tags:
+        - Pipeline Management
+      responses:
+        200:
+          description: A list of pipeline stages with candidate counts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        name:
+                          type: string
+                          example: 'Initial Interview'
+                        order:
+                          type: integer
+                          example: 1
+                        description:
+                          type: string
+                          example: 'First stage of the interview process'
+                        _count:
+                          type: object
+                          properties:
+                            candidates:
+                              type: integer
+                              example: 5
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Error occurred while fetching pipeline stages'
+
+  /pipeline-stages/{id}:
+    get:
+      summary: Get pipeline stage details
+      tags:
+        - Pipeline Management
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Pipeline stage ID
+      responses:
+        200:
+          description: Detailed information about a pipeline stage including candidates
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: 'Initial Interview'
+                      order:
+                        type: integer
+                        example: 1
+                      description:
+                        type: string
+                        example: 'First stage of the interview process'
+                      candidates:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                            firstName:
+                              type: string
+                              example: 'John'
+                            lastName:
+                              type: string
+                              example: 'Doe'
+                            email:
+                              type: string
+                              example: 'john.doe@example.com'
+                            status:
+                              type: string
+                              example: 'INITIAL'
+                            createdAt:
+                              type: string
+                              format: date-time
+                      _count:
+                        type: object
+                        properties:
+                          candidates:
+                            type: integer
+                            example: 5
+        400:
+          description: Invalid stage ID
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Invalid stage ID: abc'
+        404:
+          description: Stage not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Stage with ID 123 not found'
+        500:
+          description: Internal server error
+
+  /pipeline-stages/reorder:
+    put:
+      summary: Reorder pipeline stages
+      tags:
+        - Pipeline Management
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                stageOrders:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      order:
+                        type: integer
+                        example: 2
+              required:
+                - stageOrders
+      responses:
+        200:
+          description: Stages reordered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Pipeline stages reordered successfully'
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        name:
+                          type: string
+                          example: 'Initial Interview'
+                        order:
+                          type: integer
+                          example: 2
+        400:
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Invalid stage orders format'
+        500:
+          description: Internal server error
+
+  /candidates/{id}/stage:
+    put:
+      summary: Move candidate to a new stage
+      tags:
+        - Pipeline Management
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Candidate ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - stageId
+              properties:
+                stageId:
+                  type: integer
+                  example: 2
+                notes:
+                  type: string
+                  example: 'Candidate performed well in technical interview'
+      responses:
+        200:
+          description: Candidate moved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Candidate moved successfully'
+                  data:
+                    type: object
+                    properties:
+                      candidate:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                          firstName:
+                            type: string
+                            example: 'John'
+                          lastName:
+                            type: string
+                            example: 'Doe'
+                          pipelineStageId:
+                            type: integer
+                            example: 2
+                          pipelineStage:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                                example: 2
+                              name:
+                                type: string
+                                example: 'Technical Interview'
+                      history:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                          candidateId:
+                            type: integer
+                            example: 1
+                          fromStageId:
+                            type: integer
+                            example: 1
+                          toStageId:
+                            type: integer
+                            example: 2
+                          notes:
+                            type: string
+                            example: 'Candidate performed well in technical interview'
+                          createdAt:
+                            type: string
+                            format: date-time
+        400:
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Invalid candidate or stage ID'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'User must be authenticated to perform this action'
+        404:
+          description: Candidate not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Candidate not found'
+        500:
+          description: Internal server error
+
+  /candidates/by-stage:
+    get:
+      summary: Get candidates grouped by pipeline stage
+      tags:
+        - Pipeline Management
+      responses:
+        200:
+          description: Candidates grouped by stage
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        name:
+                          type: string
+                          example: 'Initial Screen'
+                        order:
+                          type: integer
+                          example: 1
+                        candidates:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                                example: 1
+                              firstName:
+                                type: string
+                                example: 'John'
+                              lastName:
+                                type: string
+                                example: 'Doe'
+                              email:
+                                type: string
+                                example: 'john.doe@example.com'
+                              status:
+                                type: string
+                                example: 'INITIAL'
+                              tags:
+                                type: array
+                                items:
+                                  type: string
+                                example: ['JavaScript', 'React']
+                              createdAt:
+                                type: string
+                                format: date-time
+                              updatedAt:
+                                type: string
+                                format: date-time
+                        _count:
+                          type: object
+                          properties:
+                            candidates:
+                              type: integer
+                              example: 3
+        500:
+          description: Internal server error
+
+  /candidates/{id}/history:
+    get:
+      summary: Get stage history for a candidate
+      tags:
+        - Pipeline Management
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Candidate ID
+      responses:
+        200:
+          description: Candidate's stage history
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        candidateId:
+                          type: integer
+                          example: 1
+                        fromStage:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                            name:
+                              type: string
+                              example: 'Initial Screen'
+                        toStage:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 2
+                            name:
+                              type: string
+                              example: 'Technical Interview'
+                        notes:
+                          type: string
+                          example: 'Candidate moved to technical interview phase'
+                        createdAt:
+                          type: string
+                          format: date-time
+                        user:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                            firstName:
+                              type: string
+                              example: 'HR'
+                            lastName:
+                              type: string
+                              example: 'Manager'
+                            email:
+                              type: string
+                              example: 'hr@example.com'
+        400:
+          description: Invalid candidate ID
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Invalid candidate ID'
+        500:
+          description: Internal server error
+
   /users/{id}:
     get:
       tags:

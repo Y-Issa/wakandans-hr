@@ -6,21 +6,22 @@ import {
   createUser,
   updateUser,
   DeleteUser,
+  getManagementUsers,
 } from '../controllers/userController';
 import {
-  authMiddleware,
+  // authMiddleware,
   authRolesMiddleware,
 } from '../middlewares/authMiddleware';
 
 const router = express.Router();
 
-router.use('/users', authMiddleware);
-
 router.get(
   '/users',
-  authRolesMiddleware([UserRole.ADMIN, UserRole.EMPLOYEE, UserRole.MANAGER]),
+  // authRolesMiddleware([UserRole.ADMIN, UserRole.EMPLOYEE, UserRole.MANAGER]),
   getAllUsers,
 );
+
+router.get('/users/management', getManagementUsers);
 
 router.get(
   '/users/:id',

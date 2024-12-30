@@ -74,6 +74,7 @@ model User {
   @@schema("public")
   CommunicationLog CommunicationLog[]
   Interview Interview[]
+  CandidateStageHistory CandidateStageHistory[]
 }
 
 model Profile {
@@ -423,20 +424,25 @@ model Candidate {
   id                Int       @id @default(autoincrement())
   firstName         String
   lastName          String
-  email             String    @unique
-  phone             String?
-  tags              Json?     // JSON array for tags like "backend", "senior", etc.
+  email            String    @unique
+  phone            String?
+  tags             Json?     // JSON array for tags like "backend", "senior", etc.
   linkedInProfile   String?
-  resumeUrl         String?
-  notes             String?
-  status            CandidateStatus @default(INITIAL)
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
-  deletedAt         DateTime?
-  interviews        Interview[]
+  resumeUrl        String?
+  notes            String?
+  status           CandidateStatus @default(INITIAL)
+  pipelineStageId  Int?      // Make it optional for initial candidates
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  deletedAt        DateTime?
+  
+  pipelineStage    PipelineStage? @relation(fields: [pipelineStageId], references: [id])
+  interviews       Interview[]
   communicationLogs CommunicationLog[]
 
+  @@index([pipelineStageId])
   @@schema("public")
+  CandidateStageHistory CandidateStageHistory[]
 }
 
 enum CandidateStatus {
@@ -453,20 +459,26 @@ enum CandidateStatus {
 model Interview {
   id               Int       @id @default(autoincrement())
   candidateId      Int
-  interviewerId    Int       // Refers to User (HR or manager conducting the interview)
+  interviewerId    Int      // Refers to User (HR or manager conducting the interview)
+  interviewTypeId  Int      // Reference to InterviewType
   scheduledAt      DateTime
-  feedback         String?   // Feedback notes
-  score            Int?      // Scoring out of 10 or any scale
-  templateUsed     String?   // Refers to a template/question bank
+  actualStartTime  DateTime?
+  actualEndTime    DateTime?
+  feedback         Json?    // Structured feedback with scores and notes
+  questionBankId   Int?     // Optional reference to QuestionBank used
   status           InterviewStatus @default(SCHEDULED)
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  location         String?  // Can be office location or video call link
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
-  candidate        Candidate @relation(fields: [candidateId], references: [id])
-  interviewer      User      @relation(fields: [interviewerId], references: [id])
+  candidate        Candidate    @relation(fields: [candidateId], references: [id])
+  interviewer      User         @relation(fields: [interviewerId], references: [id])
+  interviewType    InterviewType @relation(fields: [interviewTypeId], references: [id])
+  questionBank     QuestionBank? @relation(fields: [questionBankId], references: [id])
 
   @@index([candidateId])
   @@index([interviewerId])
+  @@index([interviewTypeId])
   @@schema("public")
 }
 
@@ -503,32 +515,84 @@ enum CommunicationType {
   @@schema("public")
 }
 
-model QuestionBank {
-  id           Int       @id @default(autoincrement())
-  name         String
-  description  String?
-  questions    Json      // Array of questions
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+model Question {
+  id            Int       @id @default(autoincrement())
+  content       String
+  type          QuestionType
+  category      String?   // e.g., "Technical", "Behavioral", "Culture Fit"
+  difficulty    String?   // e.g., "Easy", "Medium", "Hard"
+  expectedTime  Int?      // in minutes
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  questionBankId Int
+  questionBank   QuestionBank @relation(fields: [questionBankId], references: [id])
 
   @@schema("public")
+}
+
+enum QuestionType {
+  MULTIPLE_CHOICE
+  OPEN_ENDED
+  CODING
+  SYSTEM_DESIGN
+
+  @@schema("public")
+}
+
+model QuestionBank {
+  id           Int        @id @default(autoincrement())
+  name         String
+  description  String?
+  questions    Question[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@schema("public")
+  Interview Interview[]
 }
 
 model PipelineStage {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          Int         @id @default(autoincrement())
+  name        String      @unique
+  order       Int         // To maintain the sequence of stages
+  description String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  candidates  Candidate[]
 
   @@schema("public")
+  CandidateStageHistory CandidateStageHistory[]
+  CandidateToStageHistory CandidateStageHistory[] @relation("FromStage")
+  CandidateFromStageHistory CandidateStageHistory[] @relation("ToStage")
+}
+
+model CandidateStageHistory {
+  id          Int           @id @default(autoincrement())
+  candidateId Int
+  fromStageId Int?
+  toStageId   Int
+  notes       String?
+  createdAt   DateTime      @default(now())
+  createdBy   Int          // User who made the change
+  
+  candidate   Candidate     @relation(fields: [candidateId], references: [id])
+  fromStage   PipelineStage? @relation("FromStage", fields: [fromStageId], references: [id])
+  toStage     PipelineStage  @relation("ToStage", fields: [toStageId], references: [id])
+  user        User          @relation(fields: [createdBy], references: [id])
+
+  @@index([candidateId])
+  @@schema("public")
+  PipelineStage PipelineStage[]
 }
 
 model InterviewType {
-  id          Int      @id @default(autoincrement())
-  name        String   @unique
-  description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id           Int        @id @default(autoincrement())
+  name         String     @unique
+  description  String?
+  duration     Int        // Default duration in minutes
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  interviews   Interview[]
 
   @@schema("public")
 }

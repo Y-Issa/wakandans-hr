@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { writePrisma, readPrisma } from '../prisma';
 import { handle500Response } from '../helpers';
 import { COMPANY_ID } from '../constants';
+import { UserRole } from '@prisma/client';
 
 const minimalUserSelect = {
   id: true,
@@ -31,9 +32,9 @@ export const getAllUsers = async (req: Request, res: Response) => {
       users.pop();
     }
 
-    res.status(200).json({ data: users, next });
+    return res.status(200).json({ data: users, next });
   } catch (error) {
-    handle500Response(
+    return handle500Response(
       res,
       error,
       'Error occurred while fetching users',
@@ -184,6 +185,30 @@ export const DeleteUser = async (req: Request, res: Response) => {
       error,
       `Error soft-deleting user with ID: ${id}`,
       'userController.softDeleteUser',
+    );
+  }
+};
+
+export const getManagementUsers = async (_req: Request, res: Response) => {
+  try {
+    const users = await readPrisma.user.findMany({
+      where: {
+        companyId: COMPANY_ID,
+        role: {
+          in: [UserRole.MANAGER, UserRole.ADMIN],
+        },
+        deletedAt: null,
+      },
+      select: minimalUserSelect,
+    });
+
+    return res.status(200).json({ data: users });
+  } catch (error) {
+    handle500Response(
+      res,
+      error,
+      'Error fetching management users',
+      'userController.getManagementUsers',
     );
   }
 };

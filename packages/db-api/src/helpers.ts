@@ -5,13 +5,9 @@ export const handle500Response = (
   error: unknown,
   message: string,
   source: string,
-  reqBodyJson?: string,
+  requestBody?: string,
 ) => {
-  const errorMessage =
-    error instanceof Error && error?.message ? error.message : message;
-  // TODO: log to a service
-  console.log(
-    `Error in ${source}: ${errorMessage} - Request Body: ${reqBodyJson}`,
-  );
-  res.status(500).json({ message: errorMessage });
+  console.error(`Error in ${source}:`, message, '- Request Body:', requestBody);
+  console.error(error);
+  return res.status(500).json({ message });
 };

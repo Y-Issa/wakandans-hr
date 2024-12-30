@@ -10,8 +10,10 @@ import locationRouter from './routes/locationRoutes';
 import userAuthRouter from './routes/userAuthRoutes';
 import userRouter from './routes/userRoutes';
 import departmentRouter from './routes/departmentRoutes';
-import userDepartmentRouter from './routes/userDepartmentRoutes';
 import candidateRouter from './routes/candidateRoutes';
+import pipelineStageRouter from './routes/pipelineStageRoutes';
+import candidatePipelineRouter from './routes/candidatePipelineRoutes';
+import interviewRouter from './routes/interviewRoutes';
 
 if (!process.env.DB_API_PORT) {
   process.env.DB_API_PORT = '5000';
@@ -44,8 +46,10 @@ const routers = [
   userAuthRouter,
   userRouter,
   departmentRouter,
-  userDepartmentRouter,
+  candidatePipelineRouter,
   candidateRouter,
+  pipelineStageRouter,
+  interviewRouter,
 ];
 
 routers.forEach((router) => {
