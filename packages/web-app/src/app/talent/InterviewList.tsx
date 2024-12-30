@@ -2,10 +2,7 @@
 
 import React from 'react';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import {
-  Card,
-  CardContent,
-} from '@/components/ui/Card';
+import { Card, CardContent } from '@/components/ui/Card';
 import { Calendar, Clock, UserRound, Video } from 'lucide-react';
 
 interface Interview {
