@@ -22,13 +22,13 @@ export const useModalState = () => {
   return { modalState, toggleModal };
 };
 
-export const useDepartmentDetails = (
-  departmentId: number,
+export const useTeamDetails = (
+  teamId: number,
   modalState: { showMembers: boolean; showAssignModal: boolean },
 ) => {
   // User count data
   const { data: userCountData, error: userCountError } = useSWR(
-    `${API_BASE_URL}/userDepartments/department/user-count/${departmentId}`,
+    `${API_BASE_URL}/userTeams/team/user-count/${teamId}`,
     fetcher,
     {
       keepPreviousData: true,
@@ -36,10 +36,10 @@ export const useDepartmentDetails = (
     },
   );
 
-  // Department users data
-  const { data: departmentUsersData } = useSWR(
+  // Team users data
+  const { data: teamUsersData } = useSWR(
     modalState.showMembers || modalState.showAssignModal
-      ? `${API_BASE_URL}/userDepartments/department/${departmentId}`
+      ? `${API_BASE_URL}/userTeams/team/${teamId}`
       : null,
     fetcher,
     {
@@ -61,14 +61,14 @@ export const useDepartmentDetails = (
   return {
     userCountData,
     userCountError,
-    departmentUsersData,
+    teamUsersData,
     allUsersData,
   };
 };
 
-export const useEditForm = (
+export const useEditTeamForm = (
   initialData: { name: string; description: string; locationId: number },
-  departmentId: number,
+  teamId: number,
   page: number,
   toggleModal: (key: string, state: boolean) => void,
 ) => {
@@ -83,42 +83,40 @@ export const useEditForm = (
 
   const handleEditSubmit = async () => {
     try {
-      await axios.put(
-        `${API_BASE_URL}/departments/${departmentId}`,
-        editFormData,
-        { withCredentials: true },
-      );
-      mutate(`${API_BASE_URL}/departments?page=${page}&limit=10`);
+      await axios.put(`${API_BASE_URL}/teams/${teamId}`, editFormData, {
+        withCredentials: true,
+      });
+      mutate(`${API_BASE_URL}/teams?page=${page}&limit=10`);
       toggleModal('showEditModal', false);
     } catch (error) {
-      console.error('Error updating department:', error);
+      console.error('Error updating team:', error);
     }
   };
 
   return { editFormData, handleEditChange, handleEditSubmit };
 };
 
-export const useDeleteDepartment = (
-  departmentId: number,
+export const useDeleteTeam = (
+  teamId: number,
   page: number,
   toggleModal: (key: string, state: boolean) => void,
 ) => {
   const handleDelete = async () => {
     try {
-      await axios.delete(`${API_BASE_URL}/departments/${departmentId}`, {
+      await axios.delete(`${API_BASE_URL}/teams/${teamId}`, {
         withCredentials: true,
       });
-      mutate(`${API_BASE_URL}/departments?page=${page}&limit=10`);
+      mutate(`${API_BASE_URL}/teams?page=${page}&limit=10`);
       toggleModal('showDeleteModal', false);
     } catch (error) {
-      console.error('Error deleting department:', error);
+      console.error('Error deleting team:', error);
     }
   };
   return { handleDelete };
 };
 
 export const useMemberActions = (
-  departmentId: number,
+  teamId: number,
   toggleModal: (key: string, state: boolean) => void,
 ) => {
   const handleMemberAction = async (
@@ -127,10 +125,10 @@ export const useMemberActions = (
   ) => {
     const url =
       action === 'assign'
-        ? `${API_BASE_URL}/userDepartments/`
-        : `${API_BASE_URL}/userDepartments/user/${userId}/department/${departmentId}`;
+        ? `${API_BASE_URL}/userTeams/`
+        : `${API_BASE_URL}/userTeams/user/${userId}/team/${teamId}`;
     const method = action === 'assign' ? 'post' : 'delete';
-    const data = action === 'assign' ? { userId, departmentId } : null;
+    const data = action === 'assign' ? { userId, teamId } : null;
 
     try {
       if (action === 'assign') {
@@ -138,10 +136,8 @@ export const useMemberActions = (
       } else {
         await axios[method](url, { withCredentials: true });
       }
-      mutate(`${API_BASE_URL}/userDepartments/department/${departmentId}`);
-      mutate(
-        `${API_BASE_URL}/userDepartments/department/user-count/${departmentId}`,
-      );
+      mutate(`${API_BASE_URL}/userTeams/team/${teamId}`);
+      mutate(`${API_BASE_URL}/userTeams/team/user-count/${teamId}`);
       if (action === 'assign') toggleModal('showAssignModal', false);
     } catch (error) {
       console.error(
@@ -154,9 +150,9 @@ export const useMemberActions = (
   return { handleMemberAction };
 };
 
-export const useDepartments = (page: number, limit: number) => {
+export const useTeams = (page: number, limit: number) => {
   const { data, error, isLoading } = useSWR(
-    `${API_BASE_URL}/departments?page=${page}&limit=${limit}`,
+    `${API_BASE_URL}/teams?page=${page}&limit=${limit}`,
     fetcher,
     {
       keepPreviousData: true,
@@ -164,12 +160,13 @@ export const useDepartments = (page: number, limit: number) => {
     },
   );
 
-  const departments = data?.data || [];
+  const teams = data?.data || [];
   const hasNextPage = data?.next || false;
 
-  return { departments, hasNextPage, error, isLoading };
+  return { teams, hasNextPage, error, isLoading };
 };
-export const useDepartmentForm = (page: number, limit: number) => {
+
+export const useTeamForm = (page: number, limit: number) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -195,22 +192,18 @@ export const useDepartmentForm = (page: number, limit: number) => {
     setLoading(true);
 
     try {
-      const response = await axios.post(
-        `${API_BASE_URL}/departments`,
-        formData,
-        {
-          withCredentials: true,
-        },
-      );
+      const response = await axios.post(`${API_BASE_URL}/teams`, formData, {
+        withCredentials: true,
+      });
 
       if (response.status === 201) {
-        mutate(`${API_BASE_URL}/departments?page=${page}&limit=${limit}`);
+        mutate(`${API_BASE_URL}/teams?page=${page}&limit=${limit}`);
         setFormData({ name: '', description: '', locationId: '' });
         setIsModalOpen(false);
       }
     } catch (err) {
       console.error(err);
-      setError('Failed to create department. Please try again.');
+      setError('Failed to create team. Please try again.');
     } finally {
       setLoading(false);
     }

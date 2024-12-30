@@ -87,7 +87,7 @@ export const createTeam = async (req: Request, res: Response) => {
       data: {
         name,
         description,
-        locationId: locationId || null,
+        locationId: parseInt(locationId) || null,
         companyId: COMPANY_ID,
       },
     });
@@ -262,6 +262,7 @@ export const getUsersForTeam = async (req: Request, res: Response) => {
     const teamUsers = await readPrisma.userTeam.findMany({
       where: {
         teamId: parseInt(teamId),
+        active: true,
       },
       include: {
         user: true,
@@ -283,6 +284,32 @@ export const getUsersForTeam = async (req: Request, res: Response) => {
   }
 };
 
+export const getUsersCountForTeam = async (req: Request, res: Response) => {
+  const { teamId } = req.params;
+
+  try {
+    const usersCount = await readPrisma.userTeam.count({
+      where: {
+        teamId: parseInt(teamId),
+        active: true,
+      },
+    });
+
+    res.status(200).json({
+      message: `Users count for team ${teamId}`,
+      data: usersCount,
+    });
+  } catch (error) {
+    handle500Response(
+      res,
+      error,
+      'Error getting users count for team',
+      'userTeamController.getUsersCountForTeam',
+      JSON.stringify(req.params),
+    );
+  }
+};
+
 export const deleteUserTeam = async (req: Request, res: Response) => {
   const { userId, teamId } = req.params;
 
@@ -296,7 +323,6 @@ export const deleteUserTeam = async (req: Request, res: Response) => {
       },
       data: {
         active: false,
-        updatedAt: new Date(),
       },
     });
 

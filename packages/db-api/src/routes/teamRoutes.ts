@@ -10,6 +10,7 @@ import {
   getUsersForTeam,
   getTeamsForUser,
   assignUserTeam,
+  getUsersCountForTeam,
 } from '../controllers/teamController';
 import {
   authMiddleware,
@@ -57,6 +58,12 @@ router.get(
   '/userTeams/team/:teamId',
   authRolesMiddleware([UserRole.ADMIN, UserRole.EMPLOYEE, UserRole.MANAGER]),
   getUsersForTeam,
+);
+
+router.get(
+  '/userTeams/team/user-count/:teamId',
+  authRolesMiddleware([UserRole.ADMIN, UserRole.EMPLOYEE, UserRole.MANAGER]),
+  getUsersCountForTeam,
 );
 
 router.delete(

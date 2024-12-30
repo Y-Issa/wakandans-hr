@@ -1,135 +1,14 @@
-'use client';
+import { Metadata } from 'next';
+import UsersList from './UserList';
 
-import { HiPlus } from 'react-icons/hi2';
-import Pagination from '@/components/Pagination';
-import EditUserForm from '@/components/employees/EditUserForm';
-import { useRouter } from 'next/navigation';
-import useStore from '@/lib/store';
-import UserTable from '@/components/employees/UserTable';
-import { useUsers } from '@/hooks/useUsers';
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'Employees | Wakandans HR',
+    description:
+      'Manage all employees in the HR management system for Wakandans',
+  };
+}
 
-const UsersList = () => {
-  const router = useRouter();
-  const user = useStore((state) => state.user);
-
-  const {
-    users,
-    page,
-    setPage,
-    sortBy,
-    sortOrder,
-    handleSort,
-    hasNextPage,
-    handleDelete,
-    handleEdit,
-    handleEditSubmit,
-    selectedUser,
-    setSelectedUser,
-    isEditModalOpen,
-    setIsEditModalOpen,
-    isDeleteModalOpen,
-    setIsDeleteModalOpen,
-    isLoading,
-    error,
-  } = useUsers();
-
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
-
-  return (
-    <div className='bg-gray-50 shadow-lg rounded-lg p-6 m-4 overflow-y-scroll lg:max-h-[85vh]'>
-      <div className='flex justify-between items-center mb-6'>
-        <h1 className='text-2xl font-bold text-gray-800'>All Employees</h1>
-        {user?.role === 'ADMIN' && (
-          <button
-            onClick={() => router.push('/employees/new')}
-            className='px-4 py-2 flex items-center justify-center gap-2 text-white bg-teal-600 rounded-lg shadow-md transition-all duration-300 ease-in-out hover:bg-teal-700 hover:shadow-lg focus:outline-none transform hover:scale-105'
-          >
-            <HiPlus size={20} />
-            <span className='hidden md:inline'>Add Employee</span>
-          </button>
-        )}
-      </div>
-
-      <div className='overflow-x-auto rounded-lg border border-gray-200 shadow-sm'>
-        <UserTable
-          users={users}
-          sortBy={sortBy}
-          sortOrder={sortOrder}
-          onSort={handleSort}
-          onEdit={handleEdit}
-          setSelectedUser={setSelectedUser}
-          setIsDeleteModalOpen={setIsDeleteModalOpen}
-        />
-      </div>
-
-      <Pagination
-        page={page}
-        hasNextPage={hasNextPage}
-        onPrevious={() => setPage((prev) => Math.max(prev - 1, 0))}
-        onNext={() => setPage((prev) => prev + 1)}
-      />
-
-      {isDeleteModalOpen && selectedUser && (
-        <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'>
-          <div className='bg-white rounded-lg shadow-lg p-6 w-96'>
-            <h3 className='text-lg font-semibold text-gray-800'>
-              Confirm Deletion
-            </h3>
-            <p className='mt-2 text-sm text-gray-600'>
-              Are you sure you want to delete{' '}
-              <span className='font-semibold'>
-                {selectedUser.firstName} {selectedUser.lastName}
-              </span>
-              ? This action cannot be undone.
-            </p>
-            <div className='mt-4 flex justify-end gap-3'>
-              <button
-                className='px-4 py-2 bg-gray-200 rounded-lg text-gray-700 hover:bg-gray-300'
-                onClick={() => setIsDeleteModalOpen(false)}
-              >
-                Cancel
-              </button>
-              <button
-                className='px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700'
-                onClick={() => handleDelete(selectedUser.id)}
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {isEditModalOpen && selectedUser && (
-        <EditUserForm
-          formData={selectedUser}
-          onChange={(e) => {
-            console.log(e.target.name, e.target.value);
-            if (e.target.name === 'title') {
-              setSelectedUser({
-                ...selectedUser,
-                profile: {
-                  ...selectedUser.profile,
-                  [e.target.name]: e.target.value,
-                },
-              });
-            } else {
-              setSelectedUser({
-                ...selectedUser,
-                [e.target.name]: e.target.value,
-              });
-            }
-          }}
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleEditSubmit(selectedUser);
-          }}
-          onCancel={() => setIsEditModalOpen(false)}
-        />
-      )}
-    </div>
-  );
-};
-
-export default UsersList;
+export default function EmployeesPage() {
+  return <UsersList />;
+}

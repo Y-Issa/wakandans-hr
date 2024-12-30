@@ -87,7 +87,7 @@ export const createDepartment = async (req: Request, res: Response) => {
       data: {
         name,
         description,
-        locationId: parseInt(locationId, 10),
+        locationId: parseInt(locationId, 10) || null,
         companyId: COMPANY_ID,
       },
       select: minimalDepartmentSelect,

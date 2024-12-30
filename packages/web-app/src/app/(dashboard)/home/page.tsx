@@ -1,9 +1,18 @@
+import { Metadata } from 'next';
 import Announcements from '@/components/home/Announcements';
 import CompanySettingsOverview from '@/components/home/CompanySettingsOverview';
 import EventCalendar from '@/components/home/EventCalendar';
 import PostAnnouncement from '@/components/home/PostAnnouncement';
 import ProjectOverview from '@/components/home/ProjectOverview';
 import TaskList from '@/components/home/TaskList';
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'Home | Wakandans HR',
+    description:
+      'View announcements, tasks, projects, and more on your dashboard.',
+  };
+}
 
 const HomePage = () => {
   return (
