@@ -8,7 +8,7 @@ const profiles = [
     employedAt: '2022-08-29T10:15:30.000Z',
     profileImage: 'https://avatars.githubusercontent.com/u/2188008?v=4',
     additionalInfo:
-      '{"bio": "I love to play the guitar and I\'m a huge fan of the Beatles.", "social": {"linkedin": "https://www.linkedin.com/in/john-lennon", "twitter": "https://twitter.com/johnlennon, "instagram": "https://instagram.com/, "facebook": "https://facebook.com/, "github": "https://guthib.com/"}}',
+      '{"bio": "I love to play the guitar and I\'m a huge fan of the Beatles.", "social": {"linkedin": "https://www.linkedin.com/in/john-lennon", "twitter": "https://twitter.com/johnlennon", "instagram": "https://instagram.com/", "facebook": "https://facebook.com/", "github": "https://guthib.com"}}',
   },
   {
     userId: 2,
