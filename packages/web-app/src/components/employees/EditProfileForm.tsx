@@ -69,7 +69,6 @@ const EditProfileForm: React.FC<EditProfileFormProps> = ({
         },
       }));
     } else if (name === 'dateOfBirth') {
-      console.log(new Date(value).toISOString());
       setProfile((prev) => ({
         ...prev,
         dateOfBirth: new Date(value).toISOString(),
@@ -81,8 +80,7 @@ const EditProfileForm: React.FC<EditProfileFormProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const { additionalInfo, ...restprofile } = profile;
-    console.log(additionalInfo, restprofile);
+
     onSubmit(profile);
   };
 

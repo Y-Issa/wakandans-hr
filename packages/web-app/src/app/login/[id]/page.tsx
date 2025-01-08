@@ -39,7 +39,6 @@ const Page = ({ params }: PageProps) => {
           setError('Login failed.');
           return;
         }
-        console.log(response.data);
 
         setCookie('loggedIn', '1');
         setMessage("You're logged in!");
@@ -53,7 +52,6 @@ const Page = ({ params }: PageProps) => {
           },
         );
 
-
         setUser({
           id: userResponse.data.id,
           firstName: userResponse.data.firstName,
@@ -64,7 +62,6 @@ const Page = ({ params }: PageProps) => {
           title: userResponse?.data.profile?.title,
         });
         router.push('/home');
-
       } catch (err) {
         console.error(err);
         setError('An unexpected error occurred.');

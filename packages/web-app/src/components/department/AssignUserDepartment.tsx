@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { LuSearch } from 'react-icons/lu';
 
 interface AssignUserDepartmentProps {
@@ -21,13 +21,15 @@ const AssignUserDepartment: React.FC<AssignUserDepartmentProps> = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [confirmUserId, setConfirmUserId] = useState<number | null>(null);
 
-  const filteredUsers = allUsers.filter(
-    (user) =>
-      !usersInDepartment.some((deptUser) => deptUser.userId === user.id) &&
-      `${user.firstName} ${user.lastName}`
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase()),
-  );
+  const filteredUsers = useMemo(() => {
+    return allUsers.filter(
+      (user) =>
+        !usersInDepartment.some((deptUser) => deptUser.userId === user.id) &&
+        `${user.firstName} ${user.lastName}`
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()),
+    );
+  }, [allUsers, usersInDepartment, searchTerm]);
 
   const handleConfirmAssign = () => {
     if (confirmUserId !== null) {

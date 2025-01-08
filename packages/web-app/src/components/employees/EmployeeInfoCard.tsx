@@ -40,6 +40,18 @@ interface ProfileData {
   profileImage?: string;
   title?: string;
 }
+interface profileWithoutId {
+  id?: number;
+  bio?: string;
+  social?: {
+    linkedin?: string;
+    twitter?: string;
+    [key: string]: string | undefined;
+  };
+  dateOfBirth?: string;
+  profileImage?: string;
+  title?: string;
+}
 const fetcher = (url: string) =>
   axiosInstance.get(url, { withCredentials: true }).then((res) => res.data);
 
@@ -59,10 +71,9 @@ const EmployeeInfoCard: React.FC<EmployeeInfoCardProps> = ({ employee }) => {
   }
 
   const handleFormSubmit = (updatedProfile: ProfileData) => {
-    console.log('Updated Profile:', updatedProfile);
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { id, ...profileWithoutId } = updatedProfile;
+      const profileWithoutId: profileWithoutId = { ...updatedProfile };
+      delete profileWithoutId.id;
       axios.put(`${API_BASE_URL}/profiles/${employee.id}`, profileWithoutId, {
         withCredentials: true,
       });

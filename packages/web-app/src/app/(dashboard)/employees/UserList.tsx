@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import useStore from '@/lib/store';
 import UserTable from '@/components/employees/UserTable';
 import { useUsers } from '@/hooks/useUsers';
+import ConfirmDeleteUser from '@/components/employees/ConfirmDeleteUser';
 
 const UsersList = () => {
   const router = useRouter();
@@ -71,41 +72,17 @@ const UsersList = () => {
       />
 
       {isDeleteModalOpen && selectedUser && (
-        <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'>
-          <div className='bg-white rounded-lg shadow-lg p-6 w-96'>
-            <h3 className='text-lg font-semibold text-gray-800'>
-              Confirm Deletion
-            </h3>
-            <p className='mt-2 text-sm text-gray-600'>
-              Are you sure you want to delete{' '}
-              <span className='font-semibold'>
-                {selectedUser.firstName} {selectedUser.lastName}
-              </span>
-              ? This action cannot be undone.
-            </p>
-            <div className='mt-4 flex justify-end gap-3'>
-              <button
-                className='px-4 py-2 bg-gray-200 rounded-lg text-gray-700 hover:bg-gray-300'
-                onClick={() => setIsDeleteModalOpen(false)}
-              >
-                Cancel
-              </button>
-              <button
-                className='px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700'
-                onClick={() => handleDelete(selectedUser.id)}
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
+        <ConfirmDeleteUser
+          selectedUser={selectedUser}
+          setIsDeleteModalOpen={setIsDeleteModalOpen}
+          handleDelete={handleDelete}
+        />
       )}
 
       {isEditModalOpen && selectedUser && (
         <EditUserForm
           formData={selectedUser}
           onChange={(e) => {
-            console.log(e.target.name, e.target.value);
             if (e.target.name === 'title') {
               setSelectedUser({
                 ...selectedUser,

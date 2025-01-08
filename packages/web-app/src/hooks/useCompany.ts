@@ -93,7 +93,6 @@ export const useCompanyConfigurations = () => {
     e.preventDefault();
     setLoading(true);
     setError('');
-    console.log('Form Data:', formData);
 
     try {
       const response = await axios.post(
