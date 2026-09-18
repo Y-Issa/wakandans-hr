@@ -8,6 +8,8 @@ import useStore from '@/lib/store';
 import UserTable from '@/components/employees/UserTable';
 import { useUsers } from '@/hooks/useUsers';
 import ConfirmDeleteUser from '@/components/employees/ConfirmDeleteUser';
+import Card from '@/components/ui/Card';
+import PillButton from '@/components/ui/PillButton';
 
 const UsersList = () => {
   const router = useRouter();
@@ -38,38 +40,39 @@ const UsersList = () => {
   if (error) return <div>Error: {error.message}</div>;
 
   return (
-    <div className='bg-gray-50 shadow-lg rounded-lg p-6 m-4 overflow-y-scroll lg:max-h-[85vh]'>
-      <div className='flex justify-between items-center mb-6'>
-        <h1 className='text-2xl font-bold text-gray-800'>All Employees</h1>
+    <div className='flex flex-col gap-6 py-4'>
+      <div className='flex justify-between items-center'>
+        <h1 className='text-2xl font-semibold text-gray-900'>All Employees</h1>
         {user?.role === 'ADMIN' && (
-          <button
-            onClick={() => router.push('/employees/new')}
-            className='px-4 py-2 flex items-center justify-center gap-2 text-white bg-teal-600 rounded-lg shadow-md transition-all duration-300 ease-in-out hover:bg-teal-700 hover:shadow-lg focus:outline-none transform hover:scale-105'
-          >
-            <HiPlus size={20} />
-            <span className='hidden md:inline'>Add Employee</span>
-          </button>
+          <PillButton onClick={() => router.push('/employees/new')}>
+            <HiPlus size={16} />
+            Add Employee
+          </PillButton>
         )}
       </div>
 
-      <div className='overflow-x-auto rounded-lg border border-gray-200 shadow-sm'>
-        <UserTable
-          users={users}
-          sortBy={sortBy}
-          sortOrder={sortOrder}
-          onSort={handleSort}
-          onEdit={handleEdit}
-          setSelectedUser={setSelectedUser}
-          setIsDeleteModalOpen={setIsDeleteModalOpen}
-        />
-      </div>
+      <Card className='overflow-hidden'>
+        <div className='overflow-x-auto'>
+          <UserTable
+            users={users}
+            sortBy={sortBy}
+            sortOrder={sortOrder}
+            onSort={handleSort}
+            onEdit={handleEdit}
+            setSelectedUser={setSelectedUser}
+            setIsDeleteModalOpen={setIsDeleteModalOpen}
+          />
+        </div>
 
-      <Pagination
-        page={page}
-        hasNextPage={hasNextPage}
-        onPrevious={() => setPage((prev) => Math.max(prev - 1, 0))}
-        onNext={() => setPage((prev) => prev + 1)}
-      />
+        <div className='px-4 pb-4'>
+          <Pagination
+            page={page}
+            hasNextPage={hasNextPage}
+            onPrevious={() => setPage((prev) => Math.max(prev - 1, 0))}
+            onNext={() => setPage((prev) => prev + 1)}
+          />
+        </div>
+      </Card>
 
       {isDeleteModalOpen && selectedUser && (
         <ConfirmDeleteUser

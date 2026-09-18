@@ -68,12 +68,12 @@ const AssignUserDepartment: React.FC<AssignUserDepartmentProps> = ({
             {filteredUsers.map((user) => (
               <li
                 key={user.id}
-                className='flex justify-between items-center p-2 border rounded-md hover:bg-teal-50'
+                className='flex justify-between items-center p-2 border rounded-md hover:bg-blue-50'
               >
                 <span>{`${user.firstName} ${user.lastName}`}</span>
                 <button
                   onClick={() => setConfirmUserId(user.id)}
-                  className='px-2 py-1 text-sm text-white bg-teal-600 rounded-md hover:bg-teal-700'
+                  className='px-2 py-1 text-sm text-white bg-blue-600 rounded-md hover:bg-blue-700'
                 >
                   Assign
                 </button>
@@ -84,7 +84,7 @@ const AssignUserDepartment: React.FC<AssignUserDepartmentProps> = ({
 
         <button
           onClick={handleAssignModalClose}
-          className='mt-4 w-full px-4 py-2 text-sm font-medium text-white bg-teal-600 rounded-md hover:bg-teal-700'
+          className='mt-4 w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700'
         >
           Close
         </button>
@@ -106,7 +106,7 @@ const AssignUserDepartment: React.FC<AssignUserDepartmentProps> = ({
               </button>
               <button
                 onClick={handleConfirmAssign}
-                className='px-4 py-2 text-sm font-medium text-white bg-teal-600 rounded-md hover:bg-teal-700'
+                className='px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700'
               >
                 Confirm
               </button>

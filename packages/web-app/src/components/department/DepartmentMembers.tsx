@@ -70,12 +70,12 @@ const DepartmentMembers: React.FC<DepartmentMembersProps> = ({
                   href={`/employees/${user.user.id}`}
                   className='flex items-center space-x-3 group'
                 >
-                  <div className='w-10 h-10 bg-teal-100 text-teal-700 font-bold rounded-full flex items-center justify-center'>
+                  <div className='w-10 h-10 bg-blue-100 text-blue-700 font-bold rounded-full flex items-center justify-center'>
                     {user.user.firstName[0]}
                     {user.user.lastName[0]}
                   </div>
                   <div>
-                    <h3 className='text-sm font-medium text-gray-800 group-hover:text-teal-600'>
+                    <h3 className='text-sm font-medium text-gray-800 group-hover:text-blue-600'>
                       {user.user.firstName} {user.user.lastName}
                     </h3>
                     <p className='text-xs text-gray-500'>{user.user.role}</p>
@@ -95,7 +95,7 @@ const DepartmentMembers: React.FC<DepartmentMembersProps> = ({
         </div>
         <button
           onClick={handleModalClose}
-          className='mt-4 w-full px-4 py-2 text-sm font-medium text-white bg-teal-600 rounded-md hover:bg-teal-700'
+          className='mt-4 w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700'
         >
           Close
         </button>

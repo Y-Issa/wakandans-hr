@@ -5,6 +5,7 @@ import HolidayCard from '@/components/holidays/HolidayCard';
 import HolidayForm from '@/components/holidays/HolidayForm';
 import { useState } from 'react';
 import ConfirmationModal from '@/components/locations/ConfirmationModal';
+import Card from '@/components/ui/Card';
 
 const HolidaysPage = () => {
   const {
@@ -44,26 +45,26 @@ const HolidaysPage = () => {
   };
 
   return (
-    <div className='p-6 bg-gray-50'>
-      <h1 className='text-2xl font-semibold mb-6'>Manage Holidays</h1>
+    <div className='flex flex-col gap-6 py-4'>
+      <h1 className='text-2xl font-semibold text-gray-900'>Manage Holidays</h1>
 
-      {error && <p className='text-red-500 text-sm mb-4'>{error}</p>}
+      {error && <p className='text-red-500 text-sm'>{error}</p>}
 
-      <div className='p-4 flex gap-4 flex-col md:flex-row'>
+      <div className='flex gap-4 flex-col md:flex-row'>
         <div className='w-full lg:w-2/3 flex flex-col gap-4'>
-          <div className='space-y-4'>
-            {holidays.map((holiday) => (
-              <HolidayCard
-                key={holiday.id}
-                holiday={holiday}
-                toggleEdit={toggleEdit}
-                toggleDeleteModal={toggleDeleteModal}
-              />
-            ))}
-            {!holidays.length && (
-              <p className='text-gray-500'>No holidays found.</p>
-            )}
-          </div>
+          {holidays.map((holiday) => (
+            <HolidayCard
+              key={holiday.id}
+              holiday={holiday}
+              toggleEdit={toggleEdit}
+              toggleDeleteModal={toggleDeleteModal}
+            />
+          ))}
+          {!holidays.length && (
+            <Card className='p-6 text-sm text-gray-400'>
+              No holidays found.
+            </Card>
+          )}
         </div>
 
         <HolidayForm

@@ -5,6 +5,7 @@ import LocationCard from '@/components/locations/LocationCard';
 import LocationForm from '@/components/locations/LocationForm';
 import ConfirmationModal from '@/components/locations/ConfirmationModal';
 import { useState } from 'react';
+import Card from '@/components/ui/Card';
 
 const LocationsPage = () => {
   const {
@@ -45,26 +46,26 @@ const LocationsPage = () => {
   };
 
   return (
-    <div className='p-6 bg-gray-50'>
-      <h1 className='text-2xl font-semibold mb-6'>Manage Locations</h1>
+    <div className='flex flex-col gap-6 py-4'>
+      <h1 className='text-2xl font-semibold text-gray-900'>Manage Locations</h1>
 
-      {error && <p className='text-red-500 text-sm mb-4'>{error}</p>}
+      {error && <p className='text-red-500 text-sm'>{error}</p>}
 
-      <div className='p-4 flex gap-4 flex-col md:flex-row'>
+      <div className='flex gap-4 flex-col md:flex-row'>
         <div className='w-full lg:w-2/3 flex flex-col gap-4'>
-          <div className='space-y-4'>
-            {locations.map((location) => (
-              <LocationCard
-                key={location.id}
-                location={location}
-                toggleEdit={toggleEdit}
-                toggleDeleteModal={toggleDeleteModal}
-              />
-            ))}
-            {!locations.length && (
-              <p className='text-gray-500'>No locations found.</p>
-            )}
-          </div>
+          {locations.map((location) => (
+            <LocationCard
+              key={location.id}
+              location={location}
+              toggleEdit={toggleEdit}
+              toggleDeleteModal={toggleDeleteModal}
+            />
+          ))}
+          {!locations.length && (
+            <Card className='p-6 text-sm text-gray-400'>
+              No locations found.
+            </Card>
+          )}
         </div>
 
         <LocationForm

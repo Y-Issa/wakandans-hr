@@ -52,7 +52,7 @@ const CreateDepartmentForm: React.FC<CreateDepartmentFormProps> = ({
               value={formData.name}
               onChange={handleChange}
               required
-              className='mt-2 block w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500'
+              className='mt-2 block w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
             />
           </div>
           <div>
@@ -68,7 +68,7 @@ const CreateDepartmentForm: React.FC<CreateDepartmentFormProps> = ({
               value={formData.description}
               onChange={handleChange}
               required
-              className='mt-2 block w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500'
+              className='mt-2 block w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
             />
           </div>
           <div>
@@ -83,7 +83,7 @@ const CreateDepartmentForm: React.FC<CreateDepartmentFormProps> = ({
               id='locationId'
               value={formData.locationId}
               onChange={handleChange}
-              className='mt-2 block w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500'
+              className='mt-2 block w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
             >
               <option value=''>Select a location</option>
               {locations.map((location) => (
@@ -96,7 +96,7 @@ const CreateDepartmentForm: React.FC<CreateDepartmentFormProps> = ({
           <button
             type='submit'
             disabled={loading}
-            className={`w-full px-4 py-2 text-sm font-semibold text-white bg-teal-600 rounded hover:bg-teal-700 transition-all ${
+            className={`w-full px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded hover:bg-blue-700 transition-all ${
               loading && 'cursor-not-allowed opacity-60'
             }`}
           >

@@ -1,4 +1,6 @@
 import { HiAdjustmentsHorizontal, HiOutlineTrash } from 'react-icons/hi2';
+import { FaLocationDot } from 'react-icons/fa6';
+import IconBadge from '@/components/ui/IconBadge';
 
 interface Location {
   id: number;
@@ -22,13 +24,16 @@ const LocationCard: React.FC<LocationCardProps> = ({
   return (
     <div
       key={location.id}
-      className='flex items-center justify-between p-4 bg-white shadow-sm rounded-md border'
+      className='flex items-center justify-between p-4 bg-white shadow-sm rounded-2xl border border-gray-100'
     >
-      <div>
-        <p className='font-semibold text-gray-800'>{location.name}</p>
-        <p className='text-sm text-gray-600'>
-          {location.address}, {location.city}, {location.country}
-        </p>
+      <div className='flex items-center gap-3'>
+        <IconBadge icon={<FaLocationDot />} color='pink' size='sm' />
+        <div>
+          <p className='font-semibold text-gray-800'>{location.name}</p>
+          <p className='text-sm text-gray-500'>
+            {location.address}, {location.city}, {location.country}
+          </p>
+        </div>
       </div>
       <div className='flex gap-2'>
         <button

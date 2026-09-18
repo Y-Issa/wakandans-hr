@@ -92,7 +92,7 @@ const EditProfileForm: React.FC<EditProfileFormProps> = ({
       <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
         <div className='space-y-6'>
           <div>
-            <label className='block text-sm font-medium text-teal-700'>
+            <label className='block text-sm font-medium text-blue-700'>
               Bio
             </label>
             <textarea
@@ -106,7 +106,7 @@ const EditProfileForm: React.FC<EditProfileFormProps> = ({
           </div>
 
           <div>
-            <label className='block text-sm font-medium text-teal-700'>
+            <label className='block text-sm font-medium text-blue-700'>
               Title
             </label>
             <input
@@ -120,7 +120,7 @@ const EditProfileForm: React.FC<EditProfileFormProps> = ({
           </div>
 
           <div>
-            <label className='block text-sm font-medium text-teal-700'>
+            <label className='block text-sm font-medium text-blue-700'>
               Date of Birth
             </label>
             <input
@@ -133,7 +133,7 @@ const EditProfileForm: React.FC<EditProfileFormProps> = ({
           </div>
 
           <div>
-            <label className='block text-sm font-medium text-teal-700'>
+            <label className='block text-sm font-medium text-blue-700'>
               Profile Image URL
             </label>
             <input
@@ -148,7 +148,7 @@ const EditProfileForm: React.FC<EditProfileFormProps> = ({
         </div>
 
         <div>
-          <label className='block text-sm font-medium text-teal-700'>
+          <label className='block text-sm font-medium text-blue-700'>
             Social Links
           </label>
           <div className='space-y-2 mt-2'>
@@ -178,7 +178,7 @@ const EditProfileForm: React.FC<EditProfileFormProps> = ({
         </button>
         <button
           type='submit'
-          className='bg-teal-600 text-white px-4 py-2 rounded-md hover:bg-teal-700 transition-all'
+          className='bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-all'
         >
           Save Changes
         </button>

@@ -11,6 +11,16 @@ const config: Config = {
       colors: {
         background: 'var(--background)',
         foreground: 'var(--foreground)',
+        brand: {
+          green: '#16A34A',
+          greenLight: '#DCFCE7',
+          blue: '#3B82F6',
+          blueLight: '#DBEAFE',
+          pink: '#EC4899',
+          pinkLight: '#FCE7F3',
+          ink: '#111827',
+          canvas: '#F5F6F8',
+        },
       },
     },
   },

@@ -35,7 +35,7 @@ const UserRow: React.FC<UserRowProps> = ({ user, onEdit, onDelete }) => {
   const currentUser = useStore((state) => state.user);
 
   return (
-    <tr className='hover:bg-teal-50 transition duration-150'>
+    <tr className='hover:bg-blue-50 transition duration-150'>
       <td className='px-6 py-4 whitespace-nowrap'>
         <div className='flex items-center'>
           <Image
@@ -65,7 +65,7 @@ const UserRow: React.FC<UserRowProps> = ({ user, onEdit, onDelete }) => {
           )}
 
           <button
-            className='w-8 h-8 flex items-center justify-center text-teal-600 bg-teal-50 rounded-full shadow-md transition-all duration-300 ease-in-out hover:bg-teal-100 hover:shadow-lg focus:outline-none'
+            className='w-8 h-8 flex items-center justify-center text-blue-600 bg-blue-50 rounded-full shadow-md transition-all duration-300 ease-in-out hover:bg-blue-100 hover:shadow-lg focus:outline-none'
             onClick={() => router.push(`/employees/${user.id}`)}
           >
             <HiOutlineEye size={20} />

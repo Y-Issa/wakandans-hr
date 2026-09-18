@@ -16,13 +16,15 @@ const SettingsPage = () => {
   } = useCompanyConfigurations();
 
   return (
-    <div className='p-6 bg-gray-50'>
-      <h1 className='text-2xl font-semibold mb-6'>Company Configurations</h1>
+    <div className='flex flex-col gap-6 py-4'>
+      <h1 className='text-2xl font-semibold text-gray-900'>
+        Company Configurations
+      </h1>
 
-      {error && <p className='text-red-500 text-sm mb-2'>{error}</p>}
+      {error && <p className='text-red-500 text-sm'>{error}</p>}
 
       {!loading && !error && (
-        <div className='p-4 flex gap-4 flex-col md:flex-row'>
+        <div className='flex gap-4 flex-col md:flex-row'>
           <div className='w-full lg:w-2/3 flex flex-col gap-8'>
             <ConfigurationsList
               configurations={configurations.map((config) => ({

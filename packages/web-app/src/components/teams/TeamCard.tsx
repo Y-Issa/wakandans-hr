@@ -50,7 +50,7 @@ const TeamCard = ({ team, page }: TeamCardProps) => {
   const allUsers = allUsersData?.data || [];
 
   return (
-    <div className='rounded-2xl bg-gradient-to-b from-teal-50 to-teal-100 p-6 flex-1 shadow-md hover:shadow-lg transition-shadow min-w-44'>
+    <div className='rounded-2xl bg-gradient-to-b from-blue-50 to-blue-100 p-6 flex-1 shadow-md hover:shadow-lg transition-shadow min-w-44'>
       <div className='flex justify-between items-center mb-4'>
         <span className='text-xs bg-white px-3 py-1 rounded-full shadow-sm min-w-6'>
           <h2 className='capitalize text-sm font-medium text-gray-600'>
@@ -59,7 +59,7 @@ const TeamCard = ({ team, page }: TeamCardProps) => {
         </span>
         <span className='flex gap-3'>
           <button
-            className='w-8 h-8 flex items-center justify-center text-teal-600 bg-teal-50 rounded-full shadow-md transition-all duration-300 ease-in-out hover:bg-teal-100 hover:shadow-lg focus:outline-none'
+            className='w-8 h-8 flex items-center justify-center text-blue-600 bg-blue-50 rounded-full shadow-md transition-all duration-300 ease-in-out hover:bg-blue-100 hover:shadow-lg focus:outline-none'
             onClick={() => toggleModal('showEditModal', true)}
           >
             <HiAdjustmentsHorizontal />
@@ -82,7 +82,7 @@ const TeamCard = ({ team, page }: TeamCardProps) => {
       ) : (
         <>
           <div className='flex items-baseline space-x-2'>
-            <h1 className='text-3xl font-bold text-teal-700'>{userCount}</h1>
+            <h1 className='text-3xl font-bold text-blue-700'>{userCount}</h1>
           </div>
           <h2 className='text-sm text-gray-600'>Members</h2>
         </>
@@ -91,14 +91,14 @@ const TeamCard = ({ team, page }: TeamCardProps) => {
         {currentUser?.role === 'ADMIN' && (
           <button
             onClick={() => toggleModal('showAssignModal', true)}
-            className='px-4 py-2 text-sm font-medium text-white bg-teal-600 rounded-md hover:bg-teal-700'
+            className='px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700'
           >
             Assign Employee
           </button>
         )}
         <button
           onClick={() => toggleModal('showMembers', true)}
-          className='px-4 py-2 text-sm font-medium text-teal-600 bg-white border border-teal-600 rounded-md hover:bg-teal-50'
+          className='px-4 py-2 text-sm font-medium text-blue-600 bg-white border border-blue-600 rounded-md hover:bg-blue-50'
         >
           View Members
         </button>

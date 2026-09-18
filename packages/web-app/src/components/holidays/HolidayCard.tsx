@@ -1,4 +1,6 @@
 import { HiAdjustmentsHorizontal, HiOutlineTrash } from 'react-icons/hi2';
+import { FaUmbrellaBeach } from 'react-icons/fa6';
+import IconBadge from '@/components/ui/IconBadge';
 
 interface HolidayCardProps {
   holiday: {
@@ -24,14 +26,17 @@ const HolidayCard: React.FC<HolidayCardProps> = ({
   return (
     <div
       key={holiday.id}
-      className='flex items-center justify-between p-4 bg-white shadow-sm rounded-md border'
+      className='flex items-center justify-between p-4 bg-white shadow-sm rounded-2xl border border-gray-100'
     >
-      <div>
-        <p className='font-semibold text-gray-800'>{holiday.name}</p>
-        <p className='text-sm text-gray-600'>
-          From: {new Date(holiday.fromDate).toLocaleDateString()} <br />
-          To: {new Date(holiday.toDate).toLocaleDateString()}
-        </p>
+      <div className='flex items-center gap-3'>
+        <IconBadge icon={<FaUmbrellaBeach />} color='green' size='sm' />
+        <div>
+          <p className='font-semibold text-gray-800'>{holiday.name}</p>
+          <p className='text-sm text-gray-500'>
+            From: {new Date(holiday.fromDate).toLocaleDateString()} · To:{' '}
+            {new Date(holiday.toDate).toLocaleDateString()}
+          </p>
+        </div>
       </div>
       <div className='flex gap-2'>
         <button

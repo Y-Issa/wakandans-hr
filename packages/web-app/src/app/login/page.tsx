@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import axios from 'axios';
+import Image from 'next/image';
 import Link from 'next/link';
 import { API_BASE_URL } from '@/lib/constants';
 
@@ -44,7 +45,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className='min-h-screen flex items-center justify-center bg-teal-50 relative'>
+    <div className='min-h-screen flex items-center justify-center bg-brand-canvas relative'>
 
       {/* Error/Message Banner */}
       {(error || message) && (
@@ -52,7 +53,7 @@ const LoginPage = () => {
           className={`fixed top-4 left-1/2 transform -translate-x-1/2 px-6 py-2 rounded-md shadow-md text-center max-w-md w-full ${
             error
               ? 'bg-red-100 text-red-600 border border-red-300'
-              : 'bg-teal-100 text-teal-600 border border-teal-300'
+              : 'bg-blue-100 text-blue-600 border border-blue-300'
 
           }`}
         >
@@ -61,12 +62,12 @@ const LoginPage = () => {
       )}
 
       {/* Login Card */}
-      <div className='bg-white rounded-lg shadow-lg p-6 max-w-md w-full'>
+      <div className='bg-white rounded-2xl border border-gray-100 shadow-sm p-8 max-w-md w-full'>
         {/* Logo and Heading */}
-        <div className='text-center mb-6'>
-          <h1 className='text-2xl font-bold text-teal-600'>HR App</h1>
-
-          <p className='text-gray-500'>Sign in to your account</p>
+        <div className='text-center mb-6 flex flex-col items-center gap-2'>
+          <Image src='/logo.png' alt='WakandansHR' width={40} height={40} />
+          <h1 className='text-xl font-semibold text-gray-900'>WakandansHR</h1>
+          <p className='text-gray-500 text-sm'>Sign in to your account</p>
         </div>
 
         {/* Form */}
@@ -88,7 +89,7 @@ const LoginPage = () => {
               className={`mt-1 block w-full px-4 py-2 border ${
                 success
                   ? 'bg-gray-100 border-gray-300 cursor-not-allowed'
-                  : 'border-teal-300 focus:ring-teal-500 focus:border-teal-500'
+                  : 'border-blue-300 focus:ring-blue-500 focus:border-blue-500'
               } rounded-md shadow-sm`}
 
             />
@@ -96,10 +97,10 @@ const LoginPage = () => {
           <button
             type='submit'
             disabled={!email || loading || success}
-            className={`w-full py-2 text-white font-semibold rounded-md ${
+            className={`w-full py-2.5 text-white font-medium rounded-full transition-colors ${
               !email || loading || success
-                ? 'bg-teal-300 cursor-not-allowed'
-                : 'bg-teal-600 hover:bg-teal-700'
+                ? 'bg-gray-300 cursor-not-allowed'
+                : 'bg-gray-900 hover:bg-gray-800'
             }`}
           >
             {success
@@ -114,11 +115,11 @@ const LoginPage = () => {
         {/* Additional Information */}
         <p className='mt-4 text-center text-sm text-gray-500'>
           By signing in, you agree to our{' '}
-          <Link href='/terms' className='text-teal-600 hover:underline'>
+          <Link href='/terms' className='text-blue-600 hover:underline'>
             Terms of Service
           </Link>{' '}
           and{' '}
-          <Link href='/privacy' className='text-teal-600 hover:underline'>
+          <Link href='/privacy' className='text-blue-600 hover:underline'>
 
             Privacy Policy
           </Link>

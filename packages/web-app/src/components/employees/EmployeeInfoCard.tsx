@@ -100,35 +100,35 @@ const EmployeeInfoCard: React.FC<EmployeeInfoCardProps> = ({ employee }) => {
           alt={employee?.firstName || 'Employee Profile'}
           width={144}
           height={144}
-          className='w-36 h-36 rounded-full object-cover border-2 border-teal-200'
+          className='w-36 h-36 rounded-full object-cover border-2 border-blue-200'
         />
         <div className='flex flex-col justify-between gap-4 flex-1'>
           <div className='flex items-center justify-between'>
             <div className='flex items-center gap-4'>
-              <h1 className='text-xl font-semibold text-teal-800'>{`${employee?.firstName} ${employee?.lastName}`}</h1>
+              <h1 className='text-xl font-semibold text-blue-800'>{`${employee?.firstName} ${employee?.lastName}`}</h1>
             </div>
             {currentUser?.id === employee?.id && (
               <button
-                className='px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700 transition-all text-sm font-medium'
+                className='px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-all text-sm font-medium'
                 onClick={() => setIsModalOpen(true)}
               >
                 Edit Profile
               </button>
             )}
           </div>
-          <p className='text-sm text-teal-600'>{employee?.profile?.title}</p>
-          <div className='flex gap-2 lg:gap-6 flex-wrap text-xs font-medium text-teal-700'>
+          <p className='text-sm text-blue-600'>{employee?.profile?.title}</p>
+          <div className='flex gap-2 lg:gap-6 flex-wrap text-xs font-medium text-blue-700'>
             <div>
-              <span className='font-semibold text-teal-800'>Role:</span>{' '}
+              <span className='font-semibold text-blue-800'>Role:</span>{' '}
               {employee?.role}
             </div>
             <div>
-              <span className='font-semibold text-teal-800'>Location:</span>{' '}
+              <span className='font-semibold text-blue-800'>Location:</span>{' '}
               {employee?.location.name || 'N/A'}
             </div>
             {employee?.reportsToId && (
               <div>
-                <span className='font-semibold text-teal-800'>Reports To:</span>{' '}
+                <span className='font-semibold text-blue-800'>Reports To:</span>{' '}
                 <Link href={`/employees/${employee.reportsToId}`}>
                   {reportsTo?.firstName + ' ' + reportsTo?.lastName}
                 </Link>
@@ -136,7 +136,7 @@ const EmployeeInfoCard: React.FC<EmployeeInfoCardProps> = ({ employee }) => {
             )}
             {employee?.profile?.employedAt && (
               <div>
-                <span className='text-teal-800 font-semibold'>Joined At:</span>{' '}
+                <span className='text-blue-800 font-semibold'>Joined At:</span>{' '}
                 {new Date(employee.profile.employedAt).toLocaleDateString(
                   'en-US',
                   {
@@ -154,7 +154,7 @@ const EmployeeInfoCard: React.FC<EmployeeInfoCardProps> = ({ employee }) => {
       {isModalOpen && (
         <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50'>
           <div className='bg-white rounded-lg shadow-lg p-6 max-w-2xl'>
-            <h2 className='text-xl font-semibold text-teal-800 mb-4'>
+            <h2 className='text-xl font-semibold text-blue-800 mb-4'>
               Edit Profile
             </h2>
             <EditProfileForm

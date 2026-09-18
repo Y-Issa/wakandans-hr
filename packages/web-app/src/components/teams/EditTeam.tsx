@@ -39,7 +39,7 @@ const EditTeam: React.FC<EditTeamProps> = ({
               value={editFormData.name}
               onChange={handleEditChange}
               required
-              className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500'
+              className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500'
             />
           </div>
           <div>
@@ -50,12 +50,12 @@ const EditTeam: React.FC<EditTeamProps> = ({
               name='description'
               value={editFormData.description}
               onChange={handleEditChange}
-              className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500'
+              className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500'
             />
           </div>
           <button
             type='submit'
-            className='w-full px-4 py-2 text-white bg-teal-600 rounded-md hover:bg-teal-700'
+            className='w-full px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700'
           >
             Save Changes
           </button>

@@ -96,7 +96,7 @@ const LocationForm: React.FC<LocationFormProps> = ({
           </div>
           <button
             type='submit'
-            className='mt-4 p-2 bg-teal-600 text-white rounded-md hover:bg-teal-700'
+            className='mt-4 p-2 bg-blue-600 text-white rounded-md hover:bg-blue-700'
             disabled={loading}
           >
             {loading ? 'Saving...' : formData.id ? 'Update' : 'Create'}

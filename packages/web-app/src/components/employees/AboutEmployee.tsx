@@ -35,8 +35,8 @@ const AboutEmployee: React.FC<AboutEmployeeProps> = ({ profile }) => {
 
   if (!additionalInfo) {
     return (
-      <div className='bg-teal-50 shadow-lg rounded-lg p-6 space-y-6'>
-        <p className='text-teal-600 text-center'>
+      <div className='bg-blue-50 shadow-lg rounded-lg p-6 space-y-6'>
+        <p className='text-blue-600 text-center'>
           No additional information provided.
         </p>
       </div>
@@ -73,8 +73,8 @@ const AboutEmployee: React.FC<AboutEmployeeProps> = ({ profile }) => {
       {/* Bio Section */}
       {parsedInfo?.bio && (
         <>
-          <div className='text-teal-800 text-lg leading-relaxed'>
-            <h2 className='text-teal-700 font-semibold mb-4 text-base'>
+          <div className='text-blue-800 text-lg leading-relaxed'>
+            <h2 className='text-blue-700 font-semibold mb-4 text-base'>
               About me:
             </h2>
             <p>{parsedInfo.bio}</p>
@@ -87,10 +87,10 @@ const AboutEmployee: React.FC<AboutEmployeeProps> = ({ profile }) => {
       {profile?.dateOfBirth && (
         <>
           <div>
-            <h2 className='text-teal-700 font-semibold mb-4 text-base'>
+            <h2 className='text-blue-700 font-semibold mb-4 text-base'>
               Birthday:
             </h2>
-            <p className='text-teal-800 font-semibold'>
+            <p className='text-blue-800 font-semibold'>
               {new Date(profile.dateOfBirth).toLocaleDateString('en-US', {
                 month: 'long',
                 day: 'numeric',
@@ -104,7 +104,7 @@ const AboutEmployee: React.FC<AboutEmployeeProps> = ({ profile }) => {
       {/* Social Links Section */}
       {parsedInfo?.social && (
         <div>
-          <h2 className='text-teal-700 font-semibold mb-4 text-base'>
+          <h2 className='text-blue-700 font-semibold mb-4 text-base'>
             Connect with me:
           </h2>
           <div className='flex flex-wrap gap-4'>
@@ -116,7 +116,7 @@ const AboutEmployee: React.FC<AboutEmployeeProps> = ({ profile }) => {
                     href={link}
                     target='_blank'
                     rel='noopener noreferrer'
-                    className='flex items-center justify-center w-12 h-12 rounded-full bg-gray-50 hover:bg-teal-100 text-teal-600 hover:text-teal-800 shadow-md transition-transform transform hover:scale-110'
+                    className='flex items-center justify-center w-12 h-12 rounded-full bg-gray-50 hover:bg-blue-100 text-blue-600 hover:text-blue-800 shadow-md transition-transform transform hover:scale-110'
                     title={platform.charAt(0).toUpperCase() + platform.slice(1)}
                   >
                     {socialIcons[platform.toLowerCase()]}

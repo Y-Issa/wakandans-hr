@@ -39,7 +39,7 @@ const NewEmployeeForm = () => {
                 value={formData.firstName}
                 onChange={handleChange}
                 required
-                className='mt-2 block w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-teal-500'
+                className='mt-2 block w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
               />
             </div>
 
@@ -58,7 +58,7 @@ const NewEmployeeForm = () => {
                 value={formData.lastName}
                 onChange={handleChange}
                 required
-                className='mt-2 block w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-teal-500'
+                className='mt-2 block w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
               />
             </div>
           </div>
@@ -78,7 +78,7 @@ const NewEmployeeForm = () => {
               value={formData.email}
               onChange={handleChange}
               required
-              className='mt-2 block w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-teal-500'
+              className='mt-2 block w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
             />
           </div>
 
@@ -96,7 +96,7 @@ const NewEmployeeForm = () => {
               value={formData.role}
               onChange={handleChange}
               required
-              className='mt-2 block w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-teal-500'
+              className='mt-2 block w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
             >
               <option value=''>Select a role</option>
               <option value='ADMIN'>Admin</option>
@@ -120,7 +120,7 @@ const NewEmployeeForm = () => {
               value={formData.profile.title}
               onChange={handleChange}
               required
-              className='mt-2 block w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-teal-500'
+              className='mt-2 block w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
             />
           </div>
 
@@ -138,7 +138,7 @@ const NewEmployeeForm = () => {
               value={formData.locationId}
               onChange={handleChange}
               required
-              className='mt-2 block w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-teal-500'
+              className='mt-2 block w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
             >
               <option value=''>Select a location</option>
               {locations.map((location) => (
@@ -162,7 +162,7 @@ const NewEmployeeForm = () => {
               id='reportsToId'
               value={formData.reportsToId}
               onChange={handleChange}
-              className='mt-2 block w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-teal-500'
+              className='mt-2 block w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
             >
               <option value=''>Select a manager</option>
               {users.map((user) => (
@@ -177,7 +177,7 @@ const NewEmployeeForm = () => {
           <button
             type='submit'
             disabled={loading}
-            className={`w-full px-4 py-2 text-sm font-semibold text-white bg-teal-600 rounded-sm hover:bg-teal-700 transition-all duration-300 ease-in-out focus:outline-none ${
+            className={`w-full px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-sm hover:bg-blue-700 transition-all duration-300 ease-in-out focus:outline-none ${
               loading && 'cursor-not-allowed opacity-60'
             }`}
           >

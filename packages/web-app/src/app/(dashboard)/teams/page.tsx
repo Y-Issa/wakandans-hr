@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
+import { HiPlus } from 'react-icons/hi2';
 import TeamCard from '@/components/teams/TeamCard';
 import Pagination from '@/components/Pagination';
 import CreateTeamForm from '@/components/teams/CreateTeamForm';
+import PillButton from '@/components/ui/PillButton';
 import { useTeams, useTeamForm, useLocations } from '@/hooks/useTeams';
 
 const TeamList: React.FC = () => {
@@ -30,23 +32,21 @@ const TeamList: React.FC = () => {
   const { locations } = useLocations();
 
   return (
-    <div className='bg-white p-6 rounded-lg shadow-md m-4'>
+    <div className='flex flex-col gap-6 py-4'>
       <div className='flex justify-between items-center'>
-        <h2 className='text-2xl font-semibold'>Teams</h2>
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className='bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded'
-        >
+        <h1 className='text-2xl font-semibold text-gray-900'>Teams</h1>
+        <PillButton onClick={() => setIsModalOpen(true)}>
+          <HiPlus size={16} />
           Add Team
-        </button>
+        </PillButton>
       </div>
 
-      {isLoadingTeams && <p>Loading...</p>}
-      {teamsError && <p>Error loading teams.</p>}
+      {isLoadingTeams && <p className='text-gray-400'>Loading...</p>}
+      {teamsError && <p className='text-red-500'>Error loading teams.</p>}
 
       {teams && (
         <>
-          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 justify-center mt-3'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
             {teams.map(
               (team: {
                 id: number;
